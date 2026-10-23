@@ -9,9 +9,10 @@ const play=(actions,s=plugin.initialState())=>actions.reduce(act,s);
 const set=(key,value)=>({type:'set',key,value}),run={type:'run'},reason=value=>({type:'reason',value}),next={type:'next'};
 const w1=[set('orders',20),run,set('orders',30),run,reason('shared'),next];
 const w2=[...w1,run,set('s2',2),run,reason('slowest'),next];
-const w3=[...w2,run,set('s1',2),set('s2',2),run,set('s1',4),set('s2',3),run,reason('sync'),next];
+const predict=value=>({type:'predict',value}),compare=(key,value)=>({type:'compare',key,value});
+const w3=[...w2,run,set('s1',5),set('s2',4),predict('lower'),run,set('s1',4),set('s2',3),predict('lower'),run,compare('baseline','0:2'),compare('larger','0:1'),reason('sync'),next];
 const w4=[...w3,run,set('s1',2),set('s2',2),run,reason('idle'),next];
-const w5=[...w4,run,set('s1',2),set('s2',3),run,reason('carried'),next];
+const w5=[...w4,run,set('s1',2),set('s2',3),predict('lower'),run,reason('carried'),next];
 // Run one setup at the start of a week and read back the day (independent of the presentation).
 const day=(prefix,dials)=>{let s=play(prefix);for(const [k,v] of Object.entries(dials))s=act(s,set(k,v));return plugin.observe(act(s,run));};
 const pounds=o=>[o.cured,o.stuck,o.committed/100,o.total/100,Math.round(o.average)/100,o.profit/100];
@@ -75,7 +76,7 @@ test('assessment judges the run setup, the target, the seen-it condition and one
   assert.match(msg(play([run,set('orders',30),run])),/answer the question/);
   const wrong=plugin.assess(play([run,set('orders',30),run,reason('total')]));assert.equal(wrong.correct,false);assert.match(wrong.message,/total went up/);
   const right=plugin.assess(play(w1.slice(0,-1)));assert.equal(right.correct,true);assert.equal(right.scope,'this_response_only');assert.equal(right.mastery_claim,false);
-  const profitableNotBest=plugin.assess(play([...w2,run,set('s1',2),set('s2',2),run,set('s1',5),set('s2',4),run,reason('sync')]));
+  const profitableNotBest=plugin.assess(play([...w2,run,set('s1',2),set('s2',2),predict('lower'),run,set('s1',5),set('s2',4),predict('lower'),run,reason('sync')]));
   assert.equal(profitableNotBest.correct,false);assert.match(profitableNotBest.message,/most profitable size/);
   assert.doesNotMatch(profitableNotBest.message,/4 presses|four presses/);
 });
@@ -93,7 +94,7 @@ test('six days per week; restarting keeps earlier days on the ledger, faded',()=
   assert.equal(plugin.observe(s).weekOver,true);assert.throws(()=>act(s,run));
   s=act(s,{type:'retry'});const o=plugin.observe(s);
   assert.deepEqual([o.attempt,o.day,o.weekOver,o.ledger.length,o.ledger.filter(p=>p.current).length],[1,0,false,6,0]);
-  assert.equal(o.cash,0);
+  assert.equal('cash' in o,false);
   s=play([set('orders',30),run],s);assert.equal(plugin.observe(s).gateOpen,true,'earlier attempts count as evidence');
 });
 
@@ -122,4 +123,92 @@ test('state is immutable, serializable and checked by invariants',()=>{
   assert.equal(plugin.validateInvariants({...base,reason:'shared'}),false,'reason cannot precede its evidence');
   assert.equal(plugin.validateInvariants({...base,history:[{level:'rent',dials:{orders:10,s1:1,s2:1},reason:'shared'}],level:1}),false,'history must hold a winning setup');
   assert.equal(plugin.assess(act(play(w1.slice(0,-1)),{type:'help'})).assistance,'help_requested');
+});
+
+
+test('week 3 cannot pass decreasing-only evidence or use a jam or surplus tunnel as the upswing',()=>{
+  const decreasing=play([...w2,run,set('s1',2),set('s2',2),predict('lower'),run,set('s1',4),set('s2',3),predict('lower'),run]);
+  assert.equal(plugin.observe(decreasing).gateOpen,false);
+  assert.throws(()=>act(decreasing,reason('sync')));
+  assert.equal(plugin.assess(decreasing).correct,false);
+  let s=play([set('s1',5),set('s2',3),predict('higher'),run],decreasing);
+  assert.equal(plugin.observe(s).ledger.at(-1).classification,'bottleneck');
+  assert.equal(plugin.observe(s).gateOpen,false);
+  s=play([set('s1',4),set('s2',4),predict('lower'),run],s);
+  assert.equal(plugin.observe(s).ledger.at(-1).classification,'idle');
+  assert.equal(plugin.observe(s).gateOpen,false);
+});
+
+test('the scale answer requires learner-selected actual comparison runs',()=>{
+  let s=play(w3.slice(0,-4));
+  assert.equal(plugin.observe(s).gateOpen,true);
+  s=act(s,reason('sync'));
+  assert.equal(plugin.assess(s).correct,false);
+  s=play([compare('baseline','0:0'),compare('larger','0:1')],s);
+  assert.equal(plugin.assess(s).correct,false);
+  s=act(s,compare('baseline','0:2'));
+  assert.equal(plugin.observe(s).comparisonValid,true);
+  assert.equal(plugin.assess(s).correct,true);
+  assert.throws(()=>act(s,compare('larger','99:99')));
+});
+
+test('predictions precede changed scale and transfer runs, retain mistakes, and permit learning',()=>{
+  let s=play([...w2,run,set('s1',5),set('s2',4)]);
+  assert.equal(plugin.observe(s).predictionRequired,true);
+  assert.throws(()=>act(s,run));
+  assert.equal(plugin.observe(s).day,1);
+  s=play([predict('higher'),run],s);
+  const feedback=plugin.observe(s).predictionFeedback;
+  assert.deepEqual([feedback.value,feedback.actual,feedback.correct],['higher','lower',false]);
+  assert.equal(plugin.observe(s).ledger.at(-1).prediction.correct,false);
+  s=play([set('s1',4),set('s2',3),predict('lower'),run,compare('baseline','0:2'),compare('larger','0:1'),reason('sync')],s);
+  assert.equal(plugin.assess(s).correct,true,'a wrong prediction is feedback, not permanent lockout');
+  let transfer=play([...w4,run,set('s1',2),set('s2',3)]);
+  assert.throws(()=>act(transfer,run));
+  transfer=play([predict('higher'),run,reason('carried')],transfer);
+  assert.equal(plugin.observe(transfer).predictionFeedback.correct,false);
+  assert.equal(plugin.assess(transfer).correct,true);
+});
+
+test('reason order is deterministic, varied, and includes every option once',()=>{
+  const indices=[[],w1,w2,w3,w4].map(prefix=>{const a=plugin.observe(play(prefix)),b=plugin.observe(play(prefix));assert.deepEqual(a.reasons,b.reasons);assert.equal(new Set(a.reasons.map(([id])=>id)).size,3);return a.reasons.findIndex(([id])=>id===['shared','slowest','sync','idle','carried'][a.level]);});
+  assert.ok(new Set(indices).size>1);
+});
+
+test('stored prediction evidence rejects tampering and setup changes clear pending predictions',()=>{
+  let s=play([...w2,run,set('s1',5),set('s2',4),predict('higher')]);
+  s=act(s,set('s1',6));
+  assert.equal(plugin.observe(s).prediction,null);
+  assert.throws(()=>act(s,run));
+  s=play([set('s1',5),predict('higher'),run],s);
+  for(const patch of [{correct:true},{referenceId:'9:9'},{actual:'higher'},{average:0},{referenceAverage:0}]){
+    const forged=structuredClone(s),last=forged.runs.at(-1);last.prediction={...last.prediction,...patch};
+    assert.equal(plugin.validateInvariants(forged),false,JSON.stringify(patch));
+  }
+  const missing=structuredClone(s);missing.runs.at(-1).prediction=null;
+  assert.equal(plugin.validateInvariants(missing),false);
+});
+
+test('ledger distinguishes fractional utilization, whole idle stations, and efficient scale',()=>{
+  assert.equal(plugin.observe(play([run])).ledger[0].classification,'underused');
+  assert.equal(plugin.observe(play([set('orders',30),run])).ledger[0].classification,'efficient');
+  const size=play([...w2,run,set('s1',4),set('s2',4),predict('lower'),run]);
+  assert.deepEqual(plugin.observe(size).ledger.map(r=>r.classification),['efficient','idle']);
+});
+
+
+test('week 3 requires the observed falling side as well as the rising side',()=>{
+  let s=play([...w2,set('s1',4),set('s2',3),run,set('s1',5),set('s2',4),predict('higher'),run,set('s1',6),set('s2',5),predict('higher'),run]);
+  assert.equal(plugin.observe(s).gateOpen,false);
+  assert.throws(()=>act(s,reason('sync')));
+  s=play([compare('baseline','0:0'),compare('larger','0:1')],s);
+  assert.equal(plugin.observe(s).comparisonValid,true,'a rising pair alone does not supply the falling-side observation');
+  assert.equal(plugin.assess(s).correct,false);
+  s=play([set('s1',4),set('s2',3),predict('lower'),run],s);
+  assert.equal(plugin.observe(s).gateOpen,false,'returning to the best setup supplies no smaller comparison');
+  s=play([set('s1',2),set('s2',3),predict('higher'),run],s);
+  assert.equal(plugin.observe(s).ledger.at(-1).classification,'idle');
+  assert.equal(plugin.observe(s).gateOpen,false,'a smaller setup with surplus whole tunnels cannot substitute');
+  s=play([set('s1',1),set('s2',1),predict('higher'),run],s);
+  assert.equal(plugin.observe(s).gateOpen,true,'an actually observed smaller balanced setup supplies the falling side');
 });

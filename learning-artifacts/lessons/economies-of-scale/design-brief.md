@@ -27,7 +27,7 @@ Everything is measured in pence per shirt, and every day the learner runs become
 1. **Set up the day.** Lease presses and tunnels (week 1: choose how many orders to accept). Before running, the HUD shows only what is knowable in advance: committed cost, print and cure capacity, orders.
 2. **Run the day.** The model computes the result first; a short playback then shows pallets being printed, cured, piling up or docking while the cost bar grows and the cost-per-shirt ticker counts down. Reduced motion and seeking skip straight to the final frame.
 3. **Read the result.** Sold/orders, day cost, cost per shirt, profit — and a new dot on the ledger.
-4. **Decide.** Change the setup and run again, or press Check when the current setup is the answer. Each week has six days; when they run out the week restarts (earlier days stay on the ledger, faded). Days are the budget that makes thinking cheaper than clicking.
+4. **Decide.** Change the setup and run again, or press Check when the current setup is the answer. Each week has six days; when they run out the week restarts (earlier days stay on the ledger, faded). These are resettable experiment allowances, not a solvency budget. Success judges an operating plan; there is no cumulative-cash display or financial survival claim.
 
 ## 4. The model (weeks 1–4; week 5 re-skins it)
 
@@ -79,7 +79,7 @@ Common check rule: correct only if the current setup is the one last run, that r
 
 1. **The rent doesn't care.** One press, one tunnel; accept 10, 20 or 30 hoodies at £24. Target: profit (only 30). Seen it: two different volumes run. Idea: fixed cost spread over more units.
 2. **Where does it jam?** A band wants 60 tees at £20; the week opens at 2 presses, 1 tunnel. Target: profit (only 2/2). Seen it: a day with stuck shirts. Idea: bottleneck.
-3. **How big?** A festival tent buys every cured shirt at £15, up to 200. Target: the most profitable day (only 4/3). Seen it: three press counts run. Idea: economies, then diseconomies, of scale.
+3. **How big?** A festival tent buys every cured shirt at £15, up to 200. Target: the most profitable day (only 4/3). Seen it: three press counts run, including smaller and larger balanced fully used setups above the unit-cost minimum, plus a learner-selected pair comparing the best balanced run with the larger run. Idea: economies, then diseconomies, of scale.
 4. **Orders fall.** 60 shirts at £17; opens at last week's 4/3. Target: profit (only 2/2). Seen it: a day with idle capacity. Idea: the right size follows demand; idle leases still cost.
 5. **Night Noodles.** Transfer to a different business and numbers. Target: profit (only 3 woks/2 benches). Seen it: two setups run. Tests whether the method carries to one more fictional case, not mastery.
 
@@ -94,3 +94,14 @@ No definition quiz, no answer radios before a result, no pre-drawn curve or "com
 ## 8. Assumptions and limits
 
 All figures fictional. Leases are fresh daily contracts, so shrinking has no sunk cost here; real capital purchases do. The sync rule is an invented stand-in for coordination overhead, not a business law. Blanks and ink cost the same at every size (bulk discounts are deliberately excluded so only fixed-cost spreading and coordination move the curve). Uncured shirts have no value that day; no inventory, uncertainty, defects, wages beyond leases, tax or finance. Not taught: marginal cost, short- vs long-run curves by name, demand curves, pricing, supplier bargaining, learning curves, network effects. A correct week is a bounded response, not mastery.
+
+
+## 9. Review-driven revision (2.1.0)
+
+The subsequent review is now captured in `learning-artifacts/AGENTS.md` for future projects. Sol 6.1 coding agents implemented the model and presentation revisions with Codex integration review; Terra was unavailable and Astra was not used for this revision.
+
+The scale assessment rejects both a decreasing-only sequence (1/1 → 2/2 → 4/3) and an increasing-only sequence (4/3 → 5/4 → 6/5) and cannot be satisfied with rising costs caused by a jam or surplus whole tunnels. Learners select two actual ledger records to support the explanation. Changed scale and transfer setups require a pre-run prediction against the named previous observation; incorrect predictions remain recorded and receive feedback without blocking further experimentation. Reasoning positions vary deterministically, preserving replay.
+
+The chart records experiments, not an automatically valid long-run cost curve. Markers and accessible full records distinguish balanced production, wasted work, unused whole stations and fractional underuse. Both station counts, output, cost, profit and past predictions are available. A selected comparison remains visible beside its question. The detailed chart is open on desktop and expandable on phones; results and the next task sit together on phones. Animation uses capacity-based assignments so idle machines do not process goods first.
+
+The six runs are explicitly resettable test days. Only a proposed day's performance is assessed, so cumulative cash has been removed. No new capital, bankruptcy or inventory mechanism is implied. The equations and unique best setups in §4 remain unchanged. Automated checks verify these requirements; learner, expert and physical-device reviews remain unperformed.

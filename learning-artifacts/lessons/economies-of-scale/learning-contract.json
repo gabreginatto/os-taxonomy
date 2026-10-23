@@ -3,24 +3,62 @@
   "activity": "Press Club",
   "taxonomy_foundation": "mt_9gpUHWVKMR",
   "requested_age": 15,
-  "objective": "Choose a profitable size for one business by running days and reading their costs; explain fixed-cost spreading, bottlenecks, coordination overhead and idle capacity from the learner's own runs; transfer the method to a different business.",
+  "objective": "Choose a profitable operating size through predictions, observed runs and explicit comparisons; distinguish coordination-driven rising costs from bottlenecks and underused capacity, and transfer the method to a different business.",
   "weeks": [
-    {"id": "rent", "idea": "Fixed cost spread over more units", "target": "profit", "evidence_gate": "two different volumes run", "unique_win": "30 hoodies"},
-    {"id": "jam", "idea": "Bottleneck", "target": "profit", "evidence_gate": "a day with stuck shirts", "unique_win": "2 presses, 2 tunnels"},
-    {"id": "size", "idea": "Economies, then diseconomies, of scale", "target": "most profitable configuration", "evidence_gate": "three press counts run", "unique_win": "4 presses, 3 tunnels"},
-    {"id": "fall", "idea": "Idle capacity; optimal size follows demand", "target": "profit", "evidence_gate": "a day with idle capacity", "unique_win": "2 presses, 2 tunnels"},
-    {"id": "noodles", "idea": "Transfer to a new business", "target": "profit", "evidence_gate": "two setups run", "unique_win": "3 woks, 2 prep benches"}
+    {
+      "id": "rent",
+      "idea": "Fixed cost spread over more units",
+      "target": "profit",
+      "evidence_gate": "two different volumes run",
+      "unique_win": "30 hoodies"
+    },
+    {
+      "id": "jam",
+      "idea": "Bottleneck",
+      "target": "profit",
+      "evidence_gate": "a day with stuck shirts",
+      "unique_win": "2 presses, 2 tunnels"
+    },
+    {
+      "id": "size",
+      "idea": "Economies, then diseconomies, of scale",
+      "target": "most profitable configuration",
+      "evidence_gate": "At least three press counts including smaller and larger balanced fully used setups with higher unit cost than the best run; learner selects the actual best balanced run and larger comparison run.",
+      "unique_win": "4 presses, 3 tunnels"
+    },
+    {
+      "id": "fall",
+      "idea": "Idle capacity; optimal size follows demand",
+      "target": "profit",
+      "evidence_gate": "a day with idle capacity",
+      "unique_win": "2 presses, 2 tunnels"
+    },
+    {
+      "id": "noodles",
+      "idea": "Transfer to a new business",
+      "target": "profit",
+      "evidence_gate": "two setups run",
+      "unique_win": "3 woks, 2 prep benches"
+    }
   ],
   "taxonomy_coverage": [
-    {"index": 1, "mode": "partial", "claim": "Use displayed revenue, total cost and profit for runs the learner chose to select a profitable configuration; profit is computed by the game, not unaided."},
-    {"index": 2, "mode": "partial", "claim": "Recognise loss-making days (costs above revenue) and respond by changing the configuration; no free-text explanation is graded."}
+    {
+      "index": 1,
+      "mode": "partial",
+      "claim": "Use displayed revenue, total cost and profit for runs the learner chose to select a profitable configuration; profit is computed by the game, not unaided."
+    },
+    {
+      "index": 2,
+      "mode": "partial",
+      "claim": "Recognise loss-making days (costs above revenue) and respond by changing the configuration; no free-text explanation is graded."
+    }
   ],
   "authored_extensions": [
     "Fixed versus variable costs",
     "Average versus total cost",
     "Capacity and bottlenecks",
     "Coordination cost growing with pairs of teams",
-    "Long-run cost curve built from the learner's own runs",
+    "Comparison of balanced fully used configurations, distinguished from bottlenecks and underused capacity",
     "Idle capacity and demand-dependent optimal size"
   ],
   "assumed_prerequisites": [
@@ -29,7 +67,7 @@
     "Reading a simple scatter chart",
     "Distinguishing a day's total from a per-unit amount"
   ],
-  "prerequisite_mastery": "Unknown; inspect the saved generated plan. The source topic's age 7–9 band is a foundation, not the requested audience level.",
+  "prerequisite_mastery": "Unknown; inspect the saved generated plan. The source topic's age 7\u20139 band is a foundation, not the requested audience level.",
   "assessment_scope": "this_response_only",
   "not_assessed": [
     "Broad mental-model mastery",
@@ -42,12 +80,12 @@
   "tool_decisions": {
     "threejs": "Print-studio floor with pallets flowing through presses and curing tunnels, a stuck pile at the bottleneck, sync cables between every pair of teams, a segmented cost bar with a revenue flag, and direct scene picking to add, remove and run.",
     "gsap": "Deterministic replay of an already-computed day and a win pulse; cancelled on seek and skipped under reduced motion.",
-    "html_svg": "Steppers, order buttons and Run as keyboard/touch twins; result tiles; an SVG ledger plotting the learner's own runs; one reasoning question per week.",
+    "html_svg": "Accessible setup controls, pre-run predictions, selected evidence pair, result summaries and an experiment scatter plot with full run details. Phone flow keeps results and the next task together; detailed records remain expandable.",
     "anatomy": "Not used.",
     "blender": "Not needed; procedural geometry only.",
     "hyperframes": "No video requested."
   },
-  "design_review": "Design brief by Fable (advisor); see design-brief.md. Every tabulated outcome was re-derived independently and is asserted in unit tests.",
+  "design_review": "Initial Press Club direction by Fable; subsequent Codex review identified missing turning-point evidence, predictable answer positions, cosmetic cash, confounded chart points and mobile scrolling. Sol 6.1 agents implemented model/UI revisions with parent integration review; see design-brief.md and AGENTS.md. No new Astra or Terra consultation.",
   "source_review": "Local exact taxonomy evidence, local Munger scale research and the disclosed fictional equations. No external economics source retrieved.",
   "expert_review": "not_performed",
   "learner_review": "not_performed",
@@ -59,5 +97,15 @@
     "mt_vpMDMbx4pc",
     "mt_RTwmvr9R7V",
     "mt_phpn6KhCAv"
-  ]
+  ],
+  "prediction_protocol": {
+    "weeks": [
+      "size",
+      "noodles"
+    ],
+    "when": "Before running a changed setup after an earlier observation",
+    "response": "Predict lower, same or higher average cost against the named prior run",
+    "record": "Bind the prediction to its setup and reference run; preserve predicted and actual direction with feedback. Incorrect predictions do not block further learning."
+  },
+  "experiment_allowance": "Six resettable test days per training round. Results persist across retries. Success evaluates a prospective operating plan; cumulative cash and financial solvency are not simulated."
 }

@@ -23,7 +23,7 @@ The design direction is colorful, tactile 3D scenes with meaningful direct inter
 - Catalog: https://gabreginatto-learning-lab.web.app/
 - Opportunity cost, ages 10 and 15: https://gabreginatto-learning-lab.web.app/opportunity-cost/
 - Inversion, ages 10 and 15: https://gabreginatto-learning-lab.web.app/inversion/
-- Economies of scale, age 15: https://gabreginatto-learning-lab.web.app/economies-of-scale/ (still serves the earlier Little Works until Press Club is deployed; Press Club is built and verified locally at `output/press-club-v2`)
+- Economies of scale, age 15: https://gabreginatto-learning-lab.web.app/economies-of-scale/ (Press Club 2.1.0, published and verified; source build `output/press-club-v5`)
 
 The Anatomy prototype did not replace Choice Islands. Publishing a new activity must preserve the other routes.
 
@@ -45,6 +45,8 @@ The restore command generates and browser-verifies missing artifacts at the path
 Generated `output/`, hosting `public/`, caches, virtual environments, logs and private `.state/` receipts stay out of Git. Their absence after cloning is expected. The editable plugins, models, compiler, lockfiles, contracts, research, review evidence and restore instructions are committed. Optional Anatomy installation is reproducible with `bash learning-artifacts/scripts/install-anatomy.sh`; it pins the upstream revision rather than copying an external home-directory checkout into this repository.
 
 ## Continue the work
+
+Read [learning-artifacts/AGENTS.md](learning-artifacts/AGENTS.md) for the reusable design review: consequential scenes, contrasting observations, predictions, evidence-based comparisons, honest experiment allowances and mobile flow. Press Club now requires observed falling and rising unit costs in balanced setups, preserves predictions and makes the learner select comparison evidence. Two Sol 6.1 agents coded this revision; Terra was unavailable and Astra was not used for it.
 
 ```bash
 npm --prefix learning-artifacts test

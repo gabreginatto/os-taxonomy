@@ -7,6 +7,8 @@ description: Create and verify interactive learning activities or scripted expla
 
 Own the request through a runnable, verified local artifact. A topic ID, topic name, or series is sufficient to begin. Use the existing repository checkout; cloud tasks are already isolated, so do not create worktrees unless explicitly requested.
 
+Read `learning-artifacts/AGENTS.md` before designing or revising a game. Its reusable learning-design requirements cover causal scenes, contrasting evidence, predictions, assessment shortcuts, truthful experiment budgets, chart interpretation and mobile flow.
+
 ## Establish the learning contract
 
 1. Locate this skill's repository root (three directories above this skill directory); work in its learning-artifacts/ package.

@@ -29,14 +29,14 @@
     {
       "slug": "economies-of-scale",
       "title": "Press Club",
-      "description": "Run a merch print studio for five weeks. Lease presses, find the jam, and discover when getting bigger stops making shirts cheaper.",
+      "description": "Run a merch studio. Predict, test and compare real results to discover when getting bigger stops making shirts cheaper.",
       "audience": "Age 15 \u00b7 Costs, capacity & growth",
       "tags": [
         "Economies of scale",
         "3D",
         "5 weeks"
       ],
-      "artifact": "../output/press-club-v2",
+      "artifact": "../output/press-club-v5",
       "thumbnail": "checks/scale-world-1200.png"
     }
   ]

@@ -23,6 +23,12 @@ try:
   obs=lambda:snap()['observed']
   canvas=lambda:page.locator('.pc-world canvas').evaluate('(c)=>c.toDataURL()')
   def click(selector):page.locator(selector).click()
+  def run(prediction='lower'):
+   if obs().get('predictionRequired'):click('#pc-predict-'+prediction)
+   click('#pc-run')
+  def open_ledger():
+   if not page.locator('.pc-ledger').evaluate('(e)=>e.open'):page.locator('.pc-ledger > summary').click()
+
   def pick(name):
    page.locator('.pc-world').scroll_into_view_if_needed()
    target=next((t for t in snap()['presentation']['pick_targets'] if t['name']==name),None);require(target,'No 3D pick target '+name)
@@ -55,38 +61,49 @@ try:
    pick('run');require(obs()['stuck']==20 and obs()['unfilled']==20,'Bottleneck trap did not jam')
    require(page.locator('.pc-badge-stuck').is_visible(),'Stuck pile badge missing');check(False,'never cured')
    page.locator('#stage').screenshot(path=str(out/f'bottleneck-{width}.png'));page.locator('.pc-world').screenshot(path=str(out/f'bottleneck-world-{width}.png'))
-   pick('add-s2');require(obs()['dials']['s2']==2,'3D ghost tunnel did not add a tunnel');click('#pc-run');require(obs()['profit']==24000,'Second tunnel did not fix the bottleneck')
+   pick('add-s2');require(obs()['dials']['s2']==2,'3D ghost tunnel did not add a tunnel');run();require(obs()['profit']==24000,'Second tunnel did not fix the bottleneck')
    click('#pc-reason-late');check(False,'slowest step');click('#pc-reason-slowest');check(True,'bottleneck');next_week(3)
-   # Week 3: map sizes, find the best, see the star.
-   click('#pc-run');dials(2,2);click('#pc-run');dials(5,4);click('#pc-run')
-   check(False,'most profitable size')
+   # Week 3: make predictions and choose a genuine efficient comparison pair.
+   run();dials(2,2)
+   require(page.locator('#pc-run').is_disabled(),'Changed size ran without pre-run prediction')
+   before_day=obs()['day'];pick('run');require(obs()['day']==before_day,'3D run bypassed prediction')
+   run('higher');require(page.locator('#pc-prediction-feedback').is_visible(),'Prediction feedback hidden on phone');dials(5,4);run('lower');open_ledger()
+   check(False)
    require(page.locator('#pc-chart circle').count()==3,'Ledger did not plot three runs')
-   dials(4,3);click('#pc-run');require(obs()['average']==1400,'Four presses and three tunnels wrong');click('#pc-reason-sync');check(True,'sweet spot')
+   dials(4,3);run();require(obs()['average']==1400,'Four presses and three tunnels wrong');click('#pc-reason-sync');check(False)
+   rows=obs()['ledger'];baseline=next(r for r in rows if r['s1']==4 and r['s2']==3);larger=next(r for r in rows if r['s1']==5 and r['s2']==4)
+   page.select_option('#pc-compare-baseline',baseline['id']);page.select_option('#pc-compare-larger',baseline['id']);check(False)
+   page.select_option('#pc-compare-larger',larger['id']);check(True,'sweet spot')
+   require(obs()['comparisonValid'],'Selected efficient evidence pair rejected')
+   require(page.locator('#pc-ledger-details details').count()==4,'Exact accessible ledger run details missing')
+   page.locator('#pc-ledger-details details').last.locator('summary').click()
+   require('total cost' in page.locator('#pc-ledger-details details').last.inner_text(),'Run details omit total cost')
    require(page.locator('#pc-chart .pc-star').count()==1,'Winning star missing');page.locator('#stage').screenshot(path=str(out/f'scale-{width}.png'));page.locator('.pc-world').screenshot(path=str(out/f'scale-world-{width}.png'));next_week(4)
    # Week 4: idle leases; shrink with the 3D minus tokens.
-   click('#pc-run');require(obs()['profit']==-42000 and 'idle' in page.locator('#pc-outcome').inner_text(),'Idle capacity not shown')
+   run();require(obs()['profit']==-42000 and 'idle' in page.locator('#pc-outcome').inner_text(),'Idle capacity not shown')
    pick('remove-s1');pick('remove-s1');pick('remove-s2');require(obs()['dials']=={'s1':2,'s2':2},'3D remove tokens failed: '+json.dumps(obs()['dials']))
-   click('#pc-run');click('#pc-reason-slow');check(False,'dimmed');click('#pc-reason-idle');check(True,'Idle capacity');next_week(5)
+   run();click('#pc-reason-slow');check(False,'dimmed');click('#pc-reason-idle');check(True,'Idle capacity');next_week(5)
    # Week 5: noodle transfer.
-   click('#pc-run');dials(2,3);click('#pc-run');require(obs()['profit']==4000,'Noodle stall best setup wrong')
+   run();dials(2,3);run();require(obs()['profit']==4000,'Noodle stall best setup wrong')
    page.locator('.pc-world').screenshot(path=str(out/f'noodles-world-{width}.png'))
    click('#pc-reason-bigger');check(False);click('#pc-reason-carried');check(True,'new place')
    click('#pc-next');require(obs()['complete'] and page.locator('#pc-finish').is_visible() and page.locator('#pc-finish-list li').count()==5,'Finish screen missing')
    page.screenshot(path=str(out/f'complete-{width}.png'),full_page=True)
    # Six-day week and restart.
    click('#pc-again');require(obs()['week']==1 and obs()['day']==0,'Play again did not restart')
-   for _ in range(6):click('#pc-run')
+   for _ in range(6):run()
    require(page.locator('#pc-run').is_disabled() and page.locator('#pc-retry').is_visible(),'Week-over state missing')
    click('#pc-retry');require(obs()['attempt']==1 and obs()['day']==0 and len(obs()['ledger'])==6,'Restarting the week lost earlier days')
    click('#reset');require(snap()['state']==page.evaluate('window.lessonAPI.snapshot().state') and obs()['day']==0 and obs()['ledger']==[] and snap()['assessment'] is None,'Reset left progress')
    require(page.evaluate('document.documentElement.scrollWidth<=innerWidth'),'Horizontal overflow')
+   require(page.locator('.pc-tiles').evaluate('(e)=>Array.from(e.querySelectorAll("strong")).every(n=>n.scrollWidth<=n.clientWidth)'), 'Result tile text overflow')
    for button in page.get_by_role('button').all():
     if button.is_visible():require(button.bounding_box()['height']>=43,'Touch target below 44px')
    require(page.locator('canvas').count()==1,'A stale renderer leaked')
-   page.locator('#stage').screenshot(path=str(out/f'start-{width}.png'));checks.append({'viewport':width,'five_weeks':'passed','scene_picking':'passed','wrong_answers':'passed','keyboard':'passed','week_budget':'passed','reset':'passed'})
+   page.locator('#stage').screenshot(path=str(out/f'start-{width}.png'));checks.append({'viewport':width,'five_weeks':'passed','scene_picking':'passed','wrong_answers':'passed','keyboard':'passed','week_budget':'passed','prediction_and_evidence_pair':'passed','reset':'passed'})
   # Live playback must be cancelled by a seek, and repeated seeks must render the same still frame.
   page.set_viewport_size({'width':1200,'height':950});page.emulate_media(reduced_motion='no-preference');page.goto(args.url,wait_until='networkidle');page.wait_for_function('window.__lessonReady===true')
-  click('#pc-orders-30');click('#pc-run');page.wait_for_timeout(250);mid=page.locator('#pc-tile-profit').inner_text()
+  click('#pc-orders-30');run();page.wait_for_timeout(250);mid=page.locator('#pc-tile-profit').inner_text()
   require('…' in mid,'Run did not play back live')
   page.evaluate('window.lessonAPI.renderAt(4)');first=canvas();page.wait_for_timeout(1200);require(first==canvas(),'A stale tween changed the sought scene')
   page.evaluate('window.lessonAPI.renderAt(1)');page.evaluate('window.lessonAPI.renderAt(4)');require(first==canvas(),'Repeated-time scene differs')

@@ -1,11 +1,13 @@
 {
-  "status": "verified_locally_not_deployed",
+  "status": "published_and_verified",
   "activity": "Press Club",
-  "artifact": "output/press-club-v2",
-  "plugin_version": "2.0.0",
-  "plugin_sha256": "1daafb9faa3c5941bf4f8e62226bd1d2d3d6fb49c33cb28bc48b2e622b4ec7ac",
+  "artifact": "output/press-club-v5",
+  "plugin_version": "2.1.0",
+  "plugin_sha256": "56fd4ec38011d5fec6796735b6e4a5d96bdc01ee6ee715caf9c032efcbce5dc5",
   "compiler_checks": {
+    "schema_version": "1.0",
     "status": "passed",
+    "scope": "interactive_browser",
     "checks": [
       {
         "name": "accepted source hashes",
@@ -96,14 +98,31 @@
         "status": "passed"
       },
       {
+        "name": "economies-of-scale: independent fixture 20",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 21",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 22",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 23",
+        "status": "passed"
+      },
+      {
         "name": "browser acceptance",
         "status": "passed"
       }
     ],
     "browser": {
+      "schema_version": "1.0",
       "status": "passed",
       "profile": {
-        "chromium": "141.0.7390.37",
+        "chromium": "154.0.8037.57",
         "playwright": "1.62.0",
         "graphics": "software SwiftShader",
         "device_performance": "not_measured"
@@ -111,7 +130,53 @@
       "checks": [
         {
           "name": "1-economies-of-scale: initial state",
-          "status": "passed"
+          "status": "passed",
+          "detail": {
+            "renderer": "threejs",
+            "tool": "Three.js + GSAP",
+            "pick_targets": [
+              {
+                "name": "orders-10",
+                "action": {
+                  "type": "set",
+                  "key": "orders",
+                  "value": 10
+                },
+                "x": 0.3891219773143299,
+                "y": 0.6952433130705258
+              },
+              {
+                "name": "orders-20",
+                "action": {
+                  "type": "set",
+                  "key": "orders",
+                  "value": 20
+                },
+                "x": 0.43645123669302405,
+                "y": 0.7144774125637707
+              },
+              {
+                "name": "orders-30",
+                "action": {
+                  "type": "set",
+                  "key": "orders",
+                  "value": 30
+                },
+                "x": 0.48378049607171825,
+                "y": 0.7337115120570157
+              },
+              {
+                "name": "run",
+                "action": {
+                  "type": "run"
+                },
+                "x": 0.8043966313281807,
+                "y": 0.40076215009151644
+              }
+            ],
+            "geometry": "procedural print studio and noodle stall",
+            "device_performance": "not_measured"
+          }
         },
         {
           "name": "1-economies-of-scale: learning interaction and assessment",
@@ -141,9 +206,14 @@
           "name": "No browser errors",
           "status": "passed"
         }
-      ]
+      ],
+      "human_visual_review": "not_performed_by_this_script",
+      "device_performance": "not_measured"
     },
-    "validation_fingerprint": "faba32c71f34c1eaedd2e1e723fe5808cb828adad67d09b4192e017d61e02b16"
+    "validation_fingerprint": "c09b6b87536ca3a816a44b0899a21541602a6ed2abf8d6977b1bd5f4548082c2",
+    "human_review_status": "not_performed",
+    "content_review": "Catalog fixtures and evidence references checked. Reference links and content still require editorial review for distribution.",
+    "device_performance": "not_measured"
   },
   "deep_ui": {
     "status": "passed",
@@ -155,6 +225,7 @@
         "wrong_answers": "passed",
         "keyboard": "passed",
         "week_budget": "passed",
+        "prediction_and_evidence_pair": "passed",
         "reset": "passed"
       },
       {
@@ -164,6 +235,7 @@
         "wrong_answers": "passed",
         "keyboard": "passed",
         "week_budget": "passed",
+        "prediction_and_evidence_pair": "passed",
         "reset": "passed"
       },
       {
@@ -173,6 +245,7 @@
         "wrong_answers": "passed",
         "keyboard": "passed",
         "week_budget": "passed",
+        "prediction_and_evidence_pair": "passed",
         "reset": "passed"
       }
     ],
@@ -183,33 +256,57 @@
     "physical_device_review": "not_performed"
   },
   "package_tests": {
-    "passed": 49,
+    "passed": 56,
+    "failed": 0
+  },
+  "lesson_model_tests": {
+    "passed": 19,
     "failed": 0
   },
   "hosting_tests": {
     "passed": 7,
     "failed": 0
   },
-  "local_catalog": {
-    "status": "passed",
-    "viewports": [
-      1200,
-      390
-    ],
-    "activities": [
-      "opportunity-cost",
-      "inversion",
-      "economies-of-scale"
-    ],
-    "external_requests": 0,
-    "http_errors": 0
-  },
   "taxonomy_validator": "passed unchanged: 1590 topics, 3221 dependencies, 3261 standards, 183 clusters",
-  "model_verification": "Every outcome in design-brief.md \u00a74 re-derived by an independent script and asserted in test/economies-of-scale.test.mjs; each week's winning configuration is unique by exhaustive enumeration.",
-  "visual_review": "Claude inspected desktop (1200px), phone (390px, 320px) and dark-mode screenshots of every week, the stuck-pile and idle states, live playback frames and the finish screen. Human, learner and device reviews remain distinct.",
+  "munger_validator": "passed including corruption self-tests",
+  "model_verification": "Independent integer-pence outcomes and exhaustive winning-setup enumeration retained. New regressions reject decreasing-only and increasing-only observations, unsuitable comparison evidence and altered predictions; wrong predictions permit continued learning.",
+  "visual_review": "Sol 6.1 and Codex inspected desktop and phone screenshots; first action, prediction feedback and selected comparison are visible. Mobile playback remains visible until results are shown; idle stations no longer process goods. Browser checks remain separate from human learner/device review.",
+  "design_guidance": "learning-artifacts/AGENTS.md, linked from root AGENTS.md and taxonomy-to-lesson skill",
+  "agents": {
+    "coding": "Two Sol 6.1 agents",
+    "terra": "unavailable in session",
+    "astra": "not used for this revision"
+  },
   "deployment": {
-    "status": "blocked",
-    "reason": "No FIREBASE_TOKEN or Firebase login in this cloud environment; npm run check reported 'Failed to authenticate'. The live /economies-of-scale/ route still serves the earlier Little Works build."
+    "status": "published_and_verified",
+    "project_id": "gabreginatto-learning-lab",
+    "deployed_at": "2026-10-23T03:39:56.306Z",
+    "url": "https://gabreginatto-learning-lab.web.app/economies-of-scale/",
+    "public_verification": {
+      "status": "passed",
+      "files_verified": 39,
+      "browser": {
+        "status": "passed",
+        "checks": [
+          {
+            "viewport": 1200,
+            "catalog": "passed",
+            "activities": "passed",
+            "credits": "passed"
+          },
+          {
+            "viewport": 390,
+            "catalog": "passed",
+            "activities": "passed",
+            "credits": "passed"
+          }
+        ],
+        "external_requests": 0,
+        "http_errors": 0,
+        "physical_device_review": "not_performed"
+      },
+      "url": "https://gabreginatto-learning-lab.web.app/"
+    }
   },
   "expert_review": "not_performed",
   "learner_review": "not_performed",

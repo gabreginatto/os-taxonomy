@@ -42,7 +42,7 @@ const COPY={
     goal:'Make a profit on the day.',
     gate:'Run at least two different order sizes. Then a question appears here.',
     question:'Why did the cost per hoodie fall when you printed more?',
-    reasons:[['shared','The same £540 of leases was shared by more hoodies.'],['ink','Blanks and ink got cheaper per hoodie.'],['total','The day’s total cost went down.']],
+    reasons:[['shared','More hoodies shared the same £540 of leases.'],['ink','Ordering more blanks reduced the ink cost per hoodie.'],['total','The larger order reduced the total cost of the day.']],
     counters:{ink:'Look at the yellow part of the cost bar: every hoodie still uses £4 of blank and ink, whatever the volume. Which part of the bar stayed the same size?',total:'Compare the day-cost tiles: the total went up with volume. The saving is per hoodie, not in total.'},
     hint:'Before you run, look at the navy and teal blocks: £540 of leases, paid however many you print. Each hoodie also uses £4 of blank and ink. How many hoodies have to share the £540 before £24 each covers everything?',
     onlyOne:'That day hits the goal. Before you answer, run a different number of hoodies as well, so you have something to compare it with.',
@@ -54,7 +54,7 @@ const COPY={
     goal:'Deliver the order at a profit.',
     gate:'This question unlocks after a day when some tees get stuck. Monday is already set up — try it.',
     question:'On the day tees got stuck, what decided how many you could sell?',
-    reasons:[['slowest','The slowest station: one tunnel cures only 40 a day.'],['late','Two presses gave the studio room for 60; the other 20 were just late.'],['price','The second press raised the price per tee, so fewer were bought.']],
+    reasons:[['slowest','The tunnel’s 40-a-day limit capped finished output.'],['late','Press capacity set output; the remaining 20 count as sales later.'],['price','The second press raised the price, so the band bought fewer tees.']],
     counters:{late:'Stuck tees weren’t late: they were never cured, so they couldn’t be sold today, yet their ink was already paid for. A chain moves only as fast as its slowest step.',price:'The band wanted 60 all along and the price stayed £20. Look at where the red pile formed.'},
     hint:'Follow one pallet: press, then tunnel, then dock. Each press prints 30 a day; each tunnel cures 40. Which station can’t keep up?',
     onlyOne:'That day hits the goal. This question unlocks after you’ve seen a day where tees get stuck.',
@@ -63,13 +63,13 @@ const COPY={
   size:{
     week:'How big?',
     client:'A festival merch tent buys every shirt you cure today at £15 — up to 200.',
-    goal:'Find the most profitable size of studio. Map at least three different press counts on your ledger.',
-    gate:'Run at least three different numbers of presses. Then a question appears here.',
+    goal:'Find the most profitable size. Run at least three press counts, including a larger balanced setup with a higher cost per shirt; then select the two comparison runs.',
+    gate:'Run at least three press counts. Observe cost per shirt falling from a smaller balanced setup, then rising in a larger balanced setup. Avoid stuck shirts and surplus whole stations; select your comparison evidence.',
     question:'Past a certain size, cost per shirt rises again. Why?',
-    reasons:[['sync','Every new press team must sync with every existing one, so overhead grows faster than the saving.'],['ink','Blanks and ink cost more per shirt in a bigger studio.'],['lease','The studio lease gets bigger.']],
-    counters:{ink:'Blanks and ink are £4 a shirt at every size here. Look at the grey part of the cost bar as you add presses.',lease:'The navy studio lease is £480 at every size. What else grows as you add presses?'},
+    reasons:[['sync','More pairs of press teams add sync cost faster than the lease saving.'],['ink','The higher cost came from printing shirts that the tunnels could not finish.'],['lease','The higher cost came only from leasing spare whole tunnels.']],
+    counters:{ink:'That can explain a jammed setup, but your selected balanced comparison finishes every printed shirt. Compare its sync costs.',lease:'Extra idle tunnels can raise costs, but your selected comparison has only the tunnels it needs. Compare its sync costs.'},
     hint:'Use the preview before you run: committed cost ÷ shirts you can cure, plus £4. Keep the tunnels just big enough for the presses — each press prints 30, each tunnel cures 40.',
-    onlyOne:'Good day. Map at least three different press counts so you can see how size changes cost per shirt.',
+    onlyOne:'Observe both sides: a smaller balanced setup with higher cost per shirt, a better setup, and a larger balanced setup whose cost rises again. A jam or idle extra tunnel is different evidence.',
     debrief:'Economies, then diseconomies, of scale. Up to four presses the shared lease is spread over more shirts and cost per shirt falls (£22 → £16 → £14.67 → £14). After that, sync grows with every pair of teams — 6 pairs at four presses, 10 at five, 15 at six — and outruns the saving: £14.40 at five, £15 at six. In this model, four presses and three tunnels is the sweet spot.'
   },
   fall:{
@@ -78,7 +78,7 @@ const COPY={
     goal:'Make a profit on 60 shirts.',
     gate:'This question unlocks after a day where some of your capacity sits idle. Last week’s setup is ready to run.',
     question:'Why does last week’s best setup lose money now?',
-    reasons:[['idle','Leases and sync cost the same whether a press is busy or idle; now only 60 shirts share them.'],['ink','Blanks and ink got more expensive.'],['slow','The tunnels slowed down.']],
+    reasons:[['idle','Only 60 shirts now share the same leases and sync costs.'],['ink','The smaller order made blanks and ink cost more per shirt.'],['slow','The smaller order slowed the tunnels and lowered daily output.']],
     counters:{ink:'Still £4 a shirt. Compare the yellow block with the rest of the bar.',slow:'Each tunnel still cures 40 a day. Look for the dimmed stations: what are they costing?'},
     hint:'Each press prints 30 and each tunnel cures 40. What is the smallest studio that can still deliver all 60?',
     onlyOne:'That day hits the goal. This question unlocks after a day where some leased capacity sits idle — last week’s setup would show it.',
@@ -90,7 +90,7 @@ const COPY={
     goal:'Serve all 150 bowls at a profit.',
     gate:'Run at least two different setups. Then a question appears here.',
     question:'Which ideas from the print studio carried over to the stall?',
-    reasons:[['carried','The slowest station caps output, the pitch fee is cheaper per bowl at higher volume, and every extra cook adds sync with every other.'],['bigger','Bigger always serves cheaper.'],['flat','Cost per bowl doesn’t depend on how many you sell.']],
+    reasons:[['carried','Output follows the slowest station; volume shares the pitch fee; more cook pairs add sync.'],['bigger','Each extra wok spreads the pitch fee, so adding woks always lowers cost per bowl.'],['flat','The pitch fee stays fixed, so balancing stations changes output but never cost per bowl.']],
     counters:{bigger:'Check your ledger: past a point, adding woks raises the cost per bowl, because every cook has to sync with every other.',flat:'Compare a day that sold 80 bowls with one that sold 150: the same pitch fee is shared very differently.'},
     hint:'Each bench preps 80 bowls and each wok cooks 50. Too few benches leave woks waiting; too few woks leave prepped bowls to waste.',
     onlyOne:'That day hits the goal. Run one more, different setup to compare before you answer.',
@@ -118,19 +118,32 @@ function configs(level){
 const bestProfit=level=>Math.max(...configs(level).map(d=>dayResult(level,d).profit));
 const maxScale=level=>Math.max(...configs(level).map(d=>{const r=dayResult(level,d);return Math.max(r.total,r.revenue);}));
 const sameDials=(a,b)=>a.s1===b.s1&&a.s2===b.s2&&a.orders===b.orders;
+const runId=r=>r.attempt+':'+r.day;
+const classification=r=>r.stuck?'bottleneck':r.idle1||r.idle2?'idle':r.entered<r.cap1?'underused':'efficient';
+const efficientScale=r=>r.entered===r.cap1&&r.done===r.entered&&r.s2===Math.ceil(r.done/STUDIO.s2.cap);
+const predictionValues=['lower','same','higher'];
+const predictionActual=(average,reference)=>Math.abs(average-reference)<0.000001?'same':average<reference?'lower':'higher';
+const predictionReference=s=>levelRuns(s).at(-1)||null;
+const predictionNeeded=s=>['size','noodles'].includes(LEVELS[s.level].id)&&Boolean(predictionReference(s)&&!sameDials(predictionReference(s).dials,s.dials));
+const validComparison=s=>{
+  const rows=levelRuns(s),a=rows.find(r=>runId(r)===s.comparison?.baseline),b=rows.find(r=>runId(r)===s.comparison?.larger);
+  if(!a||!b)return false;
+  const x=dayResult(LEVELS[s.level],a.dials),y=dayResult(LEVELS[s.level],b.dials);
+  return x.s1===4&&x.s2===3&&efficientScale(x)&&y.s1>x.s1&&efficientScale(y)&&y.average>x.average;
+};
 const levelRuns=s=>s.runs.filter(r=>r.level===s.level);
 const currentRuns=s=>s.runs.filter(r=>r.level===s.level&&r.attempt===s.attempt);
 function gateOpen(s){
   const level=LEVELS[s.level],results=levelRuns(s).map(r=>dayResult(level,r.dials)),g=level.gate;
   if(g.type==='volumes')return new Set(results.map(r=>r.orders)).size>=g.count;
-  if(g.type==='sizes')return new Set(results.map(r=>r.s1)).size>=g.count;
+  if(g.type==='sizes')return new Set(results.map(r=>r.s1)).size>=g.count&&results.some(r=>r.s1<4&&efficientScale(r)&&r.average>1400)&&results.some(r=>r.s1>4&&efficientScale(r)&&r.average>1400);
   if(g.type==='configs')return new Set(levelRuns(s).map(r=>JSON.stringify(r.dials))).size>=g.count;
   if(g.type==='stuck')return results.some(r=>r.stuck>0);
   return results.some(r=>r.idle1>0||r.idle2>0);
 }
 const targetMet=(level,r)=>level.target==='best'?r.profit===bestProfit(level):r.profit>0;
 
-function startLevel(level,history,runs){const L=LEVELS[level];return {level,attempt:0,dials:{...L.start},runs,reason:null,help:false,history,complete:false};}
+function startLevel(level,history,runs){const L=LEVELS[level];return {level,attempt:0,dials:{...L.start},runs,reason:null,prediction:null,comparison:{baseline:null,larger:null},help:false,history,complete:false};}
 const initialState=()=>startLevel(0,[],[]);
 
 function outcome(level,r){
@@ -164,6 +177,7 @@ function assess(s){
   const r=dayResult(level,last.dials);
   if(!targetMet(level,r))return {...base,correct:false,kind,message:missMessage(level,r)};
   if(!gateOpen(s))return {...base,correct:false,kind,message:c.onlyOne};
+  if(level.id==='size'&&!validComparison(s))return {...base,correct:false,kind,message:'Select two actual ledger runs: your best balanced setup and a larger balanced setup with a higher cost per shirt. Jams and surplus whole stations do not demonstrate rising coordination cost.'};
   if(!s.reason)return {...base,correct:false,kind,message:'That run hits the goal. Now answer the question: '+c.question};
   if(s.reason!==level.correct)return {...base,correct:false,kind,message:'Your setup works. Your reason doesn’t fit the evidence yet: '+c.counters[s.reason]};
   return {...base,correct:true,kind,message:c.debrief};
@@ -172,17 +186,21 @@ function assess(s){
 function observe(s){
   const level=LEVELS[s.level],c=COPY[level.id],b=level.biz,runs=currentRuns(s),day=runs.length,last=runs.at(-1);
   const matches=Boolean(last&&sameDials(last.dials,s.dials)),preview=dayResult(level,s.dials),result=matches?dayResult(level,last.dials):null;
-  const ledger=levelRuns(s).map(r=>{const x=dayResult(level,r.dials);return {day:r.day,attempt:r.attempt,current:r.attempt===s.attempt,dials:r.dials,orders:x.orders,s1:x.s1,s2:x.s2,average:x.average,profit:x.profit,stuck:x.stuck,unfilled:x.unfilled,done:x.done};});
+  const ledger=levelRuns(s).map(r=>{const x=dayResult(level,r.dials);return {id:runId(r),classification:classification(x),total:x.total,idle1:x.idle1,idle2:x.idle2,cap1:x.cap1,cap2:x.cap2,prediction:r.prediction||null,day:r.day,attempt:r.attempt,current:r.attempt===s.attempt,dials:r.dials,orders:x.orders,s1:x.s1,s2:x.s2,average:x.average,profit:x.profit,stuck:x.stuck,unfilled:x.unfilled,done:x.done};});
   const history=s.history.map((h,i)=>{const L=LEVELS[i],x=dayResult(L,h.dials);return {...h,week:COPY[L.id].week,unit:L.unit,units:L.units,s1:x.s1,s2:x.s2,orders:x.orders,done:x.done,average:x.average,profit:x.profit};});
-  const cash=runs.reduce((sum,r)=>sum+dayResult(level,r.dials).profit,0);
+  const reference=predictionReference(s),referenceResult=reference?dayResult(level,reference.dials):null;
+  const rotation=(s.level+1)%c.reasons.length,reasons=[...c.reasons.slice(rotation),...c.reasons.slice(0,rotation)];
   const label='Week '+(s.level+1)+', '+(s.complete?'all five weeks complete':result?DAYS[day-1]+': '+outcome(level,result)+'; '+money(result.total)+' total, '+money2(result.average)+' per '+level.unit+', profit '+signed(result.profit):'next day '+(day<DAYS_PER_WEEK?DAYS[day]:'none — week over')+'; not run yet');
   return {
     level:s.level,levelId:level.id,kind:b.kind,week:s.level+1,weeks:LEVELS.length,title:c.week,client:c.client,goal:c.goal,
     unit:level.unit,units:level.units,price:level.price,orderChoices:level.orderChoices||null,limits:level.limits,
     s1Name:b.s1,s2Name:b.s2,variableRate:b.variable,syncStation:b.sync.station,chartX:level.chartX,ink:level.ink,baseLabel:b.baseLabel,variableLabel:b.variableLabel,syncLabel:b.sync.label,
     day,daysLeft:DAYS_PER_WEEK-day,nextDay:day<DAYS_PER_WEEK?DAYS[day]:null,weekOver:day>=DAYS_PER_WEEK,attempt:s.attempt,
-    dials:{...s.dials},preview,matches,result,lastDay:last?last.day:null,ledger,history,cash,
-    gateOpen:gateOpen(s),gate:c.gate,question:c.question,reasons:c.reasons,reason:s.reason,help:s.help,hint:c.hint,
+    dials:{...s.dials},preview,matches,result,lastDay:last?last.day:null,ledger,history,
+    predictionRequired:predictionNeeded(s)&&!matches,prediction:s.prediction,predictionOptions:[['lower','Lower cost per unit'],['same','Same cost per unit'],['higher','Higher cost per unit']],
+    predictionReference:reference?{id:runId(reference),s1:referenceResult.s1,s2:referenceResult.s2,average:referenceResult.average,done:referenceResult.done,total:referenceResult.total,profit:referenceResult.profit}:null,
+    predictionFeedback:matches?last.prediction||null:null,comparisonRequired:level.id==='size',comparison:{...s.comparison},comparisonOptions:level.id==='size'?ledger:[],comparisonValid:level.id==='size'&&validComparison(s),
+    gateOpen:gateOpen(s),gate:c.gate,question:c.question,reasons,reason:s.reason,help:s.help,hint:c.hint,
     complete:s.complete,maxScale:maxScale(level),
     outcome:result?outcome(level,result):null,
     committed:preview.committed,cured:result?result.done:null,stuck:result?result.stuck:null,unfilled:result?result.unfilled:null,
@@ -206,13 +224,22 @@ function validateInvariants(s){
   if(s.history.length!==(s.complete?LEVELS.length:s.level))return false;
   if(!s.history.every((h,i)=>h.level===LEVELS[i].id&&validDials(LEVELS[i],h.dials)&&targetMet(LEVELS[i],dayResult(LEVELS[i],h.dials))&&h.reason===LEVELS[i].correct))return false;
   const counts=new Map();
+  const previous=new Map();
   for(const r of s.runs){
     if(!Number.isInteger(r.level)||r.level<0||r.level>s.level||!Number.isInteger(r.attempt)||r.attempt<0||(r.level===s.level&&r.attempt>s.attempt))return false;
     if(!validDials(LEVELS[r.level],r.dials))return false;
+    const prior=previous.get(r.level),L=LEVELS[r.level],needs=['size','noodles'].includes(L.id)&&prior&&!sameDials(prior.dials,r.dials);
+    if(needs){
+      const q=r.prediction,x=dayResult(L,r.dials),ref=dayResult(L,prior.dials),actual=predictionActual(x.average,ref.average);
+      if(!q||!predictionValues.includes(q.value)||q.referenceId!==runId(prior)||q.referenceAverage!==ref.average||q.average!==x.average||q.actual!==actual||q.correct!==(q.value===actual))return false;
+    }else if(r.prediction!==null)return false;
+    previous.set(r.level,r);
     const key=r.level+':'+r.attempt,n=counts.get(key)||0;
     if(r.day!==n||n>=DAYS_PER_WEEK)return false;
     counts.set(key,n+1);
   }
+  if(s.prediction!==null&&!predictionValues.includes(s.prediction))return false;
+  if(!s.comparison||!['baseline','larger'].every(k=>s.comparison[k]===null||levelRuns(s).some(r=>runId(r)===s.comparison[k])))return false;
   if(s.reason!==null&&!COPY[level.id].reasons.some(([id])=>id===s.reason))return false;
   if(s.reason!==null&&!gateOpen(s))return false;
   return true;
@@ -226,18 +253,30 @@ function applyAction(s,action){
   if(type==='set'){
     const dials={...s.dials,[key]:value};
     if(!['orders','s1','s2'].includes(key)||!validDials(level,dials))throw Error('That setup is not available this week.');
-    return {...s,dials};
+    return {...s,dials,prediction:null};
+  }
+  if(type==='predict'){
+    if(!predictionNeeded(s)||!predictionValues.includes(value))throw Error('Choose a prediction for a changed setup.');
+    return {...s,prediction:value};
+  }
+  if(type==='compare'){
+    if(level.id!=='size'||!['baseline','larger'].includes(key)||!levelRuns(s).some(r=>runId(r)===value))throw Error('Select a run from this week’s ledger.');
+    return {...s,comparison:{...s.comparison,[key]:value}};
   }
   if(type==='run'){
     const day=currentRuns(s).length;
     if(day>=DAYS_PER_WEEK)throw Error('The week is over; restart the week to run more days.');
-    return {...s,runs:[...s.runs,{level:s.level,attempt:s.attempt,day,dials:{...s.dials}}]};
+    const needed=predictionNeeded(s),reference=predictionReference(s),average=dayResult(level,s.dials).average;
+    if(needed&&!s.prediction)throw Error('Predict the cost per unit before running this changed setup.');
+    const referenceAverage=needed?dayResult(level,reference.dials).average:null;
+    const prediction=needed?{value:s.prediction,referenceId:runId(reference),referenceAverage,average,actual:predictionActual(average,referenceAverage),correct:s.prediction===predictionActual(average,referenceAverage)}:null;
+    return {...s,prediction:null,runs:[...s.runs,{level:s.level,attempt:s.attempt,day,dials:{...s.dials},prediction}]};
   }
   if(type==='reason'){
     if(!gateOpen(s)||!COPY[level.id].reasons.some(([id])=>id===value))throw Error('That question is not open yet.');
     return {...s,reason:value};
   }
-  if(type==='retry')return {...s,attempt:s.attempt+1,dials:{...level.start},reason:null};
+  if(type==='retry')return {...s,attempt:s.attempt+1,dials:{...level.start},reason:null,prediction:null,comparison:{baseline:null,larger:null}};
   if(type==='next'){
     if(!assess(s).correct)throw Error('Finish this week before moving on.');
     const history=[...s.history,{level:level.id,dials:{...s.dials},reason:s.reason,help:s.help,attempts:s.attempt+1,days:currentRuns(s).length}];
@@ -250,11 +289,12 @@ function applyAction(s,action){
 const set=(key,value)=>({type:'set',key,value}),run={type:'run'},reason=value=>({type:'reason',value}),next={type:'next'};
 const winWeek1=[set('orders',20),run,set('orders',30),run,reason('shared'),next];
 const winWeek2=[...winWeek1,run,set('s2',2),run,reason('slowest'),next];
-const winWeek3=[...winWeek2,run,set('s1',2),set('s2',2),run,set('s1',4),set('s2',3),run,reason('sync'),next];
+const predict=value=>({type:'predict',value}),compare=(key,value)=>({type:'compare',key,value});
+const winWeek3=[...winWeek2,run,set('s1',5),set('s2',4),predict('lower'),run,set('s1',4),set('s2',3),predict('lower'),run,compare('baseline','0:2'),compare('larger','0:1'),reason('sync'),next];
 const winWeek4=[...winWeek3,run,set('s1',2),set('s2',2),run,reason('idle'),next];
 
 export const plugin={
-  id:'economies-of-scale',version:'2.0.0',topicIds:['mt_9gpUHWVKMR'],representation:'threejs',audienceLabel:'Age 15 · Economies of scale',
+  id:'economies-of-scale',version:'2.1.0',topicIds:['mt_9gpUHWVKMR'],representation:'threejs',audienceLabel:'Age 15 · Economies of scale',
   title:'Press Club',
   prompt:'Run a merch print studio for five weeks. Lease presses and curing tunnels, ship orders, and find out when getting bigger makes each shirt cheaper — and when it stops.',
   reason:'Requested colorful, tactile 3D with meaningful direct interaction. The studio floor shows pallets flowing through presses and tunnels, a pile where the bottleneck jams, sync cables between press teams and a live cost bar; stations are added, removed and run by picking them in the scene, with matching buttons. GSAP replays results; the pure cost model determines every number and the assessment.',
@@ -268,14 +308,14 @@ export const plugin={
     'Blanks and ink cost £4 per printed shirt at every size. Bulk purchasing discounts, a real second source of economies of scale, are deliberately excluded.',
     'Finished output = min(orders, first-station capacity, second-station capacity). The first station works until the order or its capacity is reached; anything it processes that the second station cannot finish is paid for and worth nothing that day (no inventory or carry-over).',
     'Each client sets the price and buys only confirmed orders (week 3’s buyer takes everything up to 200). Quality is constant; no uncertainty, defects, wages beyond the leases, tax or finance.',
-    'Each pallet in the scene is exactly 10 units from the model. Six days per week limit trial and error; a restarted week keeps earlier days on the ledger, faded.',
+    'Each pallet in the scene is exactly 10 units from the model. Six runs per training round are an experiment allowance, not a cash balance or solvency test. Resetting the round restores the allowance and keeps prior results on the ledger.',
     'Costs & Revenue (ages 7–9) is a partial foundation. Fixed vs variable cost, bottlenecks, scale curves and coordination are authored extensions; whole-number money arithmetic and reading a simple chart are assumed, not inferred from age.',
     'Not taught or assessed: marginal cost by name, short- vs long-run cost curves, demand curves and pricing, supplier bargaining, learning curves, network effects, inventory. A correct week is one bounded response, not mastery.',
     'Local Munger attribution relies on an unofficial transcript mirror; this activity quotes no speech and makes no claim about who invented the idea. No economics expert, learner or physical-device review has been performed.'
   ],
   sources:['https://github.com/gabreginatto/os-taxonomy/blob/main/data/topics.json','Munger_Models/mental-models.json#scale','Munger_Models/course-guidelines.md','learning-artifacts/lessons/economies-of-scale/design-brief.md'],
   contentReview:{status:'source_reviewed',reviewer:'Claude (engineer) with Fable (design advisor)',scope:'Exact local Costs & Revenue evidence, local scale research, explicit fictional equations, and an independent re-derivation of every tabulated outcome. No external economics source retrieved; no expert, learner or device review.'},
-  scenario:[{time:1,action:set('orders',20)},{time:2,action:run},{time:3,action:set('orders',30)},{time:4,action:run}],
+  scenario:winWeek3.slice(0,-1).map((action,i)=>({time:(i+1)/2,action})),
   fixtures:[
     {actions:[],expectedObservation:{day:0,committed:54000,cured:null,matches:false},expectedCorrect:false},
     {actions:[run],expectedObservation:{cured:10,total:58000,average:5800,profit:-34000},expectedCorrect:false},
@@ -286,15 +326,19 @@ export const plugin={
     {actions:[...winWeek1,run],expectedObservation:{level:1,cured:40,stuck:20,unfilled:20,total:90000,average:2250,profit:-10000},expectedCorrect:false},
     {actions:[...winWeek1,run,set('s2',2),run,reason('slowest')],expectedObservation:{cured:60,stuck:0,total:96000,average:1600,profit:24000},expectedCorrect:true},
     {actions:[...winWeek1,run,set('s1',1),set('s2',2),run],expectedObservation:{cured:30,unfilled:30,total:72000,profit:-12000},expectedCorrect:false},
-    {actions:[...winWeek2,run,set('s1',2),set('s2',2),run,set('s1',5),set('s2',4),run,reason('sync')],expectedObservation:{cured:150,total:216000,average:1440,profit:9000},expectedCorrect:false},
-    {actions:[...winWeek2,run,set('s1',4),set('s2',2),run],expectedObservation:{cured:80,stuck:40,total:162000,average:2025,profit:-42000},expectedCorrect:false},
+    {actions:[...winWeek2,run,set('s1',2),set('s2',2),predict('lower'),run,set('s1',5),set('s2',4),predict('lower'),run],expectedObservation:{cured:150,total:216000,average:1440,profit:9000},expectedCorrect:false},
+    {actions:[...winWeek2,run,set('s1',4),set('s2',2),predict('lower'),run],expectedObservation:{cured:80,stuck:40,total:162000,average:2025,profit:-42000},expectedCorrect:false},
     {actions:winWeek3.slice(0,-1),expectedObservation:{cured:120,total:168000,average:1400,profit:12000},expectedCorrect:true},
     {actions:[...winWeek3,run],expectedObservation:{level:3,cured:60,total:144000,average:2400,profit:-42000},expectedCorrect:false},
     {actions:[...winWeek3,run,set('s1',2),run],expectedObservation:{cured:60,total:102000,average:1700,profit:0},expectedCorrect:false},
     {actions:winWeek4.slice(0,-1),expectedObservation:{cured:60,total:96000,average:1600,profit:6000},expectedCorrect:true},
     {actions:[...winWeek4,set('s2',3),run],expectedObservation:{level:4,cured:80,stuck:0,unfilled:70,total:63200,profit:-15200},expectedCorrect:false},
     {actions:[...winWeek4,set('s1',2),set('s2',2),run],expectedObservation:{cured:100,stuck:50,total:74500,profit:-14500},expectedCorrect:false},
-    {actions:[...winWeek4,run,set('s1',2),set('s2',3),run,reason('carried')],expectedObservation:{cured:150,total:86000,profit:4000},expectedCorrect:true},
+    {actions:[...winWeek4,run,set('s1',2),set('s2',3),predict('lower'),run,reason('carried')],expectedObservation:{cured:150,total:86000,profit:4000},expectedCorrect:true},
+    {actions:[...winWeek2,run,set('s1',2),set('s2',2),predict('lower'),run,set('s1',4),set('s2',3),predict('lower'),run],expectedObservation:{gateOpen:false,comparisonValid:false},expectedCorrect:false},
+    {actions:[...winWeek2,set('s1',4),set('s2',3),run,set('s1',5),set('s2',4),predict('higher'),run,set('s1',6),set('s2',5),predict('higher'),run],expectedObservation:{gateOpen:false,comparisonValid:false},expectedCorrect:false},
+    {actions:winWeek3.slice(0,-4),expectedObservation:{gateOpen:true,comparisonValid:false},expectedCorrect:false},
+    {actions:[...winWeek2,run,set('s1',5),set('s2',4),predict('higher'),run],expectedObservation:{day:2,gateOpen:false},expectedCorrect:false},
     {actions:[run,run,run,run,run,run],expectedObservation:{day:6,daysLeft:0,weekOver:true},expectedCorrect:false}
   ],
   acceptance:[
@@ -304,6 +348,9 @@ export const plugin={
     {action:'click',selector:'#pc-orders-30'},
     {action:'click',selector:'#pc-run'},
     {action:'assert_text',selector:'#pc-tile-avg',text:'£22.00'},
+    {action:'assert_observed',field:'daysLeft',value:4},
+    {action:'assert_observed',field:'predictionRequired',value:false},
+    {action:'assert_observed',field:'gateOpen',value:true},
     {action:'click',selector:'#pc-reason-shared'},
     {action:'assert_observed',field:'profit',value:6000}
   ],
@@ -329,6 +376,8 @@ function createPresentation(root,{dispatch}){
   const style=document.createElement('style');style.textContent=CSS;document.head.append(style);
   const surface=document.createElement('div');surface.className='pc';surface.innerHTML=TEMPLATE;root.append(surface);
   const $=id=>surface.querySelector('#'+id);
+  surface.querySelector('.pc-ledger').open=!matchMedia('(max-width:900px)').matches;
+  const revealResult=()=>{if(matchMedia('(max-width:900px)').matches)surface.querySelector('.pc-result')?.scrollIntoView({block:'start',behavior:'instant'});};
   const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Adopt the host's shared Check / Start again / feedback controls so they sit inside the game.
@@ -530,7 +579,7 @@ function createPresentation(root,{dispatch}){
     const gap=Math.min(0.42,Math.max(0.12,2.6/Math.max(P,1))),n1=o.dials.s1,n2=o.dials.s2,s1Top=specs.s1.type==='press'?0.55:0.6;
     const items=[];
     for(let i=0;i<P;i++){
-      const u=i%n1,cured=i<D,j=cured?i%n2:null,a0=i*gap;
+      const u=Math.min(n1-1,Math.floor(i/Math.max(1,r.cap1/n1/10))),cured=i<D,j=cured?Math.min(n2-1,Math.floor(i/Math.max(1,r.cap2/n2/10))):null,a0=i*gap;
       const intake=intakeSlot(i,P),sx=unitX(specs.s1,u);
       const k={i,u,j,cured,a0,a1:a0+0.38,a2:a0+0.7,a3:a0+1.05,a4:a0+1.4,a5:a0+1.75};
       k.points=[{x:intake.x,y:0.02,z:intake.z},{x:sx,y:s1Top,z:ROWS.s1+0.12},{x:sx,y:s1Top,z:ROWS.s1+0.12}];
@@ -676,7 +725,7 @@ function createPresentation(root,{dispatch}){
     const groups=new Map();pts.forEach(p=>{const k=p[o.chartX];groups.set(k,[...(groups.get(k)||[]),p]);});
     for(const [k,group] of groups)group.forEach((p,i)=>{
       const x=xOf(k)+(i-(group.length-1)/2)*Math.min(13,(R-L)/cats.length/Math.max(group.length,1)),y=yOf(p.average/100),ok=!p.stuck&&!p.unfilled;
-      svg+='<g class="pc-dot'+(p.current?'':' pc-old')+'"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="5.5" class="'+(ok?'pc-filled':'pc-hollow')+'"/>'+(p.stuck?'<line x1="'+(x-4).toFixed(1)+'" x2="'+(x+4).toFixed(1)+'" y1="'+(y+9).toFixed(1)+'" y2="'+(y+9).toFixed(1)+'" class="pc-tick"/>':'')+'<text x="'+x.toFixed(1)+'" y="'+(y-9).toFixed(1)+'" class="pc-day" text-anchor="middle">'+DAY_SHORT[p.day]+'</text></g>';
+      svg+='<g class="pc-dot'+(p.current?'':' pc-old')+'"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="5.5" class="'+(p.classification==='underused'?'pc-underused':p.classification==='idle'?'pc-idle':p.classification==='bottleneck'?'pc-waste':ok?'pc-filled':'pc-hollow')+'"/>'+(p.stuck?'<line x1="'+(x-4).toFixed(1)+'" x2="'+(x+4).toFixed(1)+'" y1="'+(y+9).toFixed(1)+'" y2="'+(y+9).toFixed(1)+'" class="pc-tick"/>':'')+'<text x="'+x.toFixed(1)+'" y="'+(y-9).toFixed(1)+'" class="pc-day" text-anchor="middle">'+DAY_SHORT[p.day]+'</text></g>';
     });
     if(star&&o.result){const k=o.dials[o.chartX],x=xOf(k),y=yOf(o.result.average/100);svg+='<path class="pc-star" d="'+starPath(x,y-1,11,5)+'"/>';}
     return svg+'</svg>';
@@ -685,7 +734,18 @@ function createPresentation(root,{dispatch}){
     if(o.chartX==='orders')return p.orders+' '+o.units;
     return plural(p.s1,o.s1Name.one,o.s1Name.many)+' and '+plural(p.s2,o.s2Name.one,o.s2Name.many);
   }
+  function ledgerDetails(o){
+    return '<p class="pc-fixed-note">These are individual experiments, not a long-run average-cost curve. Compare both stations and utilisation.</p>'+o.ledger.map(p=>'<details class="pc-run-detail"><summary>'+esc(DAYS[p.day])+' · '+esc(describeSetup(o,p))+' · '+money2(p.average)+'/unit · '+esc(p.classification==='bottleneck'?'Bottleneck / wasted work':p.classification==='idle'?'Idle extra stations':p.classification==='underused'?'Partly used capacity':'Balanced, efficient run')+'</summary><p>'+esc(describeSetup(o,p))+'; capacities '+p.cap1+' / '+p.cap2+'; output '+p.done+'; stuck '+p.stuck+'; idle stations '+p.idle1+' / '+p.idle2+'; total cost '+money(p.total)+'; profit '+signed(p.profit)+'. '+(p.current?'Current attempt.':'Earlier attempt.')+(p.prediction?' Prediction '+p.prediction.value+'; observed '+p.prediction.actual+' ('+money2(p.prediction.referenceAverage)+' → '+money2(p.prediction.average)+').':'')+'</p></details>').join('');
+  }
   function think(o){
+    const reference=o.predictionReference;
+    $('pc-prediction').hidden=!o.predictionRequired;
+    $('pc-prediction').innerHTML=o.predictionRequired?'<p><b>Before this test:</b> compared with '+esc(describeSetup(o,reference))+', '+money2(reference.average)+' per '+esc(o.unit)+', what will happen to cost per '+esc(o.unit)+'?</p><div class="pc-prediction-options">'+o.predictionOptions.map(([id,label])=>'<button id="pc-predict-'+id+'" data-pc="predict" data-value="'+id+'" aria-pressed="'+(o.prediction===id)+'">'+esc(label)+'</button>').join('')+'</div>':'';
+    const pf=o.predictionFeedback;
+    $('pc-prediction-feedback').textContent=pf?'Your prediction: '+pf.value+'. Observed: '+pf.actual+' ('+money2(pf.referenceAverage)+' → '+money2(pf.average)+'). '+(pf.correct?'Matched.':'Revise your explanation using the result.'):'';
+    $('pc-comparison').hidden=!o.comparisonRequired;
+    $('pc-comparison').innerHTML=o.comparisonRequired?'<p><b>Select your evidence pair.</b> Choose the efficient run you think is best, then a larger efficient run that tests whether growing still helps. Each row shows both stations.</p>'+['baseline','larger'].map(key=>'<label>'+ (key==='baseline'?'Your best efficient run':'Larger efficient studio')+'<select id="pc-compare-'+key+'" data-compare="'+key+'"><option value="" disabled>Choose a test day…</option>'+o.comparisonOptions.map(p=>'<option value="'+p.id+'" '+(o.comparison[key]===p.id?'selected':'')+'>'+esc(DAYS[p.day]+' · '+describeSetup(o,p)+' · '+p.done+' sold · '+money2(p.average)+' each · '+p.classification)+'</option>').join('')+'</select></label>').join('')+'<p class="pc-selected-pair">'+['baseline','larger'].map(key=>{const p=o.comparisonOptions.find(p=>p.id===o.comparison[key]);return p?esc(describeSetup(o,p))+': '+p.done+' output, '+money(p.total)+' cost, '+signed(p.profit)+' profit, '+money2(p.average)+'/unit':'No '+key+' selected';}).join('<br>')+'</p>':'';
+
     $('pc-question').textContent=o.gateOpen?o.question:'Your question';
     $('pc-gate').textContent=o.gateOpen?'':o.gate;$('pc-gate').hidden=o.gateOpen;
     $('pc-reasons').innerHTML=o.gateOpen?o.reasons.map(([id,text])=>'<button id="pc-reason-'+id+'" data-pc="reason" data-value="'+id+'" aria-pressed="'+(o.reason===id)+'">'+esc(text)+'</button>').join(''):'';
@@ -706,7 +766,7 @@ function createPresentation(root,{dispatch}){
     $('pc-title').textContent=o.complete?'Grow for a reason':o.title;
     $('pc-client').textContent=o.complete?'Three rules carried you through five weeks: spread fixed costs, find the bottleneck, and stop growing when coordination costs outrun the saving.':o.client;
     $('pc-goal').textContent=o.complete?'':'Goal: '+o.goal;$('pc-goal').hidden=o.complete;
-    $('pc-cash').textContent=o.complete?'':'Cash this week '+signed(o.cash);
+    $('pc-cash').textContent=o.complete?'':'Six test days · reset allowed';
     $('pc-days').innerHTML=o.complete?'':DAY_SHORT.map((d,i)=>'<li data-state="'+(i<o.day?'done':i===o.day?'next':'')+'" title="'+DAYS[i]+'">'+d+'</li>').join('');
     $('pc-days').setAttribute('aria-label',o.daysLeft+' of 6 days left this week');
     $('pc-main').hidden=o.complete;$('pc-finish').hidden=!o.complete;
@@ -714,26 +774,29 @@ function createPresentation(root,{dispatch}){
     const b=o.preview;
     $('pc-preview').innerHTML='<span><b>'+money(b.committed)+'</b> committed today</span><span>Can '+esc(o.s1Name.can)+' <b>'+b.cap1+'</b></span><span>Can '+esc(o.s2Name.can)+' <b>'+b.cap2+'</b></span><span>'+(o.levelId==='size'?'Buyer takes up to <b>200</b>':'Orders <b>'+b.orders+'</b>')+'</span><span>Price <b>'+money(o.price)+'</b></span>';
     $('pc-dials').innerHTML=dials(o);
-    const runLabel=o.weekOver?'Week over':(o.kind==='noodles'?'Open the stall · ':'Run ')+o.nextDay;
-    $('pc-run').textContent=runLabel;$('pc-run').disabled=o.weekOver;
+    const runLabel=o.weekOver?'Week over':o.predictionRequired&&!o.prediction?'Predict above, then run':(o.kind==='noodles'?'Open the stall · ':'Run ')+o.nextDay;
+    $('pc-run').textContent=runLabel;$('pc-run').disabled=o.weekOver||(o.predictionRequired&&!o.prediction);
     $('pc-weekover').hidden=!o.weekOver;
     $('pc-legend').innerHTML=[[PALETTE.lease,o.baseLabel],[PALETTE.s1,o.kind==='studio'?'Presses':'Extra benches'],[PALETTE.s2,o.kind==='studio'?'Extra tunnels':'Woks'],[PALETTE.sync,o.syncLabel],[PALETTE.variable,o.variableLabel],[PALETTE.revenue,'Revenue flag']].map(([c,t])=>'<span><i style="background:'+c+'"></i>'+esc(t)+'</span>').join('');
     $('pc-chart').innerHTML=ledger(o);
+    $('pc-ledger-details').innerHTML=ledgerDetails(o);
     think(o);
     renderer.domElement.setAttribute('aria-label',(o.kind==='studio'?'Print studio floor':'Noodle stall')+': '+plural(o.dials.s1,o.s1Name.one,o.s1Name.many)+', '+plural(o.dials.s2,o.s2Name.one,o.s2Name.many)+'. '+(o.result?o.outcome:'Not run yet')+'. Every scene action has a button beside the scene.');
     // Rebuild the floor when the week or the setup changes; replay a fresh run, otherwise draw a still frame.
     const nextSignature=[o.level,o.attempt,o.dials.orders,o.dials.s1,o.dials.s2,o.weekOver&&!o.matches].join(':');
     // A run is replayed only when it is exactly one new day in the same week, and never while seeking.
+    const dayAdvanced=previous&&previous.level===o.level&&o.day===previous.day+1;
     const freshRun=!seeking&&!reduced()&&o.matches&&previous&&previous.level===o.level&&previous.attempt===o.attempt&&o.day===previous.day+1;
     previous={level:o.level,attempt:o.attempt,day:o.day};
     if(nextSignature!==signature||seeking||freshRun){signature=nextSignature;build(o);}
     if(freshRun)play();else{killTweens();apply(o.matches?view.schedule.T:-1);}
     if(levelChanged&&!seeking&&o.week>1)$('pc-title').focus({preventScroll:false});
     else if(active&&!seeking){const el=app.querySelector('#'+active);if(el&&!el.disabled)el.focus({preventScroll:true});else if(active==='pc-run')$('pc-run').focus({preventScroll:true});}
+    if(dayAdvanced&&!seeking&&!freshRun)revealResult();
   }
   function play(){
     killTweens();clock={t:0};apply(0);
-    tween=gsap.to(clock,{t:view.schedule.T,duration:view.schedule.T,ease:'none',onUpdate:()=>apply(clock.t),onComplete:()=>{tween=null;apply(view.schedule.T);}});
+    tween=gsap.to(clock,{t:view.schedule.T,duration:view.schedule.T,ease:'none',onUpdate:()=>apply(clock.t),onComplete:()=>{tween=null;apply(view.schedule.T);revealResult();}});
   }
   function killTweens(){if(tween){tween.kill();tween=null;}if(pulse){pulse.kill();pulse=null;}}
   function onAssessment(a){
@@ -753,9 +816,12 @@ function createPresentation(root,{dispatch}){
     const b=event.target.closest('[data-pc]');if(!b||b.disabled)return;
     const kind=b.dataset.pc;
     if(kind==='set')dispatch({type:'set',key:b.dataset.key,value:Number(b.dataset.value)});
+    else if(kind==='predict')dispatch({type:'predict',value:b.dataset.value});
     else if(kind==='reason')dispatch({type:'reason',value:b.dataset.value});
   }
   surface.addEventListener('click',onClick);
+  const onCompare=e=>{if(e.target.dataset.compare)dispatch({type:'compare',key:e.target.dataset.compare,value:e.target.value});};
+  surface.addEventListener('change',onCompare);
   $('pc-run').addEventListener('click',()=>dispatch({type:'run'}));
   $('pc-retry').addEventListener('click',()=>dispatch({type:'retry'}));
   $('pc-help').addEventListener('click',()=>dispatch({type:'help'}));
@@ -771,6 +837,7 @@ function createPresentation(root,{dispatch}){
     if(!down||Math.hypot(e.clientX-down.x,e.clientY-down.y)>10){down=null;return;}down=null;
     const action=hit(e);if(!action||!observed||observed.complete)return;
     if(action.type==='run'&&observed.weekOver)return;
+    if(action.type==='run'&&observed.predictionRequired&&!observed.prediction){$('pc-prediction').querySelector('button')?.focus();return;}
     dispatch(action);
   };
   const onMove=e=>{renderer.domElement.style.cursor=hit(e)?'pointer':'default';};
@@ -784,7 +851,7 @@ function createPresentation(root,{dispatch}){
     dispose(){
       disposed=true;killTweens();resizeObserver.disconnect();
       renderer.domElement.removeEventListener('pointerdown',onDown);renderer.domElement.removeEventListener('pointerup',onUp);renderer.domElement.removeEventListener('pointermove',onMove);renderer.domElement.removeEventListener('pointercancel',onCancel);
-      surface.removeEventListener('click',onClick);
+      surface.removeEventListener('click',onClick);surface.removeEventListener('change',onCompare);
       for(const g of geos.values())g.dispose();for(const m of mats.values())m.dispose();for(const m of owned)m.dispose();
       renderer.dispose();renderer.forceContextLoss?.();
       for(const home of adopted){home.parent.insertBefore(home.el,home.next&&home.next.parentNode===home.parent?home.next:null);home.el.textContent=home.text;}
@@ -809,18 +876,18 @@ const TEMPLATE=`
   <section class="pc-stage" aria-label="Studio floor">
     <div class="pc-world" id="pc-world"><div class="pc-badges" id="pc-badges" aria-hidden="true"></div></div>
     <p class="pc-legend" id="pc-legend" aria-label="Cost bar colours"></p>
-    <div class="pc-card pc-ledger"><h3>Your ledger</h3><div id="pc-chart" class="pc-chart"></div><p class="pc-key"><span><i class="k-filled"></i>everything sold</span><span><i class="k-hollow"></i>orders missed or stuck</span><span><i class="k-tick"></i>stuck pile</span></p></div>
+    <details class="pc-card pc-ledger"><summary>Your experiment ledger & exact run details</summary><div id="pc-chart" class="pc-chart"></div><p class="pc-key"><span><i class="k-filled"></i>balanced / efficient</span><span><i class="k-idle"></i>idle extra stations</span><span><i class="k-underused"></i>partly used capacity</span><span><i class="k-hollow"></i>bottleneck / waste</span><span><i class="k-tick"></i>stuck pile</span></p><div id="pc-ledger-details"></div></details>
   </section>
   <section class="pc-side">
     <div class="pc-card pc-setup">
       <p class="pc-preview" id="pc-preview"></p>
       <div id="pc-dials" class="pc-dials"></div>
-      <button id="pc-run" class="pc-run"></button>
-      <div id="pc-weekover" class="pc-weekover" hidden><p>All six days are used. Your days stay on the ledger, faded.</p><button id="pc-retry">Restart this week</button></div>
+      <div id="pc-prediction" class="pc-prediction" hidden></div><button id="pc-run" class="pc-run"></button>
+      <div id="pc-weekover" class="pc-weekover" hidden><p>All six test days are used. Reset this experiment freely; earlier evidence stays on the ledger, faded.</p><button id="pc-retry">Restart this week</button></div>
     </div>
     <div class="pc-card pc-result">
       <p class="pc-outcome" id="pc-outcome" role="status"></p>
-      <div class="pc-tiles">
+      <p id="pc-prediction-feedback" class="pc-prediction-feedback"></p><div class="pc-tiles">
         <div id="pc-tile-cured"><span></span><strong></strong></div>
         <div id="pc-tile-cost"><span></span><strong></strong></div>
         <div id="pc-tile-avg"><span></span><strong></strong></div>
@@ -828,7 +895,7 @@ const TEMPLATE=`
       </div>
     </div>
     <div class="pc-card pc-think">
-      <h3 id="pc-question"></h3>
+      <div id="pc-comparison" class="pc-comparison" hidden></div><h3 id="pc-question"></h3>
       <p id="pc-gate" class="pc-gate"></p>
       <div id="pc-reasons" class="pc-reasons" role="group" aria-labelledby="pc-question"></div>
       <div class="pc-checkrow"><span id="pc-check-slot"></span><button id="pc-help" class="pc-quiet">Hint</button></div>
@@ -901,7 +968,7 @@ body:has(.press-club){background:var(--pc-page,#fbf7f0)}
 .pc-tiles div[data-tone=good] strong{color:var(--pc-good)}.pc-tiles div[data-tone=bad] strong{color:var(--pc-bad)}
 .pc-chart svg{width:100%;height:auto;display:block}.pc-ax{font-size:10px;fill:var(--pc-soft)}.pc-axname{font-size:10px;fill:var(--pc-soft);font-weight:700}.pc-axis{stroke:var(--pc-line);stroke-width:1.5}.pc-grid{stroke:var(--pc-line);stroke-dasharray:2 3}
 .pc-empty{font-size:12px;fill:var(--pc-soft)}.pc-filled{fill:#2bb3a3;stroke:#0f766e;stroke-width:1.5}.pc-hollow{fill:var(--pc-card);stroke:#0f766e;stroke-width:2}.pc-tick{stroke:#dc2626;stroke-width:3;stroke-linecap:round}
-.pc-day{font-size:9px;font-weight:800;fill:var(--pc-ink)}.pc-old{opacity:.35}.pc-star{fill:#eab308;stroke:#a16207;stroke-width:1}
+.pc-underused{fill:#c4b5fd;stroke:#7c3aed;stroke-width:2}.k-underused{background:#c4b5fd}.pc-idle{fill:#fbbf24;stroke:#a16207;stroke-width:2}.pc-waste{fill:var(--pc-card);stroke:#dc2626;stroke-width:2}.k-idle{background:#fbbf24}.pc-day{font-size:9px;font-weight:800;fill:var(--pc-ink)}.pc-old{opacity:.35}.pc-star{fill:#eab308;stroke:#a16207;stroke-width:1}
 .pc-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin:6px 0 0;font-size:11px;color:var(--pc-soft)}.pc-key i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
 .k-filled{background:#2bb3a3}.k-hollow{border:2px solid #0f766e;box-sizing:border-box}.pc-key .k-tick{width:10px;height:3px;border-radius:2px;background:#dc2626;vertical-align:2px}
 .pc-gate{margin:0;color:var(--pc-soft);font-size:14px;line-height:1.45}
@@ -916,8 +983,9 @@ body:has(.press-club){background:var(--pc-page,#fbf7f0)}
 .pc-finish-list em{font-style:normal;color:var(--pc-soft)}.pc-ideas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.pc-ideas p{margin:0;font-size:14px;line-height:1.45}
 .pc-foot{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}.pc-foot details{flex:1;min-width:240px;font-size:13px;line-height:1.5;color:var(--pc-soft)}.pc-foot summary{cursor:pointer;font-weight:700;color:var(--pc-ink);min-height:44px;display:flex;align-items:center}
 .pc-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media (max-width:900px){.pc-main{display:flex;flex-direction:column}.pc-stage,.pc-side{display:contents}.pc-world{order:1;aspect-ratio:4/3;max-height:330px;width:100%}.pc-setup{order:2}.pc-result{order:3}.pc-legend{order:4;margin:0}.pc-ledger{order:5}.pc-think{order:6}}
-@media (max-width:640px){.press-club{padding:14px 12px}.press-club .lede{display:none}.press-club .pill{display:none}.pc-week{padding:12px}.pc-client{font-size:14px}.pc-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.pc-finish-list li{grid-template-columns:1fr}.pc-ideas{grid-template-columns:1fr}.pc-days li{width:26px;height:26px}.pc-legend{font-size:11px;gap:4px 10px}}
-@media (max-width:360px){.pc-stepper-name small{font-size:11px}.pc-tiles strong{font-size:17px}.pc-preview{font-size:12px;margin-bottom:8px}.pc-preview span{padding:4px 7px}.pc-fixed-note{display:none}.pc-week h2{font-size:21px}.pc-client{font-size:13px;line-height:1.4}.pc-goal{font-size:13px;padding:6px 12px}.pc-goal-row{margin-top:8px;gap:8px}.pc-world{max-height:205px}.pc{gap:10px}}
+@media (max-width:900px){.pc-main{display:flex;flex-direction:column}.pc-stage,.pc-side{display:contents}.pc-world{order:1;aspect-ratio:4/3;max-height:330px;width:100%}.pc-setup{order:2}.pc-result{order:3}.pc-think{order:4}.pc-legend{order:5;margin:0}.pc-ledger{order:6}}
+@media (max-width:640px){.press-club{padding:14px 12px}.press-club .lede{display:none}.press-club .pill{display:none}.pc-week{padding:12px}.pc-client{font-size:14px}.pc-tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.pc-tiles div{padding:7px 5px}.pc-tiles strong{font-size:16px}.pc-tiles span{font-size:9px;letter-spacing:0}.pc-finish-list li{grid-template-columns:1fr}.pc-ideas{grid-template-columns:1fr}.pc-days li{width:26px;height:26px}.pc-legend{font-size:11px;gap:4px 10px}}
+@media (max-width:360px){.pc-stepper-name small{font-size:11px}.pc-tiles strong{font-size:17px}.pc-preview{font-size:12px;margin-bottom:8px}.pc-preview span{padding:4px 7px}.pc-fixed-note{display:none}.pc-week h2{font-size:21px}.pc-client{font-size:13px;line-height:1.4}.pc-goal{font-size:13px;padding:6px 12px}.pc-goal-row{margin-top:8px;gap:8px}.pc-world{max-height:190px}.pc{gap:10px}}
+.pc-ledger>summary{font-weight:800;cursor:pointer;min-height:44px;display:flex;align-items:center}.pc-run-detail summary{cursor:pointer;min-height:44px;padding:8px 0;line-height:1.4}.pc-run-detail p{font-size:13px;line-height:1.5}.pc-prediction-feedback{font-size:13px;line-height:1.4;margin:0 0 8px}.pc-prediction-feedback:empty{display:none}.pc-prediction p,.pc-comparison p{font-size:14px;line-height:1.4;margin:8px 0}.pc-prediction-options{display:flex;gap:6px;flex-wrap:wrap}.pc-comparison label{display:block;font-size:13px;font-weight:700;margin:8px 0}.pc-comparison select{display:block;width:100%;max-width:100%;min-height:44px;background:var(--pc-card);color:var(--pc-ink);border:1px solid var(--pc-accent);border-radius:8px;font:inherit}.pc-setup{border-top:4px solid #2bb3a3}.pc-result{border-top:4px solid #f08a4b}.pc-think{border-top:4px solid #a78bfa}.pc-world{border:2px solid #a7e2da}.pc-prediction{border-radius:10px;background:var(--pc-chip);padding:4px 10px}.pc-main>*{min-width:0}
 @media (prefers-reduced-motion:reduce){.pc *{transition:none!important}}
 `;

@@ -64,12 +64,16 @@ try:
                         for key,value in (('s1',s1),('s2',s2)):
                             while observed('dials')[key]<value:page.locator('#pc-'+key+'-plus').click()
                             while observed('dials')[key]>value:page.locator('#pc-'+key+'-minus').click()
-                    run=lambda:page.locator('#pc-run').click()
+                    def run(prediction='lower'):
+                        if observed('predictionRequired'):page.locator('#pc-predict-'+prediction).click()
+                        page.locator('#pc-run').click()
                     page.locator('#pc-orders-20').click();run();page.locator('#pc-orders-30').click();run()
                     page.locator('#pc-reason-total').click();week_check(False);page.locator('#pc-reason-shared').click();week_check();week_next(2)
                     run();require(observed('stuck')==20,'Hosted bottleneck did not jam');setup(2,2);run();page.locator('#pc-reason-slowest').click();week_check();week_next(3)
                     run();setup(2,2);run();setup(5,4);run();page.locator('#pc-reason-sync').click();week_check(False)
-                    setup(4,3);run();require(observed('average')==1400,'Hosted best studio size incorrect');week_check();week_next(4)
+                    setup(4,3);run();require(observed('average')==1400,'Hosted best studio size incorrect');week_check(False)
+                    page.locator('#pc-compare-baseline').select_option('0:3');page.locator('#pc-compare-larger').select_option('0:2')
+                    week_check();week_next(4)
                     run();setup(2,2);run();page.locator('#pc-reason-idle').click();week_check();week_next(5)
                     run();setup(2,3);run();page.locator('#pc-reason-carried').click();week_check();page.locator('#pc-next').click()
                     require(observed('complete') and page.locator('#pc-finish').is_visible(),'Hosted Press Club did not complete')
