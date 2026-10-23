@@ -1,0 +1,89 @@
+{
+  "model_id": "inversion",
+  "taxonomy_foundation": "mt_nNYo5A-7Bl",
+  "requested_ages": [
+    10,
+    15
+  ],
+  "objective": "Work backward from a failed goal, connect a cause to a prevention, compare rehearsal evidence, and still test whether the positive goal happened.",
+  "goal": "All3star-seeds delivered to MoonGarden",
+  "authored_rules": [
+    "Loaded cargo spills if hatch is open",
+    "Sleeping destination beacon sends rocket to QuietMoon",
+    "Only closed loaded cargo at MoonGarden meets the delivery goal",
+    "Badge straightening and casing polish have no delivery effect"
+  ],
+  "observable_sequence": [
+    "Observe baseline failure",
+    "Inspect and confirm one part",
+    "Predict that component\u2019s pre-repair effect",
+    "Choose one intervention",
+    "Compare rehearsal result with delivery goal and saved prediction",
+    "Address remaining independent fault",
+    "Reject a universal success guarantee"
+  ],
+  "taxonomy_coverage": [
+    {
+      "index": 1,
+      "mode": "partial",
+      "claim": "Identify weaknesses from supplied fictional rehearsal outcomes"
+    },
+    {
+      "index": 2,
+      "mode": "partial",
+      "claim": "Use outcome evidence to choose and test a design improvement"
+    }
+  ],
+  "extensions": [
+    "Inversion",
+    "Independent failure routes",
+    "Avoidance versus positive goal",
+    "Prediction versus evidence",
+    "Bounded conclusions"
+  ],
+  "assumed_prerequisites": [
+    "Compare observations",
+    "Simple cause and effect",
+    "Distinguish a goal from a means"
+  ],
+  "hard_prerequisite_topic_ids": [
+    "mt_XirhnAB6Ye",
+    "mt_hi8cVycbwn",
+    "mt_vJO5Bxk4z-",
+    "mt_Wa44s-f8Ws",
+    "mt_ZFwPZaDJ0_"
+  ],
+  "prerequisite_mastery": "Unknown; exact closure is recorded as background in the generated plan, not silently taught or inferred from age/IQ.",
+  "assessment_scope": "this_response_only",
+  "prediction_evidence": "Saved component prediction compared with pre-repair consequence; completion does not rewrite it.",
+  "not_assessed": [
+    "Physical construction or experimentation",
+    "Unscripted scientific explanation",
+    "Real-world mission reliability",
+    "Individual psychological diagnosis",
+    "Learner transfer or general inversion mastery"
+  ],
+  "sources_reviewed": [
+    "Exact local taxonomy topic, evidence and prerequisites",
+    "Munger_Models/mental-models.json inversion definition",
+    "Munger_Models/course-guidelines.md"
+  ],
+  "source_limitations": "Historical Munger attribution in the local research relies on an unofficial transcript mirror. This lesson uses no quotation or invention claim; causal rules are explicitly fictional, not scientific or empirical psychology claims.",
+  "tool_decisions": {
+    "threejs": "Requested 3D toy world, hinged cargo, depth, distinct destinations and direct component inspection",
+    "gsap": "Skippable causal flight presentation; no domain updates in callbacks",
+    "html_css": "One question and commit at a time, keyboard equivalents, goal/outcome comparison and focus management",
+    "blender": "Not needed for procedural toy geometry",
+    "hyperframes": "Not requested; no video"
+  },
+  "design_director": "gpt-6-astra",
+  "design_review": "Approved subject to final automated checks; see design-review.md",
+  "expert_review": "not_performed",
+  "learner_review": "not_performed",
+  "physical_device_review": "not_performed",
+  "human_followup": [
+    "Plan a group project: goal, possible failure, causal prevention and positive completion check",
+    "Could one cause create several problems?",
+    "What might the model have omitted?"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "format_version": "1.0",
+  "sources": [
+    {
+      "id": "gsap-core",
+      "repository": "greensock/gsap-skills",
+      "revision": "aed9cfd3277740755f6bfc1155c7aa645403b760",
+      "path": "skills/gsap-core/SKILL.md",
+      "url": "https://raw.githubusercontent.com/greensock/gsap-skills/aed9cfd3277740755f6bfc1155c7aa645403b760/skills/gsap-core/SKILL.md",
+      "sha256": "3887b47e050ab5afbe2a9a820f23d39fa02ab785e06a343be44c6f91d84d12b3",
+      "cache_file": "gsap-core.md"
+    },
+    {
+      "id": "gsap-timeline",
+      "repository": "greensock/gsap-skills",
+      "revision": "aed9cfd3277740755f6bfc1155c7aa645403b760",
+      "path": "skills/gsap-timeline/SKILL.md",
+      "url": "https://raw.githubusercontent.com/greensock/gsap-skills/aed9cfd3277740755f6bfc1155c7aa645403b760/skills/gsap-timeline/SKILL.md",
+      "sha256": "1a8b0f39cc4be3ed3d834b89672e4ae2f151b901dc3450bebf10bbc45379fe02",
+      "cache_file": "gsap-timeline.md"
+    },
+    {
+      "id": "gsap-performance",
+      "repository": "greensock/gsap-skills",
+      "revision": "aed9cfd3277740755f6bfc1155c7aa645403b760",
+      "path": "skills/gsap-performance/SKILL.md",
+      "url": "https://raw.githubusercontent.com/greensock/gsap-skills/aed9cfd3277740755f6bfc1155c7aa645403b760/skills/gsap-performance/SKILL.md",
+      "sha256": "cb5408d6fba707aabcbfe3320317a14c1f8fca6070074e5261047930f50d441e",
+      "cache_file": "gsap-performance.md"
+    },
+    {
+      "id": "hyperframes-animation",
+      "repository": "heygen-com/hyperframes",
+      "revision": "01adadb91814a8fdca102c0a008ffac663c43dcd",
+      "path": "skills/hyperframes-animation/SKILL.md",
+      "url": "https://raw.githubusercontent.com/heygen-com/hyperframes/01adadb91814a8fdca102c0a008ffac663c43dcd/skills/hyperframes-animation/SKILL.md",
+      "sha256": "b35f1f8eff68e9ff480a5d5d343a1bf5a40ebb7d0d9be20b0b980cfdb36047f3",
+      "cache_file": "hyperframes-animation.md"
+    },
+    {
+      "id": "hyperframes-three",
+      "repository": "heygen-com/hyperframes",
+      "revision": "01adadb91814a8fdca102c0a008ffac663c43dcd",
+      "path": "skills/hyperframes-animation/adapters/three.md",
+      "url": "https://raw.githubusercontent.com/heygen-com/hyperframes/01adadb91814a8fdca102c0a008ffac663c43dcd/skills/hyperframes-animation/adapters/three.md",
+      "sha256": "4cea6db8315673d2e2875d6e4bdcad31e3951e4fb46fb67236bd87881648353f",
+      "cache_file": "hyperframes-three.md"
+    },
+    {
+      "id": "hyperframes-core",
+      "repository": "heygen-com/hyperframes",
+      "revision": "01adadb91814a8fdca102c0a008ffac663c43dcd",
+      "path": "skills/hyperframes-core/SKILL.md",
+      "url": "https://raw.githubusercontent.com/heygen-com/hyperframes/01adadb91814a8fdca102c0a008ffac663c43dcd/skills/hyperframes-core/SKILL.md",
+      "sha256": "a8d6fe52471be6bcf1816ba0b9eb16c6d1efc830c668de533d6bee8d41d86e11",
+      "cache_file": "hyperframes-core.md"
+    },
+    {
+      "id": "blender-mcp-readme",
+      "repository": "ahujasid/mcp-for-blender",
+      "revision": "25e1fe008fc523b1a947c6f3d28510a362a0f06e",
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/ahujasid/mcp-for-blender/25e1fe008fc523b1a947c6f3d28510a362a0f06e/README.md",
+      "sha256": "20b87b44a3ab8c59d2e7f863438c7fe1b981ef6bb2e92d6d89c86dea8b3a3202",
+      "cache_file": "blender-mcp-readme.md"
+    }
+  ]
+}

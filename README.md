@@ -123,3 +123,11 @@ Plus the upstream notices in [PROVENANCE.md](PROVENANCE.md) for any curriculum s
 ## What's *not* here
 
 Deliberately excluded from this release: semantic embeddings (derived, recomputable) and any per-child / user data (never published). See [CHANGELOG.md](CHANGELOG.md).
+
+## Learning artifacts in this fork
+
+**Continuing this work in another AI? Start with [AI_HANDOFF.md](AI_HANDOFF.md).** It links every skill, game, research folder and live site, and explains how to rebuild the published catalog from a fresh checkout.
+
+This fork also contains an optional [learning-artifact compiler](learning-artifacts/README.md) and a [Codex skill](.agents/skills/taxonomy-to-lesson/SKILL.md). They turn selected taxonomy topics into interactive browser activities, with explicit learning goals, model assumptions, and automated checks. The original dataset remains dependency-free.
+
+The [Munger_Models research package](Munger_Models/README.md) maps 23 Munger-associated mental models to taxonomy foundations and outlines child/teen course pathways. It is a sourced, provisional course-design proposal; its source-access limits and uncovered concepts are documented.

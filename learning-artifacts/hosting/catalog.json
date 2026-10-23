@@ -1,0 +1,43 @@
+{
+  "title": "Family Learning Lab",
+  "activities": [
+    {
+      "slug": "opportunity-cost",
+      "title": "Choice Islands",
+      "description": "One afternoon, one adventure. Discover what you give up, then help Leah spot her trade-off.",
+      "audience": "Ages 10 & 15 \u00b7 Guided discovery + challenges",
+      "tags": [
+        "Opportunity cost",
+        "3D",
+        "3 guided scenes"
+      ],
+      "artifact": "../output/opportunity-islands-clear",
+      "thumbnail": "checks/redesign-world.png"
+    },
+    {
+      "slug": "inversion",
+      "title": "Save the Moon Garden",
+      "description": "Think backward. Predict what could stop a seed delivery, change one cause, and rehearse the result.",
+      "audience": "Ages 10 & 15 \u00b7 Discover + two-cause challenge",
+      "tags": [
+        "Science",
+        "3D"
+      ],
+      "artifact": "../output/inversion-mission-v3",
+      "thumbnail": "checks/inversion-world.png"
+    },
+    {
+      "slug": "economies-of-scale",
+      "title": "Little Works",
+      "description": "Grow wisely. Compare costs, fix a bottleneck, and discover when a bigger business becomes more expensive.",
+      "audience": "Age 15 \u00b7 Costs, capacity & growth",
+      "tags": [
+        "Economies of scale",
+        "3D",
+        "5 experiments"
+      ],
+      "artifact": "../output/economies-of-scale-v4",
+      "thumbnail": "checks/growth-world-1200.png"
+    }
+  ]
+}

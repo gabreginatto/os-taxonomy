@@ -1,0 +1,335 @@
+{
+  "design_version": "0.1",
+  "status": "proposed_not_executable",
+  "default_output": "interactive_browser",
+  "output_formats": [
+    "interactive_browser",
+    "mp4",
+    "interactive_deck"
+  ],
+  "defaults": {
+    "max_topics_per_lesson_unit": 5,
+    "prerequisite_expansion": "traverse_full_relevant_hard_closure_for_order_and_gaps_generate_only_bounded_scaffolding",
+    "asset_route": "procedural",
+    "blender_adapter": "headless_python",
+    "learning_pattern": [
+      "predict",
+      "explore",
+      "explain",
+      "check"
+    ],
+    "child_data_persistence": false
+  },
+  "stages": [
+    "capability_probe",
+    "resolve_topics",
+    "inspect_prerequisites",
+    "plan_learning",
+    "specify_domain_model",
+    "review_model_spec",
+    "route_tools",
+    "generate",
+    "verify_model_implementation",
+    "validate_outputs",
+    "handoff"
+  ],
+  "blocking_rules": [
+    {
+      "id": "ambiguous_topic",
+      "condition": "more_than_one_plausible_topic_match",
+      "action": "needs_disambiguation_for_affected_topic"
+    },
+    {
+      "id": "invalid_graph",
+      "condition": "missing_endpoint_or_cycle_in_relevant_graph",
+      "action": "needs_review_do_not_rewrite_taxonomy"
+    },
+    {
+      "id": "semantic_edge_conflict",
+      "condition": "stored_edge_and_reason_materially_conflict",
+      "action": "needs_review_for_affected_prerequisite_plan"
+    },
+    {
+      "id": "unverified_domain",
+      "condition": "new_domain_claims_without_trustworthy_grounding_or_required_model_checks",
+      "action": "needs_content_review"
+    },
+    {
+      "id": "requested_output_unavailable",
+      "condition": "required_output_capability_missing_and_no_equivalent_route",
+      "action": "blocked_capability_preserve_requested_output"
+    },
+    {
+      "id": "uncovered_claimed_evidence",
+      "condition": "claimed_mastery_criterion_has_no_meaningful_assessment",
+      "action": "revise_scope_or_plan"
+    }
+  ],
+  "representation_rules": [
+    {
+      "priority": 10,
+      "id": "explicit_representation",
+      "when": "user_explicitly_requests_supported_representation",
+      "select": "requested_representation",
+      "require": [
+        "instructional_goal_preserved",
+        "accessibility_equivalent",
+        "capability_probe_passed"
+      ]
+    },
+    {
+      "priority": 20,
+      "id": "instructional_3d",
+      "when": "rotation_depth_occlusion_or_viewpoint_is_needed_to_explain_or_assess",
+      "select": "threejs",
+      "require": [
+        "counterfactual_benefit_recorded",
+        "webgl_probe_passed",
+        "accessible_equivalent"
+      ],
+      "fallback": "html_svg_only_if_objective_and_output_preserved"
+    },
+    {
+      "priority": 30,
+      "id": "dense_2d",
+      "when": "many_dynamic_2d_elements_or_fields_make_svg_impractical",
+      "select": "canvas2d",
+      "require": [
+        "semantic_html_controls",
+        "noncanvas_explanation"
+      ]
+    },
+    {
+      "priority": 40,
+      "id": "semantic_2d_default",
+      "when": "otherwise",
+      "select": "html_svg"
+    }
+  ],
+  "orthogonal_tool_rules": [
+    {
+      "tool": "gsap",
+      "when": "sequenced_interruptible_or_reversible_presentation_motion_is_useful",
+      "role": "presentation_only",
+      "forbid": [
+        "authoritative_domain_state_in_tween_callbacks"
+      ]
+    },
+    {
+      "tool": "headless_blender",
+      "when": "custom_geometry_or_authored_asset_materially_beats_procedural_or_accepted_cached_assets",
+      "require": [
+        "blender_create_export_probe",
+        "asset_budget",
+        "licensing_and_provenance"
+      ],
+      "adapter": "python_script",
+      "output": "uncompressed_glb_by_default"
+    },
+    {
+      "tool": "blender_mcp",
+      "when": "live_iterative_scene_authoring_is_useful_and_connected_tool_roundtrip_passed",
+      "require": [
+        "registered_mcp_server",
+        "running_compatible_addon",
+        "scene_create_inspect_export_roundtrip"
+      ],
+      "fallback": "headless_blender_if_asset_contract_preserved"
+    },
+    {
+      "tool": "hyperframes_video",
+      "when": "mp4_in_requested_outputs",
+      "require": [
+        "pinned_toolchain",
+        "fixed_demo_event_script",
+        "arbitrary_seek_support",
+        "explicit_duration",
+        "preloaded_local_assets",
+        "actual_render_validation"
+      ]
+    },
+    {
+      "tool": "hyperframes_deck",
+      "when": "interactive_deck_in_requested_outputs",
+      "require": [
+        "deck_navigation_and_branch_tests"
+      ],
+      "forbid": [
+        "claim_whole_deck_mp4_from_current_multi_root_deck_render"
+      ]
+    }
+  ],
+  "decision_record_required_fields": [
+    "selected_tool",
+    "alternatives_considered",
+    "instructional_reason",
+    "capability_evidence",
+    "estimated_cost",
+    "fallback_consequences"
+  ],
+  "model_contract": {
+    "common_functions": [
+      "initialState",
+      "applyAction",
+      "observe",
+      "validateInvariants"
+    ],
+    "profiles": {
+      "event_only": "action_reducer_without_physical_time",
+      "analytic": "stateAt_time_actionScript_parameters_seed",
+      "integrated": "advanceFixedStep_with_deterministic_replay_and_checkpoints"
+    },
+    "presentation_reads_only": true,
+    "randomness": "seeded_for_simulation_and_presentation",
+    "llm_regeneration_deterministic": false
+  },
+  "budgets": {
+    "visible_triangles": 100000,
+    "draw_calls": 50,
+    "max_texture_dimension": 1024,
+    "max_device_pixel_ratio": 1.5,
+    "max_compressed_js_bytes": 2000000,
+    "max_parallel_blender_jobs": 1,
+    "max_parallel_video_renders": 1,
+    "max_parallel_browser_validations": 2,
+    "max_asset_job_seconds": 120,
+    "max_repair_attempts_per_stage": 2,
+    "max_visual_review_passes": 3,
+    "default_video": {
+      "max_seconds": 60,
+      "height": 720,
+      "fps": 30
+    },
+    "note": "Proposed starting caps. Calibrate on fixtures and learner-device hardware; log exceptions.",
+    "initial_compressed_transfer_bytes": {
+      "two_d": 2000000,
+      "three_d": 5000000
+    }
+  },
+  "acceptance": {
+    "required_gates": [
+      "input_graph",
+      "output_specific_learning_plan_coverage",
+      "model_spec_review",
+      "model_implementation_checks",
+      "build_assets",
+      "output_specific_behavior",
+      "visual_states",
+      "output_specific_accessibility",
+      "requested_output",
+      "provenance"
+    ],
+    "ready_requires": "every_required_gate_passed_for_this_output",
+    "human_review_status": "tracked_separately",
+    "publication_status": "tracked_separately",
+    "batch_partial_success": true,
+    "states": [
+      "received",
+      "resolved",
+      "planned",
+      "model_spec_reviewed",
+      "routed",
+      "built",
+      "model_implementation_verified",
+      "validated",
+      "ready",
+      "needs_review",
+      "needs_content_review",
+      "blocked_capability",
+      "repairing",
+      "failed",
+      "partial_batch"
+    ],
+    "coverage_labels": [
+      "demonstrated",
+      "practised",
+      "assessed",
+      "partial",
+      "uncovered"
+    ],
+    "gate_applicability": {
+      "interactive_browser": {
+        "core_learner_interaction": "required_for_declared_actions",
+        "reset": "required_for_declared_resettable_state",
+        "video_encode": "inapplicable_without_requested_video_export"
+      },
+      "mp4": {
+        "core_learner_interaction": "inapplicable_scripted_demonstration_only",
+        "followup_assessment": "prompt_only_no_observed_mastery",
+        "arbitrary_seek_and_actual_encode": "required"
+      },
+      "interactive_deck": {
+        "navigation_fragments_and_declared_actions": "required",
+        "whole_deck_video_encode": "unsupported_in_current_multiroot_route"
+      }
+    },
+    "review_fields": [
+      "source_review_status",
+      "automated_content_checks",
+      "expert_review_status",
+      "human_review_status"
+    ],
+    "clear_needs_content_review_when": "essential_claims_have_adequate_reliable_sources_and_independent_model_checks_pass; unresolved_specialist_or_disputed_claims_need_recorded_expert_review_or_narrower_scope"
+  },
+  "cache": {
+    "generation_request_fingerprint": [
+      "canonical_brief_topic_hashes",
+      "policy_version",
+      "plan_model_template_prompt_hashes",
+      "generator_model_configuration",
+      "evidence_reference_snapshots",
+      "tool_skill_versions",
+      "parameters",
+      "asset_sources"
+    ],
+    "accepted_source_fingerprint": [
+      "exact_source",
+      "domain_model",
+      "asset_hashes",
+      "dependency_lock",
+      "accepted_review_decisions"
+    ],
+    "render_fingerprint": [
+      "accepted_source_fingerprint",
+      "demo_event_script",
+      "seed",
+      "output_settings",
+      "render_toolchain"
+    ],
+    "validation_fingerprint": [
+      "artifact_hash",
+      "validator_versions",
+      "acceptance_policy_hash",
+      "capability_device_profile",
+      "check_scope_and_date"
+    ],
+    "cache_unit": "immutable_accepted_stage_output",
+    "writes": "atomic",
+    "invalidate": "dependent_stages_only",
+    "readiness_reuse": "only_when_validation_fingerprint_is_current"
+  },
+  "evaluation_semantics": {
+    "blocking_rules": "evaluate_first",
+    "representation_rule_order": "ascending_priority",
+    "representation_selection": "first_matching_eligible_route",
+    "explicit_requirement_failure": "report_block_or_review_do_not_silently_fall_through",
+    "automatic_route_failure": "declared_fallback_only_if_contract_preserved",
+    "orthogonal_tools": "compose_after_representation_selection",
+    "fallback_must_preserve": [
+      "requested_output_types",
+      "explicit_representation_requirements",
+      "required_learner_interactions",
+      "learning_objectives"
+    ]
+  },
+  "video_adapter_contract": {
+    "time_source": "hyperframes_hf_seek",
+    "state_reconstruction": "analytic_evaluation_or_fixed_step_replay",
+    "requirements": [
+      "arbitrary_seek_order",
+      "explicit_duration",
+      "preloaded_local_assets",
+      "single_video_composition"
+    ]
+  }
+}

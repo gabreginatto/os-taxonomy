@@ -1,0 +1,13 @@
+# Publish the family's learning activities
+
+The user has requested that these educational activities be available as browser pages in a Firebase project separate from all commercial sites. Use `learning-artifacts/hosting/`; read its README and `project.json`. Keep the commercial repository and resources untouched. The requested representation and learning contract remain in force.
+
+1. Generate and verify a fresh artifact through the full skill. Check its actual interactions and representative screenshots before registering it.
+2. Register a new stable route using `node scripts/add.mjs --artifact <absolute-artifact-directory> --slug <topic-name> ...` from `learning-artifacts/hosting/`. For an existing route, deliberately update its catalog entry to the new verified artifact instead of adding a duplicate.
+3. Run `npm run build`. Only verified artifacts with unchanged accepted source and current validation fingerprints are exported. Inspect the child-facing catalog and lesson on desktop and mobile using `scripts/verify-hosting.py`.
+4. Run `npm run check` to verify current Firebase authentication and project access. Existing project IDs in another repository are not credentials. Use configured auth/proxy bindings; never copy tokens into source or display them.
+5. This family's separate education project `gabreginatto-learning-lab` already exists and hosts the verified catalog and Choice Islands. Retain it for future lessons. If a fresh workspace lacks the ignored project receipt, `npm run connect` verifies and records that exact education project. `npm run provision` is for initial project creation only. Never deploy into a business project to work around missing access.
+6. Run `npm run deploy` when access permits. The user authorized publishing these learning sites. The wrapper selects the exact education project, builds all registered activities, deploys Hosting only, checks public file hashes, and runs real public browser checks.
+7. Return the actual verified catalog and lesson URLs. A configuration file, generated URL, local build, preview process or successful draft save is not a live deployment. If access blocks publication, finish the build/test work, report the exact blocker and save only missing environment requirements through the supported flow. Do not invent a public preview.
+
+All future lessons should be added to this catalog so the children have one bookmark and a stable link for each activity. No Firebase client SDK or API key is required for these static pages. Public hosting does not add accounts, learner tracking or backend data collection.

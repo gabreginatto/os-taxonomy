@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "kind", "status", "source", "lessons", "outputs", "source_files", "fingerprints"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "kind": { "const": "learning_artifact" },
+    "status": { "enum": ["built", "validated", "partial_batch", "failed", "needs_content_review"] },
+    "source": { "type": "object", "required": ["version", "topics_sha256", "dependencies_sha256"] },
+    "lessons": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["topic_id", "name", "plugin_id", "plugin_version", "age", "coverage", "route", "assumptions"],
+        "properties": {
+          "topic_id": { "type": "string", "pattern": "^mt_" },
+          "plugin_id": { "type": "string", "minLength": 1 },
+          "plugin_version": { "type": "string", "minLength": 1 },
+          "age": { "type": "integer", "minimum": 3, "maximum": 18 },
+          "coverage": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "required": ["index", "mode", "source_evidence"],
+              "properties": {
+                "index": { "type": "integer", "minimum": 0 },
+                "mode": { "enum": ["assessed_response", "practised", "demonstrated", "explanation_prompt", "partial"] },
+                "source_evidence": { "type": "string", "minLength": 1 }
+              }
+            }
+          },
+          "route": { "type": "object", "required": ["representation", "instructional_reason"], "properties": { "representation": { "enum": ["html_svg", "canvas2d", "threejs"] } } },
+          "assumptions": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "outputs": { "type": "object", "required": ["interactive_browser"] },
+    "source_files": { "type": "object", "additionalProperties": { "type": "string", "pattern": "^[a-f0-9]{64}$" } },
+    "fingerprints": { "type": "object", "required": ["generation_request", "accepted_source", "validation_policy"] }
+  }
+}

@@ -1,0 +1,9 @@
+node_modules/
+public/
+.state/
+.firebase/
+*.log
+.env*
+*credentials*.json
+*service-account*.json
+*-key.json

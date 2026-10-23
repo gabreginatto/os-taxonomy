@@ -1,0 +1,91 @@
+{
+  "kind": "opportunity_cost_redesign_validation",
+  "plugin_version": "3.0.0",
+  "artifact": "output/opportunity-islands-clear",
+  "accepted_source": "5ff8bdeca6af62cdfdf18bf43778042d1908e070312fad0844d4dcde0483294e",
+  "core_validation": {
+    "status": "passed",
+    "checks": 14,
+    "validation_fingerprint": "cdf5482fe7b2225a536bc70510df626bb90bee32e26c681c045e4bf80d22fcf2"
+  },
+  "package_tests": {
+    "passed": 21,
+    "failed": 0
+  },
+  "interaction_verification": {
+    "status": "passed",
+    "checks": [
+      "Real WebGL2 raycast previews; explicit keyboard confirmation; personal benefit reveal with no objective preference score",
+      "All six personal preference pairs accepted; only runner-up benefit is opportunity cost",
+      "Original \u00a310 vs remaining \u00a32 explicit; unavailable telescope and lower-ranked garden rejected with specific reasons",
+      "Original-budget \u00a39 transfer changes best alternative; help labelled; scene restart clears attempt",
+      "390px and 320px layouts, readable nonoverlapping options, keyboard/touch targets and all scenes",
+      "Motion-enabled seek and reset deterministic; presentation does not change domain truth"
+    ],
+    "renderer": "threejs/WebGL2",
+    "delivery": "static_folder",
+    "physical_device_review": "not_performed",
+    "learner_review": "not_performed"
+  },
+  "standalone_verification": {
+    "status": "passed",
+    "checks": [
+      "Real WebGL2 raycast previews; explicit keyboard confirmation; personal benefit reveal with no objective preference score",
+      "All six personal preference pairs accepted; only runner-up benefit is opportunity cost",
+      "Original \u00a310 vs remaining \u00a32 explicit; unavailable telescope and lower-ranked garden rejected with specific reasons",
+      "Original-budget \u00a39 transfer changes best alternative; help labelled; scene restart clears attempt",
+      "390px and 320px layouts, readable nonoverlapping options, keyboard/touch targets and all scenes",
+      "Motion-enabled seek and reset deterministic; presentation does not change domain truth"
+    ],
+    "renderer": "threejs/WebGL2",
+    "delivery": "single_html_loaded_locally_then_offline",
+    "physical_device_review": "not_performed",
+    "learner_review": "not_performed"
+  },
+  "consultation": {
+    "model": "gpt-6-astra",
+    "role": "Game-design brief, code/copy review and final desktop/mobile visual review",
+    "result": "No remaining publication blocker found; distinct from learner or expert validation"
+  },
+  "visual_review": "Codex inspected initial desktop/mobile, personal reveal and \u00a39 challenge; Astra inspected final screenshots",
+  "assessment_scope": {
+    "personal": "Preference elicitation only; assessed:false, host boolean means valid_preference_pair",
+    "challenge": "Authored response correctness only, not mastery",
+    "help": "help_not_requested describes the help button only, not absence of prior feedback"
+  },
+  "public_deployment": {
+    "status": "published_and_verified",
+    "catalog_url": "https://gabreginatto-learning-lab.web.app/",
+    "lesson_url": "https://gabreginatto-learning-lab.web.app/opportunity-cost/",
+    "deployed_at": "2026-10-19T01:49:24.430Z",
+    "verification": {
+      "status": "passed",
+      "files_verified": 17,
+      "browser": {
+        "status": "passed",
+        "checks": [
+          {
+            "viewport": 1200,
+            "catalog": "passed",
+            "activities": "passed",
+            "credits": "passed"
+          },
+          {
+            "viewport": 390,
+            "catalog": "passed",
+            "activities": "passed",
+            "credits": "passed"
+          }
+        ],
+        "external_requests": 0,
+        "http_errors": 0,
+        "physical_device_review": "not_performed"
+      },
+      "url": "https://gabreginatto-learning-lab.web.app/"
+    }
+  },
+  "learner_review": "not_performed",
+  "expert_review": "not_performed",
+  "physical_device_review": "not_performed",
+  "taxonomy_validation": "1590 topics, 3221 dependencies, 3261 standards, 183 clusters: referential integrity and checksums passed."
+}

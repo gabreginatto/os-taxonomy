@@ -1,0 +1,80 @@
+{
+  "kind": "inversion_mission_validation",
+  "plugin_version": "1.0.0",
+  "accepted_source": "01f09b71bfbb35dbc56a8089f14a4d93c33546dad48d8a60ed811e192d980bdb",
+  "artifact": "output/inversion-mission-v3",
+  "package_tests": {
+    "passed": 30,
+    "failed": 0,
+    "inversion_tests": 9
+  },
+  "core_verification": {
+    "status": "passed",
+    "checks": 16,
+    "validation_fingerprint": "2487ac59b647fb37a2d81b21e42939d9e28bd3df5c3b41c1402037207db84e61"
+  },
+  "interaction_verification": {
+    "status": "passed",
+    "checks": [
+      "Baseline observation, real 3D cargo raycast, explicit confirmations, wrong prediction retained, empty-cargo undo and cosmetic non-cause",
+      "Independent fault remains after hatch repair; working hatch has no-failure option; beacon cosmetic/wake distinction; guarantee rejected, bounded conclusion accepted",
+      "Both repair orders; empty-cargo reload retains open-hatch failure until seal; configuration changes persist between rehearsals",
+      "390px and 320px full game, readable distinct labels, all touch targets, focus and no horizontal overflow",
+      "Motion flight, skip, reset and arbitrary seek remain deterministic; hint exposure clears on restart"
+    ],
+    "renderer": "threejs/WebGL2",
+    "physical_device_review": "not_performed",
+    "learner_review": "not_performed"
+  },
+  "design_director": {
+    "model": "gpt-6-astra",
+    "role": "Design brief, rules, phase/copy direction, implementation and actual screenshot review",
+    "decision": "Approved for release subject to final automated checks",
+    "record": "design-review.md"
+  },
+  "visual_review": "Codex inspected initial desktop/mobile, in-flight rehearsal and successful delivery; Astra reviewed actual intermediate and final scenes",
+  "taxonomy_foundation": {
+    "topic_id": "mt_nNYo5A-7Bl",
+    "coverage": "Evidence1and2partial; authored inversion extension",
+    "prerequisites": "Plan records5hardancestors; no conflicts; mastery unknown"
+  },
+  "public_deployment": {
+    "status": "published_and_verified",
+    "url": "https://gabreginatto-learning-lab.web.app/inversion/",
+    "deployed_at": "2026-10-19T07:34:33.398Z",
+    "verification": {
+      "status": "passed",
+      "files_verified": 28,
+      "browser": {
+        "status": "passed",
+        "checks": [
+          {
+            "viewport": 1200,
+            "catalog": "passed",
+            "activities": "passed",
+            "credits": "passed"
+          },
+          {
+            "viewport": 390,
+            "catalog": "passed",
+            "activities": "passed",
+            "credits": "passed"
+          }
+        ],
+        "external_requests": 0,
+        "http_errors": 0,
+        "physical_device_review": "not_performed"
+      },
+      "url": "https://gabreginatto-learning-lab.web.app/"
+    }
+  },
+  "expert_review": "not_performed",
+  "learner_review": "not_performed",
+  "physical_device_review": "not_performed",
+  "raycast_targets_verified": [
+    "hatch",
+    "badge",
+    "beacon"
+  ],
+  "taxonomy_validation": "1590 topics, 3221 dependencies, 3261 standards, 183 clusters: referential integrity and checksums passed."
+}

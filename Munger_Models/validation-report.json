@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "modelCount": 23,
+  "mappingCount": 52,
+  "distinctMappedTopics": 29,
+  "mappedEvidenceEntries": 82,
+  "distinctDirectHardPrerequisiteEdges": 40,
+  "sourceAnchorsChecked": 23,
+  "taxonomyGraph": "acyclic; stored edge direction preserved",
+  "proposedModelGraph": "acyclic",
+  "sourceVerification": "passed: pinned HTML SHA-256, byte count and every stored source anchor",
+  "limits": [
+    "Structural integrity and exact dataset references are checked; semantic mappings remain editorial judgments.",
+    "No source authenticity, independent corroboration, empirical psychology validation or learner mastery is established.",
+    "Lessons are proposals; no browser lesson or learner trial was run by this research package."
+  ],
+  "negativeTestsPassed": [
+    "fabricated topic ID rejected",
+    "fabricated evidence text rejected",
+    "blocked unread source citation rejected",
+    "unresolved source anchor rejected",
+    "cyclic proposed sequence rejected",
+    "reversed prerequisite edge rejected"
+  ]
+}

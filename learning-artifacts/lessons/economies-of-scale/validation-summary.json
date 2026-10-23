@@ -1,0 +1,239 @@
+{
+  "status": "published_and_verified",
+  "artifact": "output/economies-of-scale-v4",
+  "plugin_sha256": "5f40dfbddb834361f13240d122136ed3f8bece62eb569b8ef52c3b1a7ded8146",
+  "compiler_checks": {
+    "schema_version": "1.0",
+    "status": "passed",
+    "scope": "interactive_browser",
+    "checks": [
+      {
+        "name": "accepted source hashes",
+        "status": "passed"
+      },
+      {
+        "name": "taxonomy evidence references",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: initial invariant and serialization",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 1",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 2",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 3",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 4",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 5",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 6",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 7",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 8",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 9",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 10",
+        "status": "passed"
+      },
+      {
+        "name": "economies-of-scale: independent fixture 11",
+        "status": "passed"
+      },
+      {
+        "name": "browser acceptance",
+        "status": "passed"
+      }
+    ],
+    "browser": {
+      "schema_version": "1.0",
+      "status": "passed",
+      "profile": {
+        "chromium": "154.0.8037.57",
+        "playwright": "1.62.0",
+        "graphics": "software SwiftShader",
+        "device_performance": "not_measured"
+      },
+      "checks": [
+        {
+          "name": "1-economies-of-scale: initial state",
+          "status": "passed",
+          "detail": {
+            "renderer": "threejs",
+            "tool": "Three.js + GSAP",
+            "pick_targets": [
+              {
+                "name": "10 orders",
+                "action": {
+                  "type": "batch",
+                  "value": 10
+                },
+                "x": 0.36460268293811,
+                "y": 0.35160221284092963
+              },
+              {
+                "name": "20 orders",
+                "action": {
+                  "type": "batch",
+                  "value": 20
+                },
+                "x": 0.6000762778283535,
+                "y": 0.5983659701482701
+              }
+            ],
+            "geometry": "procedural miniature workshop",
+            "device_performance": "not_measured"
+          }
+        },
+        {
+          "name": "1-economies-of-scale: learning interaction and assessment",
+          "status": "passed"
+        },
+        {
+          "name": "1-economies-of-scale: reset",
+          "status": "passed"
+        },
+        {
+          "name": "1-economies-of-scale: arbitrary seek",
+          "status": "passed"
+        },
+        {
+          "name": "1-economies-of-scale: small-screen layout and touch targets",
+          "status": "passed"
+        },
+        {
+          "name": "Session-local state isolation",
+          "status": "passed"
+        },
+        {
+          "name": "No remote runtime requests",
+          "status": "passed"
+        },
+        {
+          "name": "No browser errors",
+          "status": "passed"
+        }
+      ],
+      "human_visual_review": "not_performed_by_this_script",
+      "device_performance": "not_measured"
+    },
+    "validation_fingerprint": "5b462768887c1ee8de3162b9a5e5d1c8a4ef4059c77e13adb56d856574242032",
+    "human_review_status": "not_performed",
+    "content_review": "Catalog fixtures and evidence references checked. Reference links and content still require editorial review for distribution.",
+    "device_performance": "not_measured"
+  },
+  "deep_ui": {
+    "status": "passed",
+    "checks": [
+      {
+        "viewport": 1200,
+        "five_experiments": "passed",
+        "scene_picking": "passed",
+        "wrong_answers": "passed",
+        "keyboard_focus": "passed",
+        "reset": "passed"
+      },
+      {
+        "viewport": 390,
+        "five_experiments": "passed",
+        "scene_picking": "passed",
+        "wrong_answers": "passed",
+        "keyboard_focus": "passed",
+        "reset": "passed"
+      },
+      {
+        "viewport": 320,
+        "five_experiments": "passed",
+        "scene_picking": "passed",
+        "wrong_answers": "passed",
+        "keyboard_focus": "passed",
+        "reset": "passed"
+      }
+    ],
+    "motion_seek": "passed",
+    "external_requests": 0,
+    "browser_errors": 0,
+    "learner_review": "not_performed",
+    "physical_device_review": "not_performed"
+  },
+  "package_tests": {
+    "passed": 45,
+    "failed": 0
+  },
+  "hosting_tests": {
+    "passed": 7,
+    "failed": 0
+  },
+  "taxonomy_validator": "passed unchanged: 1590 topics, 3221 dependencies, 3261 standards, 183 clusters",
+  "visual_review": "Codex inspected initial, bottleneck and growth screenshots at desktop and narrow-phone sizes. Human/learner/device reviews remain distinct.",
+  "public_url": "https://gabreginatto-learning-lab.web.app/economies-of-scale/",
+  "deployed_at": "2026-10-22T03:30:31.434Z",
+  "public_verification": {
+    "status": "passed",
+    "files_verified": 39,
+    "browser": {
+      "status": "passed",
+      "checks": [
+        {
+          "viewport": 1200,
+          "catalog": "passed",
+          "activities": "passed",
+          "credits": "passed"
+        },
+        {
+          "viewport": 390,
+          "catalog": "passed",
+          "activities": "passed",
+          "credits": "passed"
+        }
+      ],
+      "external_requests": 0,
+      "http_errors": 0,
+      "physical_device_review": "not_performed"
+    },
+    "url": "https://gabreginatto-learning-lab.web.app/"
+  },
+  "local_catalog": {
+    "status": "passed",
+    "checks": [
+      {
+        "viewport": 1200,
+        "catalog": "passed",
+        "activities": "passed",
+        "credits": "passed"
+      },
+      {
+        "viewport": 390,
+        "catalog": "passed",
+        "activities": "passed",
+        "credits": "passed"
+      }
+    ],
+    "external_requests": 0,
+    "http_errors": 0,
+    "physical_device_review": "not_performed"
+  }
+}

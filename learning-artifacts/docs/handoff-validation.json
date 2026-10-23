@@ -1,0 +1,49 @@
+{
+  "verified_at": "2026-10-23T02:36:10.801336+00:00",
+  "method": "Clean staged-source snapshot via git checkout-index, with no generated artifacts. Reused the environment’s installed Node/Python dependencies; did not claim a fresh OS/dependency install.",
+  "package_tests": {
+    "passed": 45,
+    "failed": 0
+  },
+  "hosting_tests": {
+    "passed": 7,
+    "failed": 0
+  },
+  "taxonomy_validator": "passed; original data, schemas and validator unchanged",
+  "munger_mapping_validator": "passed, including deliberate-corruption self-tests",
+  "activities": [
+    {
+      "slug": "opportunity-cost",
+      "plugin_sha256": "b51688e7c725e75ec40f0e34ba0c01c037627bbf927ef16042a5b7e74a99eae7",
+      "fresh_generation": "passed",
+      "browser_verification": "passed",
+      "thumbnail_restored": true
+    },
+    {
+      "slug": "inversion",
+      "plugin_sha256": "a9c2d9872d2b27e59aab17a6e8ff029ef1a8b49aa590e8ed6750946758e37208",
+      "fresh_generation": "passed",
+      "browser_verification": "passed",
+      "thumbnail_restored": true
+    },
+    {
+      "slug": "economies-of-scale",
+      "plugin_sha256": "5f40dfbddb834361f13240d122136ed3f8bece62eb569b8ef52c3b1a7ded8146",
+      "fresh_generation": "passed",
+      "browser_verification": "passed",
+      "thumbnail_restored": true
+    }
+  ],
+  "fresh_catalog_files": 39,
+  "repeat_restore": "reused all three matching verified artifacts",
+  "deployment": "not performed by handoff checks; existing public sites unchanged",
+  "excluded_from_git": [
+    "credentials",
+    "node_modules",
+    "virtual environments",
+    "caches",
+    "generated output",
+    "hosting public build",
+    "private hosting state"
+  ]
+}

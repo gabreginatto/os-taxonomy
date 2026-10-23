@@ -1,0 +1,80 @@
+{
+  "model_id": "opportunity-cost",
+  "taxonomy_foundation": "mt_Qzbh-_v0Gq",
+  "requested_ages": [
+    10,
+    15
+  ],
+  "assumed_prerequisites": [
+    "Compare whole-number amounts",
+    "Finite cash and time",
+    "Saving",
+    "Needs and wants"
+  ],
+  "objective": "Identify the value of the best feasible alternative forgone, first through a stated personal preference and then an explicit fictional budget.",
+  "extensions": [
+    "Personal next-best alternative without cash spending",
+    "Original-resource counterfactual",
+    "Ordinal fictional preferences without utility scores",
+    "Single budget change from \u00a310 to \u00a39"
+  ],
+  "automated_assessment_scope": "this_response_only",
+  "not_automatically_assessed": [
+    "Personal preference correctness",
+    "Original budget-definition evidence",
+    "Written or spoken reasoning",
+    "General opportunity-cost mastery",
+    "Real-world alternatives and uncertainty"
+  ],
+  "taxonomy_coverage": [
+    {
+      "index": 0,
+      "mode": "partial"
+    },
+    {
+      "index": 2,
+      "mode": "partial"
+    }
+  ],
+  "hard_prerequisite_topic_ids": [
+    "mt__ab4knIaSL",
+    "mt_zrCyqhngYm",
+    "mt_SsS7GptD_o"
+  ],
+  "prerequisite_mastery": "unknown; prerequisites are background assumptions, not inferred from age or IQ",
+  "tool_decisions": {
+    "threejs": "Required colorful 3D toy experience; raycast previews, fixed toy-to-label alignment, raised choice/alternative rings and bounded framing",
+    "html_css": "One question and primary action at a time, explicit confirmation, keyboard labels, original-budget context, comparison and reveal",
+    "gsap": "Batched presentation transitions and celebration; deterministic immediate rendering during seeks",
+    "blender": "Not needed: custom toy models built from local Three.js geometry",
+    "hyperframes": "Not needed: no video requested"
+  },
+  "sources_reviewed": [
+    "Exact local taxonomy topic and evidence",
+    "Munger_Models/mental-models.json opportunity-cost entry",
+    "Munger_Models/course-guidelines.md"
+  ],
+  "source_limitations": "Local Munger research attributes emphasis using an unauthenticated transcript mirror. No Munger quote is reproduced. Official Fed/OpenStax definition pages were attempted but blocked by the configured proxy and were not read or cited as reviewed.",
+  "expert_review": "not_performed",
+  "learner_review": "not_performed",
+  "human_followup": [
+    "Ask what the learner would do if their first choice were unavailable",
+    "Ask what they value about that alternative",
+    "Explain why Leah\u2019s \u00a310 movie counts despite \u00a32 left after the robot",
+    "Invent a new decision and check that alternatives were actually possible"
+  ],
+  "presentation": "Progressive Three.js story: three personal adventures, explicit confirmation, next-best comparison, then fictional original-budget challenges. Astra consulted for design and implementation review.",
+  "personal_preference_scope": {
+    "assessed": false,
+    "host_boolean_meaning": "valid_preference_pair",
+    "claim": "Preferences are elicited, never objectively graded."
+  },
+  "scene_sequence": [
+    "Preview and confirm a personal two-hour adventure",
+    "Imagine it unavailable; choose the next-best adventure",
+    "Reveal the missed benefit and name opportunity cost",
+    "Identify Leah\u2019s alternative with her original \u00a310",
+    "Keep the robot choice fixed and change the original budget to \u00a39"
+  ],
+  "review_note": "Design and code reviewed with Astra; browser and model verification do not establish child comprehension."
+}

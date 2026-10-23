@@ -1,0 +1,337 @@
+{
+  "design_version": "0.1",
+  "status": "illustrative_design_not_generated_lesson",
+  "source": {
+    "repository": "gabreginatto/os-taxonomy",
+    "commit": "96a7933754af672e1bfdbf7ecb05c325860c6e0d",
+    "taxonomy_version": "v1",
+    "topics_sha256": "2d99fc3b5e57d9ddb86b6c179b58a1b0390f048d9798585fe03b13cbc183719b",
+    "dependencies_sha256": "86a24efb44b480e5be23082b4bdea653f69f6d6fd54c5409a2f33c185be1d87f"
+  },
+  "lesson_candidate": {
+    "request": {
+      "topic_ids": [
+        "mt_FbDKeLfBCo"
+      ],
+      "age": 7,
+      "outputs": [
+        "interactive_browser"
+      ],
+      "style": "clear_playful_2d"
+    },
+    "topic": {
+      "id": "mt_FbDKeLfBCo",
+      "name": "Equivalent fractions",
+      "subject": "Mathematics",
+      "type": "CONCEPTUAL",
+      "age_range": [
+        7,
+        8
+      ],
+      "evidence": [
+        "Show that 1/2 = 2/4 using a diagram of equal parts",
+        "Use a fraction wall or bar model to find equivalent fractions",
+        "Explain why two fractions are equivalent by comparing the shaded areas"
+      ],
+      "standards": [
+        "uk-nc-2013:Ma/KS2/Y3/F/4"
+      ]
+    },
+    "prerequisites": {
+      "all_hard_ancestors_for_inspection": [
+        "mt_-hTTat0mBR",
+        "mt_LpSuPgL31x",
+        "mt_MyGblah2yY",
+        "mt_WcfaSfVT33",
+        "mt_cFltwUQi-d",
+        "mt_dmNvjroCPT",
+        "mt_g3W0mdADVu",
+        "mt_vKcxX6iNOA",
+        "mt_zuKAX6lcYR"
+      ],
+      "direct_hard_edges": [
+        {
+          "topicId": "mt_FbDKeLfBCo",
+          "prerequisiteId": "mt_MyGblah2yY",
+          "strength": "hard",
+          "reason": "Extends equivalence of 2/4 and 1/2 to broader equivalent fractions"
+        },
+        {
+          "topicId": "mt_FbDKeLfBCo",
+          "prerequisiteId": "mt_vKcxX6iNOA",
+          "strength": "hard",
+          "reason": "Recognising and showing equivalent fractions requires that vocabulary"
+        }
+      ],
+      "instructional_expansion": "bounded_scaffolding_after_review",
+      "learner_mastery": "unknown_not_inferred"
+    },
+    "learning_pattern": [
+      "predict",
+      "explore",
+      "explain",
+      "check"
+    ],
+    "interaction": {
+      "pattern": "fraction_bars_same_whole",
+      "controls": [
+        "partition_count",
+        "shaded_part_count",
+        "compare",
+        "reset"
+      ],
+      "denominators": [
+        2,
+        3,
+        4,
+        6,
+        8
+      ],
+      "visual_constraint": "all_bars_represent_identically_sized_wholes_with_equal_parts"
+    },
+    "coverage": [
+      {
+        "evidence_index": 0,
+        "source_evidence": "Show that 1/2 = 2/4 using a diagram of equal parts",
+        "learner_action": "Construct a bar showing one half and another showing two quarters.",
+        "check": "Both bars show the same shaded proportion under fixed known examples.",
+        "claim": "digital_construction_observed_only_if_performed",
+        "coverage_mode": "assessed_response_only"
+      },
+      {
+        "evidence_index": 1,
+        "source_evidence": "Use a fraction wall or bar model to find equivalent fractions",
+        "learner_action": "Use aligned bars to find another representation of two thirds.",
+        "check": "A new independently chosen valid numerator/denominator is checked against exact rational equality.",
+        "claim": "task_response_observed_not_general_mastery",
+        "coverage_mode": "assessed_response_only"
+      },
+      {
+        "evidence_index": 2,
+        "source_evidence": "Explain why two fractions are equivalent by comparing the shaded areas",
+        "learner_action": "Explain why the shaded areas match using a supported verbal or written prompt.",
+        "check": "Show a reasoning prompt and teacher rubric; automatic free-text/oral explanation grading is outside this candidate.",
+        "claim": "explanation_opportunity_provided_not_automatically_verified",
+        "coverage_mode": "practised_explanation_not_automatically_assessed"
+      }
+    ],
+    "domain_model": {
+      "quantities": [
+        "numerator_integer",
+        "denominator_positive_integer"
+      ],
+      "state_constraints": [
+        "0 <= numerator <= denominator",
+        "whole_size_equal_across_compared_bars"
+      ],
+      "representation": "normalized_exact_rationals",
+      "independent_fixtures": [
+        {
+          "left": [
+            1,
+            2
+          ],
+          "right": [
+            2,
+            4
+          ],
+          "equivalent": true
+        },
+        {
+          "left": [
+            2,
+            3
+          ],
+          "right": [
+            4,
+            6
+          ],
+          "equivalent": true
+        },
+        {
+          "left": [
+            1,
+            2
+          ],
+          "right": [
+            2,
+            3
+          ],
+          "equivalent": false
+        }
+      ],
+      "grounding_status": "requires_review_before_content_verified"
+    },
+    "routing": [
+      {
+        "selected_tool": "html_svg",
+        "alternatives_considered": [
+          "canvas2d",
+          "threejs"
+        ],
+        "instructional_reason": "Aligned shaded areas communicate equivalent fractions directly; depth is unnecessary.",
+        "capability_evidence": "DOM browser interaction probe passed; full SVG lesson integration unverified.",
+        "estimated_cost": "low; no custom models",
+        "fallback_consequences": "HTML/table explanation preserves access; graphical construction still needs validation."
+      },
+      {
+        "selected_tool": "gsap_optional",
+        "alternatives_considered": [
+          "instant_state_update",
+          "css_transition"
+        ],
+        "instructional_reason": "A short split/recombine presentation may help compare partitions; exact fraction state stays in the domain model.",
+        "capability_evidence": "Node is present; GSAP integration not yet tested.",
+        "estimated_cost": "small optional runtime dependency",
+        "fallback_consequences": "Immediate updates preserve the construction task."
+      }
+    ],
+    "excluded_tools": {
+      "blender": "No custom mesh is needed.",
+      "blender_mcp": "No Blender authoring session is needed.",
+      "threejs": "Spatial viewpoint is not needed.",
+      "hyperframes": "No video or deck was requested."
+    },
+    "planned_validation": [
+      "topic_and_evidence_mapping",
+      "known_exact_fraction_examples",
+      "equal_whole_geometry",
+      "construct_equivalent_pair",
+      "construct_unequal_pair",
+      "keyboard_equivalent_to_pointer",
+      "reset",
+      "reduced_motion",
+      "initial_changed_and_assessment_screenshots",
+      "local_asset_loading"
+    ],
+    "implementation_status": "not_built",
+    "human_review_status": "not_performed",
+    "source_review_status": "taxonomy_evidence_inspected_additional_domain_grounding_pending",
+    "automated_content_checks": "not_implemented",
+    "expert_review_status": "not_performed"
+  },
+  "routing_regression_cases": [
+    {
+      "topic": {
+        "id": "mt_mnEVZNkX3p",
+        "name": "Flat vs Solid Shapes",
+        "subject": "Mathematics",
+        "type": "CONCEPTUAL",
+        "age_range": [
+          5,
+          6
+        ],
+        "evidence": [
+          "Sort shapes into 'flat' and 'solid' groups",
+          "Explain that a circle is flat but a sphere is solid",
+          "Identify whether a given shape is 2-D or 3-D"
+        ],
+        "standards": [
+          "ccss-math:K.G.3"
+        ]
+      },
+      "expected_route": "html_svg_plus_optional_threejs_primitives",
+      "reason": "Sorting is semantic HTML; rotating a solid may help distinguish flat depiction from depth. Select 3D only if the plan actually uses that affordance.",
+      "blender_needed": false
+    },
+    {
+      "topic": {
+        "id": "mt_zCGwH1OQZa",
+        "name": "Evaporation and condensation",
+        "subject": "Science",
+        "type": "LANGUAGE",
+        "age_range": [
+          7,
+          9
+        ],
+        "evidence": [
+          "Describe the complete water cycle using at least four correct technical terms in the right order",
+          "Distinguish 'evaporation' from 'condensation' and explain where each occurs in the water cycle",
+          "Use 'water vapour' and 'precipitation' correctly in descriptions of weather and the water cycle"
+        ],
+        "standards": []
+      },
+      "expected_route": "html_svg",
+      "reason": "The evidence asks for vocabulary, sequencing, and distinctions; a qualitative labeled water-cycle diagram fits. It does not require a quantitative boiling simulation.",
+      "blender_needed": false
+    },
+    {
+      "topic": {
+        "id": "mt_ByXgbTld6R",
+        "name": "Moon Phases",
+        "subject": "Science",
+        "type": "CONCEPTUAL",
+        "age_range": [
+          5,
+          7
+        ],
+        "evidence": [
+          "Describe that the Moon appears to change shape over about a month",
+          "Name or draw at least three phases: new moon (dark), half moon, and full moon",
+          "State that the pattern repeats — the Moon goes through the same shapes again and again"
+        ],
+        "standards": []
+      },
+      "expected_route": "html_svg",
+      "reason": "Observe/name repeating phase appearances; no orbital geometry explanation is required by these criteria.",
+      "blender_needed": false
+    },
+    {
+      "topic": {
+        "id": "mt_q15w--Fb5H",
+        "name": "Earth's rotation and day/night",
+        "subject": "Science",
+        "type": "CONCEPTUAL",
+        "age_range": [
+          9,
+          11
+        ],
+        "evidence": [
+          "Explain that the Earth rotates (spins) on its axis once every 24 hours",
+          "Describe how this rotation causes day (facing the sun) and night (facing away)",
+          "Explain that the sun appears to move across the sky because we are rotating, not the sun"
+        ],
+        "standards": [
+          "ngss-k5:5-ESS1-2",
+          "uk-nc-2013:Y5.Sci.ES.4"
+        ]
+      },
+      "expected_route": "threejs_candidate_with_html_controls",
+      "reason": "Manipulating globe orientation relative to light can explain facing toward/away from sunlight; reviewed model and usable non-WebGL equivalent required.",
+      "blender_needed": false
+    }
+  ],
+  "sequence_conflict_case": {
+    "requested_topic_ids": [
+      "mt_VBl1T1sFCM",
+      "mt__00ZSLnB7p"
+    ],
+    "all_hard_ancestors_for_inspection": [
+      "mt_4i-FKXDDXh",
+      "mt_YPSx5pbpVl",
+      "mt_ZL9qVVnpwN"
+    ],
+    "stored_edge": {
+      "topicId": "mt_VBl1T1sFCM",
+      "prerequisiteId": "mt_ZL9qVVnpwN",
+      "strength": "hard",
+      "reason": "Must understand how sound works before designing a communication device using it"
+    },
+    "topic_name": "Vibrations & Sound",
+    "prerequisite_name": "Communication with Light & Sound",
+    "issue": "Stored direction and reason appear semantically inconsistent. No corrected edge is established.",
+    "expected_planning_status": "needs_review",
+    "expected_behavior": [
+      "preserve_original_edge",
+      "do_not_auto_reverse",
+      "do_not_claim_prerequisite_plan_resolved",
+      "continue_independent_topics"
+    ]
+  },
+  "provenance": {
+    "taxonomy_database_license": "ODbL-1.0",
+    "copied_evidence_text_license": "CC-BY-SA-4.0",
+    "standard_keys_only": "Preserve upstream standards terms and relevant notices; no full text is reconstructed.",
+    "attribution": "Marble Skill Taxonomy (v1), Generative Spark, Inc. (Marble), https://withmarble.com. Source topic/evidence excerpts retained for architecture illustration."
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "integration_checks": [
+    {
+      "name": "six-lesson browser series",
+      "status": "passed"
+    },
+    {
+      "name": "new-topic extension browser",
+      "status": "passed"
+    },
+    {
+      "name": "fractions interactive and MP4",
+      "status": "passed"
+    },
+    {
+      "name": "daynight interactive and MP4",
+      "status": "passed"
+    },
+    {
+      "name": "reject frozen video with an otherwise valid duration",
+      "status": "passed"
+    },
+    {
+      "name": "Blender GLB export and browser load",
+      "status": "passed"
+    }
+  ],
+  "unit_tests": {
+    "passed": 14,
+    "failed": 0
+  },
+  "munger_research": {
+    "models": 23,
+    "mappings": 52,
+    "topics": 29,
+    "source_anchors": 23,
+    "source_authentication": "unofficial_mirror_not_independently_authenticated"
+  },
+  "artifact_locations": {
+    "showcase": "output/showcase",
+    "fractions": "output/fractions-demo",
+    "daynight": "output/daynight-demo",
+    "extension": "output/notation-demo"
+  },
+  "limits": [
+    "Automated/agent review only; no child learning trials.",
+    "Learner-device performance is not measured.",
+    "MCP bridge and interactive decks are not configured."
+  ],
+  "agent_visual_review": "Representative screenshots for all six catalog scenes, the extension, mobile layout and decoded video states inspected; no human/learner review claimed."
+}

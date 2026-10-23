@@ -1,0 +1,7 @@
+{
+  "projectId": "gabreginatto-learning-lab",
+  "displayName": "Family Learning Lab",
+  "siteId": "gabreginatto-learning-lab",
+  "purpose": "A separate Firebase project for public, static educational activities only.",
+  "excludedProjects": ["hagin-480221", "html-comerciais-prod", "sabesp-missao-china", "sabesp-comercial"]
+}

@@ -1,0 +1,90 @@
+{
+  "kind": "family_learning_hosting_readiness",
+  "project_id": "gabreginatto-learning-lab",
+  "project_state": "created_active",
+  "deployment_state": "published_and_verified",
+  "unit_tests": {
+    "passed": 7,
+    "failed": 0,
+    "cloud_tests": "Simulated API cases in unit tests; actual project creation, Hosting deployment and remote verification also completed separately."
+  },
+  "local_browser": {
+    "status": "passed",
+    "checks": [
+      {
+        "viewport": 1200,
+        "catalog": "passed",
+        "activities": "passed",
+        "credits": "passed"
+      },
+      {
+        "viewport": 390,
+        "catalog": "passed",
+        "activities": "passed",
+        "credits": "passed"
+      }
+    ],
+    "external_requests": 0,
+    "http_errors": 0,
+    "physical_device_review": "not_performed"
+  },
+  "firebase_cli_version": "15.34.0",
+  "dependency_install_repeatability": "npm install and frozen npm ci completed",
+  "credential_check": "Published secure FIREBASE_TOKEN binding is ready; actual Firebase authentication, project creation and Hosting deployment succeeded.",
+  "network_check": "Published restricted policy enforced; Firebase OAuth/management/Hosting/upload operations and public-site verification succeeded through the configured proxy.",
+  "environment_draft": "Published configuration revision 2 is active; Firebase credential binding ready.",
+  "source_projects": "Read-only inspection of gabreginatto/HTML-comerciais; no reusable admin credentials found in tracked files",
+  "public_build_files": 39,
+  "routes": [
+    "/opportunity-cost/",
+    "/inversion/",
+    "/economies-of-scale/"
+  ],
+  "visual_review": "Codex inspected the three-activity catalog and economies-of-scale initial, bottleneck and growth scenes at desktop and narrow-phone widths; expert, learner and physical-device review not performed.",
+  "public_verification": {
+    "status": "passed",
+    "files_verified": 39,
+    "browser": {
+      "status": "passed",
+      "checks": [
+        {
+          "viewport": 1200,
+          "catalog": "passed",
+          "activities": "passed",
+          "credits": "passed"
+        },
+        {
+          "viewport": 390,
+          "catalog": "passed",
+          "activities": "passed",
+          "credits": "passed"
+        }
+      ],
+      "external_requests": 0,
+      "http_errors": 0,
+      "physical_device_review": "not_performed"
+    },
+    "url": "https://gabreginatto-learning-lab.web.app/"
+  },
+  "project_number": "1092509040039",
+  "deployed_at": "2026-10-22T03:30:31.434Z",
+  "catalog_url": "https://gabreginatto-learning-lab.web.app/",
+  "lesson_url": "https://gabreginatto-learning-lab.web.app/opportunity-cost/",
+  "inversion_url": "https://gabreginatto-learning-lab.web.app/inversion/",
+  "activity_revisions": {
+    "opportunity-cost": {
+      "source_fingerprint": "5ff8bdeca6af62cdfdf18bf43778042d1908e070312fad0844d4dcde0483294e",
+      "url": "https://gabreginatto-learning-lab.web.app/opportunity-cost/"
+    },
+    "inversion": {
+      "source_fingerprint": "01f09b71bfbb35dbc56a8089f14a4d93c33546dad48d8a60ed811e192d980bdb",
+      "url": "https://gabreginatto-learning-lab.web.app/inversion/"
+    },
+    "economies-of-scale": {
+      "plugin_sha256": "5f40dfbddb834361f13240d122136ed3f8bece62eb569b8ef52c3b1a7ded8146",
+      "url": "https://gabreginatto-learning-lab.web.app/economies-of-scale/",
+      "artifact": "output/economies-of-scale-v4"
+    }
+  },
+  "economies_of_scale_url": "https://gabreginatto-learning-lab.web.app/economies-of-scale/"
+}

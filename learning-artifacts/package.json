@@ -1,0 +1,24 @@
+{
+  "name": "taxonomy-to-lesson",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Cloud-compatible, evidence-driven learning artifact compiler and agent skill.",
+  "engines": { "node": ">=22" },
+  "bin": { "taxonomy-to-lesson": "./cli.mjs" },
+  "scripts": {
+    "restore:published": "node scripts/restore-published.mjs",
+    "test": "node --test test/*.test.mjs",
+    "check": "node cli.mjs doctor",
+    "demo": "node cli.mjs generate --topic mt_FbDKeLfBCo --out output/fractions",
+    "verify:demo": "node cli.mjs verify --dir output/fractions",
+    "test:examples": "node scripts/validate_examples.mjs"
+  },
+  "dependencies": {
+    "ajv": "8.17.1",
+    "esbuild": "0.25.12",
+    "gsap": "3.15.0",
+    "hyperframes": "0.8.171",
+    "three": "0.186.1"
+  }
+}

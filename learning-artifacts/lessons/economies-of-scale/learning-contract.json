@@ -1,0 +1,70 @@
+{
+  "model_id": "scale",
+  "taxonomy_foundation": "mt_9gpUHWVKMR",
+  "requested_age": 15,
+  "objective": "Compare prospective daily plans using unit cost, capacity, demand and coordination; transfer the reasoning to a different business.",
+  "experiments": [
+    "Shared fixed cost at 10 versus 20 units",
+    "Assembly versus packing bottleneck",
+    "Choose lowest-cost plan that fulfills 80 orders",
+    "Reconsider plan when demand drops to 20",
+    "Profit comparison for a food festival"
+  ],
+  "taxonomy_coverage": [
+    {
+      "index": 0,
+      "mode": "partial",
+      "claim": "Interpret supplied cost/revenue/profit components; not an open explanation of all definitions."
+    },
+    {
+      "index": 1,
+      "mode": "partial",
+      "claim": "Recognize a correct profit comparison from disclosed arithmetic."
+    }
+  ],
+  "authored_extensions": [
+    "Fixed versus variable costs",
+    "Average versus total cost",
+    "Capacity and bottlenecks",
+    "Economies/diseconomies across prospective configurations",
+    "Coordination-cost curve",
+    "Demand and idle capacity"
+  ],
+  "assumed_prerequisites": [
+    "Whole-number money arithmetic",
+    "Division and averages",
+    "Read a simple bar chart",
+    "Distinguish one day from one item"
+  ],
+  "prerequisite_mastery": "Unknown; inspect the saved generated plan. Source topic age 7\u20139 is a foundation, not the requested audience level.",
+  "assessment_scope": "this_response_only",
+  "not_assessed": [
+    "Broad mental-model mastery",
+    "Marketing and social-proof effects",
+    "Supplier bargaining and distribution economics",
+    "Uncertain demand and inventory",
+    "Sunk capital recovery",
+    "Physical production processes"
+  ],
+  "tool_decisions": {
+    "threejs": "Colorful toy workshop with direct scene picking, depth, throughput stations and replicated team pods. Procedural geometry needs no external assets.",
+    "gsap": "On-demand scene emphasis only; no domain mutation in animation callbacks.",
+    "html_css": "Keyboard equivalents, exact quantities, cost curve, bounded questions and focus management.",
+    "anatomy": "Not used; the user rejected forcing an explanatory machine metaphor as the general design direction.",
+    "drei": "Not needed for these procedural assets; no additional framework/dependency added.",
+    "blender": "Not needed",
+    "hyperframes": "No video requested"
+  },
+  "source_review": "Local exact taxonomy evidence, Munger course mapping and independent arithmetic. OpenStax external page was blocked; not claimed as retrieved.",
+  "expert_review": "not_performed",
+  "learner_review": "not_performed",
+  "physical_device_review": "not_performed",
+  "hard_prerequisite_topic_ids": [
+    "mt_RgQxPddV8v",
+    "mt_SbEaQnMQoD",
+    "mt_CrGnpVjnk8",
+    "mt_vpMDMbx4pc",
+    "mt_RTwmvr9R7V",
+    "mt_phpn6KhCAv"
+  ]
+}

@@ -1,0 +1,369 @@
+{
+  "sources": [
+    {
+      "id": "almanack-mirror",
+      "title": "Poor Charlie’s Almanack: The Wit and Wisdom of Charles T. Munger (expanded collection, HTML mirror)",
+      "author": "Charles T. Munger; collection edited by Peter D. Kaufman",
+      "publisher": "Retrieved publisher/host: CoffeeTalk101 on GitHub. Original collection publisher is not independently verified by the retrieved mirror.",
+      "sourceType": "transcript_mirror",
+      "primaryStatus": "Attributed first-person speeches embedded in an unofficial mirror; not authenticated against the publisher or recordings",
+      "url": "https://raw.githubusercontent.com/CoffeeTalk101/poor-charlies-almanack/dd0fa310e94db8f2990c2fac47fed6fafb74a9ca/index.html",
+      "repositoryUrl": "https://github.com/CoffeeTalk101/poor-charlies-almanack",
+      "revision": "dd0fa310e94db8f2990c2fac47fed6fafb74a9ca",
+      "retrievedDate": "2026-10-18",
+      "access": {
+        "status": "retrieved",
+        "httpStatus": 200,
+        "byteCount": 1155077,
+        "sha256": "8d6e9313a71639a6134180d0a0a5768eeadef392fb44e996bf546b45f62a78f7"
+      },
+      "sections": [
+        {
+          "id": "1986",
+          "title": "Harvard School Commencement Speech",
+          "attributedDate": "1986-06-13",
+          "note": "Inversion and active attention to disconfirming evidence. Date attribution belongs to the mirror."
+        },
+        {
+          "id": "1994",
+          "title": "A Lesson on Elementary, Worldly Wisdom as It Relates to Investment Management and Business",
+          "attributedDate": "1994-04-14",
+          "note": "USC business talk. The mirror introduction says published by Outstanding Investor Digest May 5, 1995; speech year and publication year differ."
+        },
+        {
+          "id": "1996",
+          "title": "A Lesson on Elementary, Worldly Wisdom, Revisited",
+          "attributedDate": "1996-04-19",
+          "note": "Stanford Law School; mirror introduction explicitly says the collection editor abridged passages and added comments."
+        },
+        {
+          "id": "2003",
+          "title": "Academic Economics: Strengths and Faults after Considering Interdisciplinary Needs",
+          "attributedDate": "2003-10-03",
+          "note": "UC Santa Barbara economics lecture: opportunity cost, incentives, comparative advantage, higher-order consequences."
+        },
+        {
+          "id": "psych2005",
+          "title": "The Psychology of Human Misjudgment",
+          "attributedDate": "2005 (expanded revision)",
+          "note": "The mirror describes a combined, revised text with new material, not a single delivered talk. It identifies an April 24, 1995 Cambridge Center for Behavioral Studies talk among antecedents. Do not label the 25-item revision an exact 1995 transcript."
+        }
+      ],
+      "limitations": [
+        "Visible transcription/OCR errors, repeated text and disrupted headings occur. Exact wording and dates require an authorized edition or recording before publication.",
+        "One underlying collection; separate chapters do not constitute independent corroboration.",
+        "Retrieval and source anchors are verified; speech authenticity, rights and empirical psychology claims are not independently verified. No full source text is redistributed."
+      ],
+      "anchors": {
+        "lattice": {
+          "sectionId": "1994",
+          "searchText": "latticework of models",
+          "normalizedTextLines": [
+            871,
+            872
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "invert": {
+          "sectionId": "1986",
+          "searchText": "Invert always invert",
+          "normalizedTextLines": [
+            834
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "competence": {
+          "sectionId": "1994",
+          "searchText": "circle of competence",
+          "normalizedTextLines": [
+            1017,
+            1019
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "opportunity": {
+          "sectionId": "2003",
+          "searchText": "Opportunity cost is a superpower",
+          "normalizedTextLines": [
+            2120
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "incentives": {
+          "sectionId": "psych2005",
+          "searchText": "Reward and Punishment",
+          "normalizedTextLines": [
+            2612,
+            2644
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "compound": {
+          "sectionId": "1994",
+          "searchText": "compound interest",
+          "normalizedTextLines": [
+            879
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "probability": {
+          "sectionId": "1994",
+          "searchText": "permutations and combinations",
+          "normalizedTextLines": [
+            879,
+            892,
+            897
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "safety": {
+          "sectionId": "1994",
+          "searchText": "margin of safety",
+          "normalizedTextLines": [
+            1068
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "feedback": {
+          "sectionId": "psych2005",
+          "searchText": "feedback mode",
+          "normalizedTextLines": [
+            2994,
+            2997,
+            3004
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "consequences": {
+          "sectionId": "2003",
+          "searchText": "second-order",
+          "normalizedTextLines": [
+            2229,
+            2236,
+            2243
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "scale": {
+          "sectionId": "1994",
+          "searchText": "disadvantages of scale",
+          "normalizedTextLines": [
+            951
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "comparative": {
+          "sectionId": "2003",
+          "searchText": "Ricardo's principle",
+          "normalizedTextLines": [
+            2198,
+            2202
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "disconfirm": {
+          "sectionId": "1986",
+          "searchText": "disconfirm",
+          "normalizedTextLines": [
+            839
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "limits": {
+          "sectionId": "1994",
+          "searchText": "crude approximation",
+          "normalizedTextLines": [
+            894
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "evolution": {
+          "sectionId": "1994",
+          "searchText": "ecosystem",
+          "normalizedTextLines": [
+            921,
+            924,
+            925,
+            951
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "psych": {
+          "sectionId": "psych2005",
+          "searchText": "psychological tendencies",
+          "normalizedTextLines": [
+            2420,
+            2526,
+            2610,
+            2723,
+            2889,
+            3229,
+            3364,
+            3646,
+            3823,
+            3999,
+            4005,
+            4026,
+            4134,
+            4255,
+            4257,
+            4348,
+            4353,
+            4363,
+            4367,
+            4375,
+            4396,
+            4408,
+            4424,
+            4456
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "confirmation": {
+          "sectionId": "1986",
+          "searchText": "disconfirming information",
+          "normalizedTextLines": [
+            839
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "available": {
+          "sectionId": "psych2005",
+          "searchText": "Availability- Mis Weighing",
+          "normalizedTextLines": [
+            4131,
+            4136
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "consistency": {
+          "sectionId": "psych2005",
+          "searchText": "Inconsistency-Avoidance",
+          "normalizedTextLines": [
+            2616,
+            3074,
+            3088,
+            3107,
+            3141,
+            3145,
+            3149,
+            3155,
+            3157,
+            3174,
+            3188,
+            3196,
+            3358,
+            3823,
+            3868,
+            3890
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "authority": {
+          "sectionId": "psych2005",
+          "searchText": "Authority-Misinfluence",
+          "normalizedTextLines": [
+            2638,
+            4205,
+            4252
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "liking": {
+          "sectionId": "psych2005",
+          "searchText": "Liking/Loving",
+          "normalizedTextLines": [
+            2613,
+            2973,
+            3006
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "social": {
+          "sectionId": "psych2005",
+          "searchText": "Social-Proof",
+          "normalizedTextLines": [
+            2628,
+            3068,
+            3899,
+            3905,
+            3907,
+            3915,
+            3919,
+            3940,
+            3944,
+            3957,
+            3987,
+            3992,
+            4016,
+            4065
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        },
+        "lolla": {
+          "sectionId": "psych2005",
+          "searchText": "Lollapalooza Tendency",
+          "normalizedTextLines": [
+            2642,
+            4347
+          ],
+          "normalization": "HTMLParser.handle_data; strip nonempty text nodes; join with newline; splitlines; one-based lines"
+        }
+      },
+      "editionNote": "Repository metadata.opf labels the collection Expanded Third Edition; no original-edition metadata has been authenticated.",
+      "metadataUrl": "https://github.com/CoffeeTalk101/poor-charlies-almanack/blob/dd0fa310e94db8f2990c2fac47fed6fafb74a9ca/metadata.opf"
+    },
+    {
+      "id": "berkshire2014",
+      "title": "2014 Berkshire Hathaway shareholder letter",
+      "publisher": "Berkshire Hathaway",
+      "sourceType": "primary",
+      "url": "https://www.berkshirehathaway.com/letters/2014ltr.pdf",
+      "retrievedDate": "2026-10-18",
+      "access": {
+        "status": "blocked",
+        "error": "Proxy tunnel 403 Forbidden; content not read"
+      },
+      "usedForClaims": false
+    },
+    {
+      "id": "stripe-almanack",
+      "title": "Poor Charlie’s Almanack publisher page",
+      "publisher": "Stripe Press",
+      "sourceType": "publisher",
+      "url": "https://press.stripe.com/poor-charlies-almanack",
+      "retrievedDate": "2026-10-18",
+      "access": {
+        "status": "blocked",
+        "error": "Proxy tunnel 403 Forbidden; content not read"
+      },
+      "usedForClaims": false
+    },
+    {
+      "id": "fs-worldly",
+      "title": "A Lesson on Elementary Worldly Wisdom",
+      "publisher": "Farnam Street",
+      "sourceType": "secondary_transcript",
+      "url": "https://fs.blog/great-talks/a-lesson-on-worldly-wisdom/",
+      "retrievedDate": "2026-10-18",
+      "access": {
+        "status": "blocked",
+        "error": "Proxy tunnel 403 Forbidden; content not read"
+      },
+      "usedForClaims": false
+    },
+    {
+      "id": "fs-psych",
+      "title": "The Psychology of Human Misjudgment",
+      "publisher": "Farnam Street",
+      "sourceType": "secondary_transcript",
+      "url": "https://fs.blog/great-talks/psychology-human-misjudgment/",
+      "retrievedDate": "2026-10-18",
+      "access": {
+        "status": "blocked",
+        "error": "Proxy tunnel 403 Forbidden; content not read"
+      },
+      "usedForClaims": false
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "opportunity-cost": {
+    "plugin": "lessons/opportunity-cost/opportunity-cost.plugin.mjs",
+    "age": 10,
+    "thumbnail": "lessons/opportunity-cost/screenshots/world.png"
+  },
+  "inversion": {
+    "plugin": "lessons/inversion/inversion.plugin.mjs",
+    "age": 10,
+    "thumbnail": "lessons/inversion/screenshots/world.png"
+  },
+  "economies-of-scale": {
+    "plugin": "lessons/economies-of-scale/economies-of-scale.plugin.mjs",
+    "age": 15,
+    "thumbnail": "lessons/economies-of-scale/screenshots/growth-world-1200.png"
+  }
+}

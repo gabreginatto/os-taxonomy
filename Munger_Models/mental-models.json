@@ -1,0 +1,3190 @@
+{
+  "formatVersion": "1.0",
+  "researchDate": "2026-10-18",
+  "purpose": "Prioritized Munger-associated reasoning curriculum proposal for future artifact generation",
+  "taxonomy": {
+    "relativeTopicsPath": "data/topics.json",
+    "relativeDependenciesPath": "data/dependencies.json",
+    "sourceCommit": "96a7933754af672e1bfdbf7ecb05c325860c6e0d",
+    "topicsSha256": "2d99fc3b5e57d9ddb86b6c179b58a1b0390f048d9798585fe03b13cbc183719b",
+    "dependenciesSha256": "86a24efb44b480e5be23082b4bdea653f69f6d6fd54c5409a2f33c185be1d87f",
+    "topicCount": 1590,
+    "dependencyCount": 3221,
+    "dependencyDirection": "topicId depends on prerequisiteId; never reverse from prose"
+  },
+  "scope": [
+    "23 prioritized models or groups; this is not a canonical fixed complete list of Munger models.",
+    "Munger emphasized and combined ideas from many disciplines; most were not invented by him.",
+    "Age bands are proposed teaching routes, not mastery judgments or dataset age claims.",
+    "All transfer checks and lesson actions are original course proposals, not tested interventions or built artifacts.",
+    "Direct support denotes an explicitly evidenced component, never complete model mastery.",
+    "Only one unofficial underlying collection was readable; source authenticity and independent corroboration remain unresolved."
+  ],
+  "attributionCategories": {
+    "munger_emphasized_existing_idea": "Existing idea strongly emphasized by Munger; no claim of invention.",
+    "general_disciplinary_model_used_by_munger": "General disciplinary idea Munger uses; credit the discipline and original thinkers where appropriate.",
+    "editorial_course_extension_from_munger": "Editorial course framing or extension grounded in a related Munger discussion; not a quotation or a named Munger doctrine."
+  },
+  "coverageRoles": {
+    "direct_support": "A relevant component has explicit observable evidence criteria in the taxonomy; limitation states what remains uncovered.",
+    "foundation": "A needed prior skill or conceptual mention, insufficient to establish the target mental model.",
+    "analogy_only": "Concrete source-domain example; requires explicit transfer discussion and cannot certify target-model coverage.",
+    "missing": "Unresolved concept or assessment requiring original, reviewed instruction."
+  },
+  "knownSemanticConflicts": [
+    {
+      "topicId": "mt_VBl1T1sFCM",
+      "prerequisiteId": "mt_ZL9qVVnpwN",
+      "status": "needs_review if used",
+      "note": "Stored hard edge makes Vibrations & Sound depend on Communication with Light & Sound while prose appears to imply the opposite. Retain edge direction and escalate the content conflict; do not silently repair."
+    }
+  ],
+  "models": [
+    {
+      "id": "latticework",
+      "title": "A latticework of multiple models",
+      "priority": 1,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Use several relevant disciplinary explanations, check how they fit the same facts, and notice what each leaves out. A collection of model names is insufficient.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "lattice",
+          "claim": "The USC text urges multiple models from multiple disciplines and connecting experience to them.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Explain a claim with a reason",
+        "Represent a real problem",
+        "Compare explanations"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_8xVHooT4aI",
+            "topicName": "Real-World Maths Modelling",
+            "ageRange": [
+              9,
+              10
+            ],
+            "coverageRole": "foundation",
+            "supports": "Select and interpret mathematical representations in context",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Model a recipe-scaling problem with multiplication and fractions, then interpret the answer in grams"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Represent a room-carpet problem by drawing a scale diagram and applying the area formula"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_8xVHooT4aI",
+                "prerequisiteId": "mt_K3R0yaHVcx",
+                "strength": "hard",
+                "reason": "Age 8-9 modelling is prerequisite to age 9-10 level",
+                "prerequisiteName": "Modelling with multiplication and fractions"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_gMSFymQlrW",
+            "topicName": "Evaluating Arguments in Non-Fiction",
+            "ageRange": [
+              11,
+              14
+            ],
+            "coverageRole": "foundation",
+            "supports": "Compare opposing arguments and evaluate reasons",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Compare two opposing arguments on the same issue and evaluate which is more convincing, with reasons"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_dmFnJzxKwz",
+                "strength": "hard",
+                "reason": "Assessing whether evidence is sufficient requires textual evidence skills",
+                "prerequisiteName": "Using and Evaluating Textual Evidence"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_jIcgbCmziD",
+                "strength": "hard",
+                "reason": "Evaluating claims requires understanding purpose, audience, and context",
+                "prerequisiteName": "Purpose, audience, and context"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_V6456X6pJE",
+                "strength": "hard",
+                "reason": "Evaluating arguments builds on KS2 distinguishing fact from opinion",
+                "prerequisiteName": "Fact vs opinion"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_0T0Zf0YG6k",
+            "topicName": "Changing Scientific Knowledge",
+            "ageRange": [
+              9,
+              11
+            ],
+            "coverageRole": "foundation",
+            "supports": "Compare explanations against evidence from multiple sources",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Explain that different scientists may interpret the same fossil evidence differently"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "State that the best scientific explanation is the one supported by the most evidence from multiple sources"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": []
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No explicit multidisciplinary model-selection or synthesis evidence criterion.",
+          "Need causal diagrams, assumptions, conflicts between models, and boundary conditions."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Explain a playground problem in two ways.",
+          "learnerAction": "Sort cards showing physical obstacles and different goals.",
+          "observableCheck": "Give a useful reason from each card set; name one unknown.",
+          "transferTask": "Explain why a plant might wilt using water and sunlight ideas."
+        },
+        "9-12": {
+          "objective": "Choose two useful lenses for a school-fair queue.",
+          "learnerAction": "Compare a capacity diagram with a reward rule.",
+          "observableCheck": "Use each lens to predict a different consequence and cite a fact.",
+          "transferTask": "Apply both lenses to a lunch queue with different constraints."
+        },
+        "13-17": {
+          "objective": "Synthesize causal, probabilistic and incentive models.",
+          "learnerAction": "Build a decision memo for a fictional transport policy.",
+          "observableCheck": "Explain where models agree, conflict and omit evidence; propose a test.",
+          "transferTask": "Revise the memo for a new city and justify which model transfers."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "inversion",
+      "title": "Inversion and failure prevention",
+      "priority": 2,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Approach a goal by asking what could reliably prevent it; remove avoidable failure paths and still check whether the positive goal is achieved.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "invert",
+          "claim": "The 1986 school commencement text recommends solving problems backward and attending to ways to fail.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "State a goal and constraints",
+        "Connect actions to outcomes",
+        "Distinguish prevention from guarantee"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_Z5-fSCOBep",
+            "topicName": "Simple Design Problems",
+            "ageRange": [
+              8,
+              11
+            ],
+            "coverageRole": "foundation",
+            "supports": "Specify success criteria and constraints",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Specify at least two criteria for a successful solution (e.g. must hold X weight, must cost less than Y)"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Identify constraints such as available materials, time limits, or cost"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_Z5-fSCOBep",
+                "prerequisiteId": "mt_nNYo5A-7Bl",
+                "strength": "hard",
+                "reason": "Must analyse simple design comparisons before formally defining design problems with criteria/constraints",
+                "prerequisiteName": "Comparing Design Solutions"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_nNYo5A-7Bl",
+            "topicName": "Comparing Design Solutions",
+            "ageRange": [
+              5,
+              8
+            ],
+            "coverageRole": "foundation",
+            "supports": "Use test data to identify weaknesses and improvements",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Compare the results, identifying strengths and weaknesses of each design"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Use data as evidence to recommend which design works better and suggest improvements"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_nNYo5A-7Bl",
+                "prerequisiteId": "mt_hi8cVycbwn",
+                "strength": "hard",
+                "reason": "Must create models before comparing test results of two designs",
+                "prerequisiteName": "Modelling with Sketches"
+              },
+              {
+                "topicId": "mt_nNYo5A-7Bl",
+                "prerequisiteId": "mt_ZFwPZaDJ0_",
+                "strength": "hard",
+                "reason": "Must gather/record data before analysing data from design tests",
+                "prerequisiteName": "Recording Data"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No explicit inversion, fault-tree or necessary-versus-sufficient conditions criterion."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Name avoidable ways a toy bridge could fail.",
+          "learnerAction": "Choose between a narrow base and a wide base and test a paper model.",
+          "observableCheck": "Explain which failure was reduced and test whether the bridge still works.",
+          "transferTask": "Plan how to keep a backpack ready for school."
+        },
+        "9-12": {
+          "objective": "Use a pre-mortem to protect a group project.",
+          "learnerAction": "List three plausible failure routes and choose a prevention for each.",
+          "observableCheck": "Distinguish a cause from a warning sign and test one prevention.",
+          "transferTask": "Repeat the process for a sports-day plan."
+        },
+        "13-17": {
+          "objective": "Compare forward planning with a failure tree.",
+          "learnerAction": "Map independent and shared failure paths in a fictional event plan.",
+          "observableCheck": "Explain why preventing one failure does not guarantee success; prioritize by likelihood and consequence.",
+          "transferTask": "Use inversion on a study schedule without treating uncertainty as personal failure."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "circle-of-competence",
+      "title": "Circle of competence and calibrated confidence",
+      "priority": 3,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Separate what you can explain and check from what you merely recognize; act within justified knowledge, seek evidence or ask for help at the boundary.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "competence",
+          "claim": "The USC text explicitly discusses knowing and staying within a circle of competence.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Explain rather than repeat",
+        "Recognize missing information",
+        "Ask a checkable question"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_gMSFymQlrW",
+            "topicName": "Evaluating Arguments in Non-Fiction",
+            "ageRange": [
+              11,
+              14
+            ],
+            "coverageRole": "foundation",
+            "supports": "Assess whether a claim has sufficient evidence",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Identify the main claim in an argument text and evaluate whether the evidence presented is sufficient"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_dmFnJzxKwz",
+                "strength": "hard",
+                "reason": "Assessing whether evidence is sufficient requires textual evidence skills",
+                "prerequisiteName": "Using and Evaluating Textual Evidence"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_jIcgbCmziD",
+                "strength": "hard",
+                "reason": "Evaluating claims requires understanding purpose, audience, and context",
+                "prerequisiteName": "Purpose, audience, and context"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_V6456X6pJE",
+                "strength": "hard",
+                "reason": "Evaluating arguments builds on KS2 distinguishing fact from opinion",
+                "prerequisiteName": "Fact vs opinion"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [
+          {
+            "topicId": "mt_bPFToj0OhZ",
+            "topicName": "AI Mistakes and Limitations",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "analogy_only",
+            "supports": "AI failure from limited training data illustrates one knowledge boundary",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Explain that AI mistakes happen because of gaps or errors in training data"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "AI training-data gaps do not directly model a human circle of competence.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_bPFToj0OhZ",
+                "prerequisiteId": "mt_K6qtan847r",
+                "strength": "hard",
+                "reason": "Must understand how training works before understanding why it can go wrong",
+                "prerequisiteName": "Machine Learning Basics"
+              }
+            ]
+          }
+        ],
+        "missing": [
+          "No explicit calibration, confidence scoring, expert-domain boundaries or help-seeking evidence criterion."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Tell knowing from guessing.",
+          "learnerAction": "Place familiar and unfamiliar puzzles in know, could-check and need-help trays.",
+          "observableCheck": "Explain one choice by showing a solution or naming needed help.",
+          "transferTask": "Use the trays for an unfamiliar household task with adult guidance."
+        },
+        "9-12": {
+          "objective": "Set a boundary for justified confidence.",
+          "learnerAction": "Predict which questions you can explain, answer them, then compare.",
+          "observableCheck": "Revise confidence using actual explanations; identify where an expert is needed.",
+          "transferTask": "Try a different subject and check whether previous confidence transfers."
+        },
+        "13-17": {
+          "objective": "Calibrate confidence across domains.",
+          "learnerAction": "Record probability ranges on factual predictions and audit outcomes.",
+          "observableCheck": "Explain overconfidence, limited samples and domain-specific expertise.",
+          "transferTask": "Evaluate an expert speaking beyond their specialty using evidence and credentials."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "opportunity-cost",
+      "title": "Opportunity cost and trade-offs",
+      "priority": 4,
+      "attribution": "general_disciplinary_model_used_by_munger",
+      "definition": "The cost of choosing an option includes the best feasible alternative forgone; money paid and every imaginable alternative are different quantities.",
+      "status": "interactive lesson implemented at learning-artifacts/lessons/opportunity-cost; source reviewed and automated checks passed; no expert or learner review",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "opportunity",
+          "claim": "The 2003 economics text explicitly emphasizes opportunity cost as a general reasoning tool.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Finite time or resources",
+        "Compare feasible choices",
+        "Identify an alternative"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [
+          {
+            "topicId": "mt_Qzbh-_v0Gq",
+            "topicName": "Budgeting Pocket Money",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "direct_support",
+            "supports": "A concrete budget trade-off: choosing one purchase prevents another",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Create a simple spending plan for £10 showing what they would buy and how much is left"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Identify a trade-off (choosing one thing means not having enough for another)"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Concrete spending trade-offs do not yet establish best-forgone-alternative reasoning or nonfinancial application.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_Qzbh-_v0Gq",
+                "prerequisiteId": "mt__ab4knIaSL",
+                "strength": "hard",
+                "reason": "Must understand needs vs wants to make budget trade-offs",
+                "prerequisiteName": "Needs & Wants"
+              },
+              {
+                "topicId": "mt_Qzbh-_v0Gq",
+                "prerequisiteId": "mt_zrCyqhngYm",
+                "strength": "hard",
+                "reason": "Must understand saving concept before budgeting a fixed amount",
+                "prerequisiteName": "Saving Money"
+              }
+            ]
+          }
+        ],
+        "foundation": [
+          {
+            "topicId": "mt__ab4knIaSL",
+            "topicName": "Needs & Wants",
+            "ageRange": [
+              5,
+              7
+            ],
+            "coverageRole": "foundation",
+            "supports": "Prioritize needs under limited resources",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Explain why a family might choose to buy a need before a want"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt__ab4knIaSL",
+                "prerequisiteId": "mt_SsS7GptD_o",
+                "strength": "hard",
+                "reason": "Must understand money exists and is limited before distinguishing needs from wants",
+                "prerequisiteName": "What Money Is"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "Best feasible alternative, nonfinancial opportunity cost, sunk cost and changing constraints need new objectives."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Identify what choosing uses up.",
+          "learnerAction": "Spend a fixed set of play tokens on a picnic pack.",
+          "observableCheck": "Name the wanted feasible item left out because of the choice.",
+          "transferTask": "Choose how to use twenty minutes of free time."
+        },
+        "9-12": {
+          "objective": "Name the best feasible alternative forgone.",
+          "learnerAction": "Plan a fair visit with a time and token budget.",
+          "observableCheck": "Compare the chosen plan with its runner-up and explain the sacrifice.",
+          "transferTask": "Re-plan a club activity when one resource changes."
+        },
+        "13-17": {
+          "objective": "Compare opportunity costs with sunk costs.",
+          "learnerAction": "Allocate a fictional team’s limited hours among projects.",
+          "observableCheck": "Exclude unrecoverable past effort; justify the best feasible alternative under stated goals.",
+          "transferTask": "Analyze a study-versus-club decision with values and uncertainty made explicit."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "incentives",
+      "title": "Incentives and incentive-caused bias",
+      "priority": 5,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Rewards, penalties and measurement rules change behavior and can also bias what people notice or report; inspect whose goals the rule actually serves.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "incentives",
+          "claim": "The expanded misjudgment text emphasizes reward and punishment and incentive-caused bias.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Different people have different goals",
+        "Rules affect behavior",
+        "Distinguish evidence from persuasion"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_My0OL6fhGL",
+            "topicName": "Advertising & Spending",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "foundation",
+            "supports": "Recognize persuasion and its effect on wants",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Spot at least two persuasion techniques in a real advert (bright colours, celebrity, special offer)"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Describe a time when advertising made them want something they didn't really need"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_My0OL6fhGL",
+                "prerequisiteId": "mt__ab4knIaSL",
+                "strength": "hard",
+                "reason": "Must understand needs vs wants to critically evaluate advertising",
+                "prerequisiteName": "Needs & Wants"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_Qzbh-_v0Gq",
+            "topicName": "Budgeting Pocket Money",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "foundation",
+            "supports": "Understand constrained choice",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Identify a trade-off (choosing one thing means not having enough for another)"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_Qzbh-_v0Gq",
+                "prerequisiteId": "mt__ab4knIaSL",
+                "strength": "hard",
+                "reason": "Must understand needs vs wants to make budget trade-offs",
+                "prerequisiteName": "Needs & Wants"
+              },
+              {
+                "topicId": "mt_Qzbh-_v0Gq",
+                "prerequisiteId": "mt_zrCyqhngYm",
+                "strength": "hard",
+                "reason": "Must understand saving concept before budgeting a fixed amount",
+                "prerequisiteName": "Saving Money"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No evidence criterion for reward-induced behavior, principal-agent conflicts or gaming a metric."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Predict how a rule changes a pretend game.",
+          "learnerAction": "Compare points for speed with points for careful sorting.",
+          "observableCheck": "Explain a behavior encouraged by each rule and one unintended result.",
+          "transferTask": "Design a kind classroom cleanup rule with adult discussion."
+        },
+        "9-12": {
+          "objective": "Connect rewards to unintended behavior.",
+          "learnerAction": "Run a fictional library game rewarding book counts versus thoughtful summaries.",
+          "observableCheck": "Use observations to explain a metric that can be gamed and suggest a better check.",
+          "transferTask": "Audit a school-fair prize rule for fairness and quality."
+        },
+        "13-17": {
+          "objective": "Analyze incentives and conflicts of interest.",
+          "learnerAction": "Compare sponsor-funded claims, seller advice and independent test results.",
+          "observableCheck": "Explain who benefits, what data are missing and why incentives alone do not prove dishonesty.",
+          "transferTask": "Design a transparent rubric for a fictional volunteer program."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "compounding",
+      "title": "Compounding and repeated growth",
+      "priority": 6,
+      "attribution": "general_disciplinary_model_used_by_munger",
+      "definition": "When each round’s change applies to the current total, growth differs from adding a fixed amount. Rates, duration and losses matter; indefinite growth assumptions can fail.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "compound",
+          "claim": "The USC text identifies compound interest among the basic mathematical models.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Repeated multiplication",
+        "Fractions or percentages for formal work",
+        "Distinguish a fixed increment from a fixed proportion"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_uSUqTjOl8m",
+            "topicName": "Banks & Saving",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "foundation",
+            "supports": "Understand interest as extra paid on savings",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Describe what interest means (the bank pays you a little extra for keeping money there)"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Naming interest is not calculating compound interest.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_uSUqTjOl8m",
+                "prerequisiteId": "mt_zrCyqhngYm",
+                "strength": "hard",
+                "reason": "Must understand saving before learning about banks as saving institutions",
+                "prerequisiteName": "Saving Money"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_ZM9mhHsyYZ",
+            "topicName": "Understanding Percentages",
+            "ageRange": [
+              9,
+              10
+            ],
+            "coverageRole": "foundation",
+            "supports": "Represent percentages as fractions and decimals",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Write 35% as 35/100 and as 0.35"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Shade 40% of a 10×10 grid and write the fraction 40/100"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_ZM9mhHsyYZ",
+                "prerequisiteId": "mt_Vi4Vo5xs_g",
+                "strength": "hard",
+                "reason": "Decimal notation for fractions is prerequisite to understanding % as parts per 100",
+                "prerequisiteName": "Decimals for Tenths & Hundredths"
+              },
+              {
+                "topicId": "mt_ZM9mhHsyYZ",
+                "prerequisiteId": "mt_W17Kbwm0-u",
+                "strength": "hard",
+                "reason": "Understanding the % symbol and 'per cent means parts per hundred' is the LANGUAGE node content",
+                "prerequisiteName": "Decimal & Percent Notation"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_PZ909yPrEC",
+            "topicName": "Multiplication as repeated addition",
+            "ageRange": [
+              5,
+              6
+            ],
+            "coverageRole": "foundation",
+            "supports": "Repeated addition provides a contrast to repeated multiplication",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Explain that 3 groups of 2 is the same as 2 + 2 + 2"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_PZ909yPrEC",
+                "prerequisiteId": "mt_OvyoRo47K-",
+                "strength": "hard",
+                "reason": "Multiplication as repeated addition requires understanding addition as combining groups",
+                "prerequisiteName": "Addition as combining or putting together two"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No explicit repeated percentage change, exponential recurrence, decay or compound-interest calculation criterion."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Distinguish adding from doubling with tiny numbers.",
+          "learnerAction": "Build four rounds of token towers under add-two and double rules.",
+          "observableCheck": "Predict and count the next tower under each rule.",
+          "transferTask": "Look for the same difference in a paper-folding thought experiment."
+        },
+        "9-12": {
+          "objective": "Explain growth applied to the current total.",
+          "learnerAction": "Compare add-ten and grow-by-ten-percent tables with fictional counters.",
+          "observableCheck": "Calculate several rounds and explain why the increases change.",
+          "transferTask": "Compare repeated shrinkage with repeated growth in a toy system."
+        },
+        "13-17": {
+          "objective": "Model proportional change and limits.",
+          "learnerAction": "Compare sequences using x_next = x*(1+r), changing rates and a resource cap.",
+          "observableCheck": "Explain path dependence of losses and gains and reject unlimited-growth extrapolation.",
+          "transferTask": "Model a fictional population with explicit resource assumptions."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "probabilistic-thinking",
+      "title": "Probability, base rates and updating",
+      "priority": 7,
+      "attribution": "general_disciplinary_model_used_by_munger",
+      "definition": "Represent uncertainty using possible outcomes and frequencies; compare a claim with an appropriate reference group and revise when relevant evidence changes.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "probability",
+          "claim": "The USC text emphasizes elementary probability, permutations/combinations and decision trees. Base rates and Bayesian updating are editorial extensions.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Fractions and ratios",
+        "Systematic listing",
+        "Repeated observations",
+        "Distinguish sample and population"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [
+          {
+            "topicId": "mt_-bMnJcPJy8",
+            "topicName": "Experimental vs Theoretical",
+            "ageRange": [
+              10,
+              11
+            ],
+            "coverageRole": "direct_support",
+            "supports": "Compare experimental frequencies with theoretical predictions",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Roll a die 60 times and compare experimental frequencies with the expected 10 per number"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Explain why experimental results don't exactly match theoretical predictions but get closer with more trials"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Predict what would happen if the experiment were repeated 600 times instead of 60"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not cover base rates, Bayesian updating, expected value or calibration. The wording about larger samples describes a tendency, not guaranteed monotonic convergence.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_-bMnJcPJy8",
+                "prerequisiteId": "mt_J4j7d3iAfg",
+                "strength": "hard",
+                "reason": "Comparing experimental and theoretical probability requires prior experience conducting simple experiments and recording results",
+                "prerequisiteName": "Simple Chance Experiments"
+              },
+              {
+                "topicId": "mt_-bMnJcPJy8",
+                "prerequisiteId": "mt_Zt30Gxi-qp",
+                "strength": "hard",
+                "reason": "Comparing experimental results with theoretical predictions requires being able to calculate the theoretical probability first",
+                "prerequisiteName": "Calculating Simple Probability"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_sHJqh6UUya",
+            "topicName": "Experimental probability",
+            "ageRange": [
+              11,
+              13
+            ],
+            "coverageRole": "direct_support",
+            "supports": "Use relative frequency as a probability estimate",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Conduct a coin-toss experiment, record results in a frequency table, and calculate relative frequencies"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Compare experimental results with theoretical probability and explain discrepancies"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_sHJqh6UUya",
+                "prerequisiteId": "mt_-bMnJcPJy8",
+                "strength": "hard",
+                "reason": "The formal KS3 frequency analysis of experimental probability extends the bridging work on long-run behaviour introduced at age 10-11",
+                "prerequisiteName": "Experimental vs Theoretical"
+              },
+              {
+                "topicId": "mt_sHJqh6UUya",
+                "prerequisiteId": "mt_vmQJAtAFuy",
+                "strength": "hard",
+                "reason": "Experimental probability requires understanding the 0–1 probability scale first",
+                "prerequisiteName": "The Probability Scale"
+              }
+            ]
+          }
+        ],
+        "foundation": [
+          {
+            "topicId": "mt_gu0NPDvlhY",
+            "topicName": "Systematic Listing",
+            "ageRange": [
+              10,
+              11
+            ],
+            "coverageRole": "foundation",
+            "supports": "Enumerate possibilities systematically",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "List all possible meal combinations from 3 starters and 4 mains"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Organise combinations into a systematic table to ensure none are missed"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Explain why the total number of combinations equals the product of the options in each category"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": []
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "Base rates, conditional probability, Bayes, expected value, dependence, sampling bias and calibration are not explicitly evidenced here.",
+          "Munger association is supported for elementary probability and decision trees; base-rate/Bayesian sequence is an editorial extension."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Use possible, impossible and more likely without exact percentages.",
+          "learnerAction": "Draw colored counters from a visible bag, replace each and record outcomes.",
+          "observableCheck": "Explain why a common color may still fail to appear on one draw.",
+          "transferTask": "Compare a new bag before predicting."
+        },
+        "9-12": {
+          "objective": "Use counts and fractions to reason about chance.",
+          "learnerAction": "Predict outcomes, run a seeded repeated experiment and compare short versus long runs.",
+          "observableCheck": "Explain a surprising streak without claiming the next draw must compensate.",
+          "transferTask": "Use a different physical randomizer and compare assumptions."
+        },
+        "13-17": {
+          "objective": "Update a belief using base rates and conditional counts.",
+          "learnerAction": "Use a 1000-case grid for a fictional signal with stated false-positive and true-positive counts.",
+          "observableCheck": "Calculate the fraction of positive signals that are true; change prevalence and explain the effect.",
+          "transferTask": "Apply the count method to a new nonmedical classification example with missing data flagged."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "margin-of-safety",
+      "title": "Margin of safety and redundancy",
+      "priority": 8,
+      "attribution": "general_disciplinary_model_used_by_munger",
+      "definition": "Allow a buffer between a requirement and a plausible limit; consider uncertainty and common-cause failures rather than assuming a backup guarantees safety.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "safety",
+          "claim": "The USC text attributes a margin of safety to Benjamin Graham and discusses its use. Child-safe engineering buffers are the course translation.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "A limit or requirement",
+        "Measurement uncertainty",
+        "Difference between protection and certainty"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_Z5-fSCOBep",
+            "topicName": "Simple Design Problems",
+            "ageRange": [
+              8,
+              11
+            ],
+            "coverageRole": "foundation",
+            "supports": "Specify constraints and performance criteria",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Specify at least two criteria for a successful solution (e.g. must hold X weight, must cost less than Y)"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Identify constraints such as available materials, time limits, or cost"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_Z5-fSCOBep",
+                "prerequisiteId": "mt_nNYo5A-7Bl",
+                "strength": "hard",
+                "reason": "Must analyse simple design comparisons before formally defining design problems with criteria/constraints",
+                "prerequisiteName": "Comparing Design Solutions"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_auJqTemMpI",
+            "topicName": "Repeated tests for reliability",
+            "ageRange": [
+              11,
+              12
+            ],
+            "coverageRole": "foundation",
+            "supports": "Distinguish accuracy, precision and suitable measurement resolution",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Explains the distinction between precision and accuracy with examples"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Selects a measuring instrument with appropriate resolution for the context (e.g. choosing a 10 ml measuring cylinder rather than a 1-litre measuring jug for a 5 ml measurement)"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_auJqTemMpI",
+                "prerequisiteId": "mt_Psun-u_lPf",
+                "strength": "hard",
+                "reason": "Precision vs accuracy and significant figures build on KS2 experience of taking careful measurements with repeat readings",
+                "prerequisiteName": "Accurate Measurement"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No explicit safety-factor calculation, redundancy reliability, common-cause failure or ruin-avoidance assessment.",
+          "Margin of safety is associated with Graham and engineering; do not present Munger as its inventor."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Explain why a toy design needs spare capacity.",
+          "learnerAction": "Compare pretend bridges at and above a model load requirement.",
+          "observableCheck": "State the buffer and one thing still unknown; use only harmless paper loads.",
+          "transferTask": "Leave extra time in a school-morning plan."
+        },
+        "9-12": {
+          "objective": "Choose a buffer under uncertain requirements.",
+          "learnerAction": "Plan a fictional outdoor event with uncertain attendance and spare supplies.",
+          "observableCheck": "Explain the cost of too little and too much spare capacity.",
+          "transferTask": "Compare buffers for a new classroom project."
+        },
+        "13-17": {
+          "objective": "Evaluate buffers and correlated failures.",
+          "learnerAction": "Compare two backups sharing a power source with two independent fictional systems.",
+          "observableCheck": "Identify a common-cause failure and explain why an apparent backup may add little protection.",
+          "transferTask": "Audit a fictional data-backup plan using stated failure assumptions."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "feedback",
+      "title": "Feedback loops and adaptation",
+      "priority": 9,
+      "attribution": "editorial_course_extension_from_munger",
+      "definition": "Trace how an output changes later inputs. Reinforcing loops can amplify change; balancing loops can oppose it, and delays may change behavior.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "feedback",
+          "claim": "The expanded misjudgment text discusses liking and admiration in a feedback mode. Formal reinforcing/balancing-loop instruction is an editorial extension.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Cause and effect",
+        "Time steps",
+        "Distinguish a loop from a one-way chain"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [],
+        "analogy_only": [
+          {
+            "topicId": "mt_EedcpioR0v",
+            "topicName": "Recommendation Systems and Filter Bubbles",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "analogy_only",
+            "supports": "Recommendations follow previous clicks and can narrow future exposure",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Explain how YouTube or Netflix decides what to suggest next"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Describe what a 'filter bubble' is (only seeing things similar to what you already like)"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "A recommender example is one feedback context, not evidence for general systems dynamics.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_EedcpioR0v",
+                "prerequisiteId": "mt_kH1DzOPsXG",
+                "strength": "hard",
+                "reason": "Must understand data before grasping how recommendation systems track clicks",
+                "prerequisiteName": "Data and Information for Computers"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_33zncDHC3N",
+            "topicName": "Giving and Receiving Feedback",
+            "ageRange": [
+              9,
+              11
+            ],
+            "coverageRole": "analogy_only",
+            "supports": "Interpersonal feedback can improve work",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Explain why constructive feedback helps people improve"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Giving comments is not equivalent to modeling a closed causal feedback loop.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_33zncDHC3N",
+                "prerequisiteId": "mt_QxsoqVUt6u",
+                "strength": "hard",
+                "reason": "Giving/receiving feedback builds on group work skills",
+                "prerequisiteName": "Working Well in a Group"
+              }
+            ]
+          }
+        ],
+        "missing": [
+          "Explicit loop polarity, state variables, delays, stability and unintended oscillation need new objectives.",
+          "The source uses feedback in liking/admiration; formal control terminology is an editorial course extension."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Notice a result that affects the next turn.",
+          "learnerAction": "Play a plant-watering card loop with a simple visible moisture meter.",
+          "observableCheck": "Trace the arrow back to the next action and name the controlled quantity.",
+          "transferTask": "Describe a tidy-room routine and what triggers its next action."
+        },
+        "9-12": {
+          "objective": "Distinguish reinforcing from balancing behavior.",
+          "learnerAction": "Change a toy recommendation rule or thermostat set point and inspect the time trace.",
+          "observableCheck": "Explain the loop using all arrows, including the return path.",
+          "transferTask": "Draw a different loop and state where the analogy may fail."
+        },
+        "13-17": {
+          "objective": "Explain the effect of delay on a feedback system.",
+          "learnerAction": "Run a bounded supply-and-demand toy simulation with adjustable delivery delay.",
+          "observableCheck": "Compare trajectories and identify which assumptions create oscillation.",
+          "transferTask": "Analyze a fictional school cafeteria ordering system and propose a measurable change."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "second-order-effects",
+      "title": "Second-order consequences and systems",
+      "priority": 10,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Follow consequences beyond the first result, including how people or connected components respond; state uncertainty rather than inventing an endless causal story.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "consequences",
+          "claim": "The 2003 economics text explicitly criticizes neglect of second-order and higher-order consequences.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Causal chains",
+        "Multiple actors or connected parts",
+        "Evidence versus plausible story"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_3jmBpEepYX",
+            "topicName": "Drawing conclusions from evidence (age 12+)",
+            "ageRange": [
+              12,
+              13
+            ],
+            "coverageRole": "foundation",
+            "supports": "Support conclusions using quantitative evidence",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Identifies the pattern or trend in a graph or data table using specific values"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Writes a conclusion that references the hypothesis, states whether the prediction was supported, and quotes numerical evidence"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_3jmBpEepYX",
+                "prerequisiteId": "mt_nyPMkeHlVJ",
+                "strength": "hard",
+                "reason": "KS3 evaluation extends KS2 reporting of causal relationships and trust in results to formal error analysis",
+                "prerequisiteName": "Drawing conclusions from evidence (age 9+)"
+              },
+              {
+                "topicId": "mt_3jmBpEepYX",
+                "prerequisiteId": "mt_YHsUhi4Prc",
+                "strength": "hard",
+                "reason": "Drawing quantitative conclusions and identifying systematic errors requires the ability to plot and read graphs correctly",
+                "prerequisiteName": "Tables, charts, and graphs"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [
+          {
+            "topicId": "mt_NPTjGJIyb3",
+            "topicName": "Predator Loss and Ecosystem Effects",
+            "ageRange": [
+              12,
+              14
+            ],
+            "coverageRole": "analogy_only",
+            "supports": "Trophic cascades provide a concrete multi-step consequence chain",
+            "sourceSupport": [
+              {
+                "field": "description",
+                "text": "Quantify energy transfer efficiency through trophic levels (~10% rule); explain trophic cascades: how removing an apex predator triggers a chain of ecosystem changes (sea otters → sea urchin explosion → kelp forest collapse); define 'fishing down the food web'; evaluate evidence for ocean rewilding — shark reintroduction, whale recovery driving nutrient cycling; understand why ecosystem-based fisheries management is needed"
+              },
+              {
+                "field": "assessmentPrompt",
+                "text": "Can {{name}} trace the chain of events that happened to Pacific kelp forests when sea otters were hunted almost to extinction — what domino effect did removing one species set off through the whole ecosystem?"
+              }
+            ],
+            "hasMappedEvidenceCriteria": false,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "No evidence array entries. Ecological cascade content does not establish general policy reasoning or a validated digital model.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_NPTjGJIyb3",
+                "prerequisiteId": "mt_J6uccv2Bo4",
+                "strength": "hard",
+                "reason": "Trophic cascades and overfishing depends on human ocean harm overview",
+                "prerequisiteName": "Ocean Pollution & Harm"
+              }
+            ]
+          }
+        ],
+        "missing": [
+          "General causal diagrams, counterfactuals, confounders, delayed effects and policy adaptation need new objectives."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Trace two steps after a change.",
+          "learnerAction": "Remove a fictional snack-stall sign in a story and order cause cards.",
+          "observableCheck": "Explain each arrow with a because statement and name one uncertain link.",
+          "transferTask": "Predict two steps after moving a classroom resource."
+        },
+        "9-12": {
+          "objective": "Distinguish immediate and later effects.",
+          "learnerAction": "Compare a school-fair rule before and after fictional participants adapt.",
+          "observableCheck": "Name a benefit, a later cost and evidence needed for each.",
+          "transferTask": "Apply the chain to a new rule without assuming people always react identically."
+        },
+        "13-17": {
+          "objective": "Compare consequences under alternative causal assumptions.",
+          "learnerAction": "Construct two causal diagrams for a fictional congestion policy.",
+          "observableCheck": "Identify a feedback route, an unintended effect and a discriminating observation.",
+          "transferTask": "Revise the policy for a setting where one causal link changes."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "scale",
+      "title": "Scale, specialization and constraints",
+      "priority": 11,
+      "attribution": "general_disciplinary_model_used_by_munger",
+      "definition": "Changing size can change cost, coordination and performance rather than simply multiplying everything; benefits may turn into bottlenecks or bureaucracy.",
+      "status": "Scoped age-15 workshop implemented in learning-artifacts/lessons/economies-of-scale using a separate Costs & Revenue foundation; broader objectives remain proposals. No learner or expert validation.",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "scale",
+          "claim": "The USC text discusses both benefits of scale and organizational disadvantages including bureaucracy.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Ratios and measurement",
+        "Parts and wholes",
+        "Fixed and variable resources"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_8xVHooT4aI",
+            "topicName": "Real-World Maths Modelling",
+            "ageRange": [
+              9,
+              10
+            ],
+            "coverageRole": "foundation",
+            "supports": "Represent a scaling problem and interpret its units",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Model a recipe-scaling problem with multiplication and fractions, then interpret the answer in grams"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Represent a room-carpet problem by drawing a scale diagram and applying the area formula"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_8xVHooT4aI",
+                "prerequisiteId": "mt_K3R0yaHVcx",
+                "strength": "hard",
+                "reason": "Age 8-9 modelling is prerequisite to age 9-10 level",
+                "prerequisiteName": "Modelling with multiplication and fractions"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_pOstrrS763",
+            "topicName": "Teamwork in Business",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "foundation",
+            "supports": "Divide tasks using different strengths",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Describe how they would divide tasks in a team business project (one person makes, one sells, one designs)"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Explain why using people's different strengths makes a business better"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": []
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No direct economies/diseconomies of scale, fixed versus variable cost, bottleneck or coordination-cost assessment.",
+          "Geometrical scaling alone does not establish organizational economies of scale."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Explain why doubling a group may need a new plan.",
+          "learnerAction": "Compare building one paper card versus ten using shared tools.",
+          "observableCheck": "Name a shared resource that does not grow with the group.",
+          "transferTask": "Plan a bigger snack table with the same tools."
+        },
+        "9-12": {
+          "objective": "Compare scale benefits and coordination costs.",
+          "learnerAction": "Allocate a fictional workshop’s shared tools and roles at two sizes.",
+          "observableCheck": "Identify a bottleneck and explain why one input cannot just double output.",
+          "transferTask": "Repeat for a school-fair queue with a different limiting step."
+        },
+        "13-17": {
+          "objective": "Model nonlinear consequences of scale.",
+          "learnerAction": "Compare total and per-item time with fixed setup and coordination costs.",
+          "observableCheck": "Explain the assumptions and the size at which coordination offsets savings.",
+          "transferTask": "Test whether the model transfers to a different fictional organization."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "comparative-advantage",
+      "title": "Comparative advantage and cooperation",
+      "priority": 12,
+      "attribution": "general_disciplinary_model_used_by_munger",
+      "definition": "Specialize according to lower opportunity cost, which differs from being fastest at every task. Cooperation depends on feasible exchange and agreed values.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "comparative",
+          "claim": "The 2003 economics text discusses Ricardo’s comparative advantage and Smith’s division of labor. The course distinguishes these carefully.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Opportunity cost",
+        "Ratios of production or time",
+        "Fairness and consent"
+      ],
+      "proposedPrerequisiteModelIds": [
+        "opportunity-cost"
+      ],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_pOstrrS763",
+            "topicName": "Teamwork in Business",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "foundation",
+            "supports": "Divide tasks and recognize different strengths",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Describe how they would divide tasks in a team business project (one person makes, one sells, one designs)"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Explain why using people's different strengths makes a business better"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Absolute strengths are not comparative advantage; the lower opportunity cost criterion is missing.",
+            "directHardPrerequisites": []
+          },
+          {
+            "topicId": "mt_Qzbh-_v0Gq",
+            "topicName": "Budgeting Pocket Money",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "foundation",
+            "supports": "Identify a resource trade-off",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Identify a trade-off (choosing one thing means not having enough for another)"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_Qzbh-_v0Gq",
+                "prerequisiteId": "mt__ab4knIaSL",
+                "strength": "hard",
+                "reason": "Must understand needs vs wants to make budget trade-offs",
+                "prerequisiteName": "Needs & Wants"
+              },
+              {
+                "topicId": "mt_Qzbh-_v0Gq",
+                "prerequisiteId": "mt_zrCyqhngYm",
+                "strength": "hard",
+                "reason": "Must understand saving concept before budgeting a fixed amount",
+                "prerequisiteName": "Saving Money"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No explicit comparative advantage versus absolute advantage, production frontier or terms-of-trade criterion."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Explore how sharing different jobs can help.",
+          "learnerAction": "Try two pretend craft roles alone and then together.",
+          "observableCheck": "Explain who did what and whether both liked the arrangement; avoid claiming a proof of comparative advantage.",
+          "transferTask": "Share roles in a new cooperative game."
+        },
+        "9-12": {
+          "objective": "Compare forgone output when assigning jobs.",
+          "learnerAction": "Use a small table where one team member is faster at both fictional tasks.",
+          "observableCheck": "Identify the lower opportunity cost for each task and compare total output.",
+          "transferTask": "Repeat with changed rates and discuss whether the assignment changes."
+        },
+        "13-17": {
+          "objective": "Demonstrate gains and limits of specialization.",
+          "learnerAction": "Construct production possibilities and a mutually beneficial exchange range.",
+          "observableCheck": "Distinguish absolute advantage from comparative advantage and note switching costs and distribution.",
+          "transferTask": "Analyze a new fictional team with learning goals that may outweigh output maximization."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "falsification",
+      "title": "Disconfirmation and testing beliefs",
+      "priority": 13,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Look for evidence that could show a favored explanation is wrong; a test must discriminate among alternatives and its limits must remain visible.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "disconfirm",
+          "claim": "The 1986 school commencement text praises Darwin’s active attention to disconfirming evidence. Formal falsifiability is a further course objective.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Testable predictions",
+        "Evidence can oppose a claim",
+        "Fair comparisons"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [
+          {
+            "topicId": "mt_5PgQB0QkWi",
+            "topicName": "Fair testing (age 9+)",
+            "ageRange": [
+              9,
+              11
+            ],
+            "coverageRole": "direct_support",
+            "supports": "Use results to make a testable prediction and design a follow-up",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Use results from an investigation to make a specific, testable prediction"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Design a follow-up test to verify the prediction"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Explain the reasoning linking the original results to the new prediction"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not explicitly require seeking a refutation or distinguishing competing hypotheses.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_5PgQB0QkWi",
+                "prerequisiteId": "mt_7VrR1GzhrN",
+                "strength": "hard",
+                "reason": "Must draw conclusions and make predictions before using results to set up further tests",
+                "prerequisiteName": "Drawing conclusions from evidence"
+              },
+              {
+                "topicId": "mt_5PgQB0QkWi",
+                "prerequisiteId": "mt_ArVBEpMAPk",
+                "strength": "hard",
+                "reason": "Must plan enquiries independently before designing follow-up investigations from predictions",
+                "prerequisiteName": "Controlling variables"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_3jmBpEepYX",
+            "topicName": "Drawing conclusions from evidence (age 12+)",
+            "ageRange": [
+              12,
+              13
+            ],
+            "coverageRole": "direct_support",
+            "supports": "State whether quantitative evidence supports a prediction",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Writes a conclusion that references the hypothesis, states whether the prediction was supported, and quotes numerical evidence"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_3jmBpEepYX",
+                "prerequisiteId": "mt_nyPMkeHlVJ",
+                "strength": "hard",
+                "reason": "KS3 evaluation extends KS2 reporting of causal relationships and trust in results to formal error analysis",
+                "prerequisiteName": "Drawing conclusions from evidence (age 9+)"
+              },
+              {
+                "topicId": "mt_3jmBpEepYX",
+                "prerequisiteId": "mt_YHsUhi4Prc",
+                "strength": "hard",
+                "reason": "Drawing quantitative conclusions and identifying systematic errors requires the ability to plot and read graphs correctly",
+                "prerequisiteName": "Tables, charts, and graphs"
+              }
+            ]
+          }
+        ],
+        "foundation": [
+          {
+            "topicId": "mt_obF-6VYRya",
+            "topicName": "Changing Your Mind with Evidence",
+            "ageRange": [
+              6,
+              8
+            ],
+            "coverageRole": "foundation",
+            "supports": "Change a prediction when confronted with contrary evidence",
+            "sourceSupport": [
+              {
+                "field": "description",
+                "text": "Be willing to change your mind when evidence doesn't support your prediction — a result that surprises you is more valuable than one that confirms what you already thought"
+              },
+              {
+                "field": "assessmentPrompt",
+                "text": "If {{name}} predicts what will happen in an experiment and gets a different result, do they accept the evidence rather than deciding the experiment must have gone wrong?"
+              }
+            ],
+            "hasMappedEvidenceCriteria": false,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Evidence entries are literature references rather than observable criteria. Description and prompt support a candidate objective, not validated assessment.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_obF-6VYRya",
+                "prerequisiteId": "mt_Hw70LI5xza",
+                "strength": "hard",
+                "reason": "Being willing to revise a hypothesis requires first distinguishing observation from interpretation — you can only update your interpretation if you recognise it as separate from the data",
+                "prerequisiteName": "Observation vs Interpretation"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "Explicit falsifiability, counterexamples, alternative hypotheses and limits of a single negative result need new objectives."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Let an observation change a guess.",
+          "learnerAction": "Predict which of two safe paper shapes slides farther and test both.",
+          "observableCheck": "Explain what happened even when it differs from the prediction.",
+          "transferTask": "Make and test a new prediction with a different shape."
+        },
+        "9-12": {
+          "objective": "Seek a counterexample to a rule.",
+          "learnerAction": "Propose a classification rule and select a test card most likely to challenge it.",
+          "observableCheck": "Revise the rule after a genuine counterexample and explain the change.",
+          "transferTask": "Apply the method to a new mathematical pattern."
+        },
+        "13-17": {
+          "objective": "Design a discriminating test.",
+          "learnerAction": "Compare two explanations for a fictional data pattern and choose a fair experiment.",
+          "observableCheck": "State outcomes that would weaken each explanation and identify possible measurement error.",
+          "transferTask": "Critique a new claim that avoids every possible refutation."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "models-and-reality",
+      "title": "Models, assumptions and limits",
+      "priority": 14,
+      "attribution": "editorial_course_extension_from_munger",
+      "definition": "A model simplifies reality for a purpose. Ask which assumptions matter, what data support it, and where its predictions should no longer be trusted.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "limits",
+          "claim": "The USC text describes accounting as a crude approximation and emphasizes understanding its limitations. General model-validity terminology is editorial.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Representations",
+        "Predictions versus observations",
+        "Scope and assumptions"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_hi8cVycbwn",
+            "topicName": "Modelling with Sketches",
+            "ageRange": [
+              5,
+              8
+            ],
+            "coverageRole": "foundation",
+            "supports": "Relate a sketch or model to a real design problem",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Create a sketch, drawing, or physical model of a design solution"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Relate the model to the real-world problem it addresses"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Constructing a representation does not establish evaluating its assumptions or limits.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_hi8cVycbwn",
+                "prerequisiteId": "mt_XirhnAB6Ye",
+                "strength": "hard",
+                "reason": "Must ask questions about problems before modelling design solutions",
+                "prerequisiteName": "Asking scientific questions"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_auJqTemMpI",
+            "topicName": "Repeated tests for reliability",
+            "ageRange": [
+              11,
+              12
+            ],
+            "coverageRole": "foundation",
+            "supports": "Consistent measurements can still be inaccurate",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Explains the distinction between precision and accuracy with examples"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_auJqTemMpI",
+                "prerequisiteId": "mt_Psun-u_lPf",
+                "strength": "hard",
+                "reason": "Precision vs accuracy and significant figures build on KS2 experience of taking careful measurements with repeat readings",
+                "prerequisiteName": "Accurate Measurement"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [
+          {
+            "topicId": "mt_bPFToj0OhZ",
+            "topicName": "AI Mistakes and Limitations",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "analogy_only",
+            "supports": "AI errors illustrate limits of a particular trained model",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Give an example of AI making a mistake (voice assistant mishearing, auto-correct error, wrong recommendation)"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Explain that AI mistakes happen because of gaps or errors in training data"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_bPFToj0OhZ",
+                "prerequisiteId": "mt_K6qtan847r",
+                "strength": "hard",
+                "reason": "Must understand how training works before understanding why it can go wrong",
+                "prerequisiteName": "Machine Learning Basics"
+              }
+            ]
+          }
+        ],
+        "missing": [
+          "No general model-validity, sensitivity, out-of-sample prediction or model-misspecification criterion.",
+          "The source discusses accounting as an approximation; the map-versus-territory course label is editorial, not a quotation or claim of Munger authorship."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Name what a picture model leaves out.",
+          "learnerAction": "Compare a toy map with a classroom route.",
+          "observableCheck": "Find one useful feature and one missing feature that matters to the task.",
+          "transferTask": "Explain why a drawing of a boat cannot prove it will float."
+        },
+        "9-12": {
+          "objective": "Test an assumption before trusting a model.",
+          "learnerAction": "Use a simple travel-time calculator, then add a waiting time it omitted.",
+          "observableCheck": "Explain why the original answer changes and which assumption failed.",
+          "transferTask": "Check a different everyday estimating rule."
+        },
+        "13-17": {
+          "objective": "Audit scope and sensitivity.",
+          "learnerAction": "Fit a toy linear predictor, vary an assumption and test outside its observed range.",
+          "observableCheck": "Distinguish interpolation, extrapolation and causal inference; report uncertainty.",
+          "transferTask": "Write a model card for a new fictional planning model."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "evolution",
+      "title": "Evolution, variation and adaptation",
+      "priority": 15,
+      "attribution": "general_disciplinary_model_used_by_munger",
+      "definition": "Heritable variation and differential reproduction can change populations over generations; biological evolution is a disciplinary model, and organizational analogies have limits.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "evolution",
+          "claim": "The USC text invokes biological evolution and an ecosystem analogy for specialization, while warning against moral conclusions from wealth. Scientific natural-selection instruction comes from taxonomy evidence.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Variation among individuals",
+        "Inheritance",
+        "Resources and reproduction",
+        "Individuals versus populations"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [
+          {
+            "topicId": "mt_FuVEZ1Ac9s",
+            "topicName": "How Natural Selection Works",
+            "ageRange": [
+              12,
+              14
+            ],
+            "coverageRole": "direct_support",
+            "supports": "Natural-selection conditions and application to a biological example",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Describes the four conditions required for natural selection to operate (variation, heritability, competition, selection)"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Applies the concept to a specific example (e.g. antibiotic resistance in bacteria, peppered moth)"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Explains why individuals with advantageous traits leave more offspring"
+              },
+              {
+                "field": "evidence",
+                "index": 3,
+                "text": "Distinguishes natural selection from evolution (selection is the mechanism; evolution is the result over many generations)"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Direct support is biological natural selection, not a claim that all social change follows genetic selection.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_FuVEZ1Ac9s",
+                "prerequisiteId": "mt_k1HXbEwG8f",
+                "strength": "hard",
+                "reason": "Natural selection requires heritable variation to act on — understanding the nature of variation is a prerequisite",
+                "prerequisiteName": "Variation in Species"
+              },
+              {
+                "topicId": "mt_FuVEZ1Ac9s",
+                "prerequisiteId": "mt_rOqo-8GeKt",
+                "strength": "hard",
+                "reason": "Mutation is the ultimate source of heritable variation — understanding this grounds the mechanism of natural selection",
+                "prerequisiteName": "Genetic Mutation"
+              }
+            ]
+          }
+        ],
+        "foundation": [
+          {
+            "topicId": "mt_UR5LvBeyF1",
+            "topicName": "Variation & Survival Advantage",
+            "ageRange": [
+              8,
+              9
+            ],
+            "coverageRole": "foundation",
+            "supports": "Connect variation to survival and reproduction",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Explain that variation within a species means some individuals have traits better suited to their environment"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Connect variation to survival advantage: individuals with beneficial traits are more likely to survive and reproduce"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_UR5LvBeyF1",
+                "prerequisiteId": "mt_1wxwg782yX",
+                "strength": "hard",
+                "reason": "Must understand trait variation before explaining how variation provides survival advantages",
+                "prerequisiteName": "Inherited characteristics"
+              },
+              {
+                "topicId": "mt_UR5LvBeyF1",
+                "prerequisiteId": "mt_h4abSktujo",
+                "strength": "hard",
+                "reason": "Explaining how variation provides survival advantages requires 'variation', 'species', and 'trait' vocabulary",
+                "prerequisiteName": "Inheritance Vocabulary"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "Transfer to cultural or organizational adaptation requires explicit limits; it is analogy, not proof.",
+          "Population simulation requires a reviewed inheritance/reproduction model and bounded randomness."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Notice helpful variation without saying an organism chooses traits.",
+          "learnerAction": "Compare paper creature cards against a habitat picture.",
+          "observableCheck": "Explain why a trait might help in this habitat and not another; do not claim full natural selection.",
+          "transferTask": "Compare the same traits in a changed habitat."
+        },
+        "9-12": {
+          "objective": "Connect variation and inherited traits across generations.",
+          "learnerAction": "Use a bounded bead-population model with explicit inheritance and selection rules.",
+          "observableCheck": "Explain why population proportions change while individuals do not choose to transform.",
+          "transferTask": "Compare a new habitat and name the toy model’s simplifications."
+        },
+        "13-17": {
+          "objective": "Apply conditions for natural selection and limit analogies.",
+          "learnerAction": "Run a seeded population simulation with heritability, variation and reproductive differences.",
+          "observableCheck": "Explain the mechanism and distinguish natural selection from evolution and intentional planning.",
+          "transferTask": "Compare biological selection with a fictional organization’s adaptation, naming what fails to transfer."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "misjudgment",
+      "title": "Psychology of misjudgment: interacting tendencies",
+      "priority": 16,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Inspect situational pressures that can distort judgment, then choose a practical check. Munger’s overlapping tendencies are a reasoning checklist rather than a diagnostic or complete scientific taxonomy.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "psych",
+          "claim": "The expanded text groups overlapping psychological tendencies and discusses their practical interaction; it acknowledges that alternative groupings are possible.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Evidence versus preference",
+        "People can disagree without being dishonest",
+        "Probability and uncertainty",
+        "A pause and an independent check"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_JiZ3H90Xg8",
+            "topicName": "Risk, Uncertainty, and Cognitive Bias",
+            "ageRange": [
+              11,
+              12
+            ],
+            "coverageRole": "foundation",
+            "supports": "Risk, uncertainty, availability, present bias and groupthink appear in the description",
+            "sourceSupport": [
+              {
+                "field": "description",
+                "text": "Distinguish between risk (decisions with known probabilities) and uncertainty (decisions with unknown outcomes); identify cognitive biases that distort risk assessment: availability heuristic (judging likelihood by how easily examples come to mind), present bias (overvaluing the immediate over the future), optimism bias (underestimating personal risk), and groupthink; understand why adolescent brains are biologically calibrated toward higher risk tolerance; apply a structured decision-making framework to real choices; understand the role of personal values in decisions where facts alone cannot determine the answer"
+              },
+              {
+                "field": "assessmentPrompt",
+                "text": "Can {{name}} explain why taking a risk isn't always irrational — and describe one cognitive bias that causes people to misjudge risk in their everyday decisions, such as why teenagers tend to underestimate certain dangers?"
+              }
+            ],
+            "hasMappedEvidenceCriteria": false,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Evidence array is empty. This is conceptual overlap and a prompt, not assessed coverage of Munger’s 25 tendencies.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_JiZ3H90Xg8",
+                "prerequisiteId": "mt_6xj94tmpi-",
+                "strength": "hard",
+                "reason": "Advanced decision-making depends on earlier critical thinking skills",
+                "prerequisiteName": "Difficult Ethical Choices"
+              },
+              {
+                "topicId": "mt_JiZ3H90Xg8",
+                "prerequisiteId": "mt_RNeEF1JU4J",
+                "strength": "hard",
+                "reason": "Advanced decision-making depends on earlier problem-solving skills",
+                "prerequisiteName": "Ethics in Real-World Issues"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_KA5j5OeGvw",
+            "topicName": "Emotions and Decision-Making",
+            "ageRange": [
+              9,
+              11
+            ],
+            "coverageRole": "foundation",
+            "supports": "Recognize emotional influence and a cooling-off strategy",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Give an example of a time a strong emotion led them or someone else to a poor decision"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Explain the idea of 'cooling off' before making an important choice"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Describe how the same situation looks different when you're calm versus upset"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_KA5j5OeGvw",
+                "prerequisiteId": "mt_Ytd8XC3eQr",
+                "strength": "hard",
+                "reason": "Emotions influencing decisions builds on body-emotion awareness",
+                "prerequisiteName": "How Emotions Feel in Your Body"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_gMSFymQlrW",
+            "topicName": "Evaluating Arguments in Non-Fiction",
+            "ageRange": [
+              11,
+              14
+            ],
+            "coverageRole": "foundation",
+            "supports": "Evaluate claims and irrelevant evidence",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Identify the main claim in an argument text and evaluate whether the evidence presented is sufficient"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Spot logical fallacies or irrelevant evidence introduced to distract from weak reasoning"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_dmFnJzxKwz",
+                "strength": "hard",
+                "reason": "Assessing whether evidence is sufficient requires textual evidence skills",
+                "prerequisiteName": "Using and Evaluating Textual Evidence"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_jIcgbCmziD",
+                "strength": "hard",
+                "reason": "Evaluating claims requires understanding purpose, audience, and context",
+                "prerequisiteName": "Purpose, audience, and context"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_V6456X6pJE",
+                "strength": "hard",
+                "reason": "Evaluating arguments builds on KS2 distinguishing fact from opinion",
+                "prerequisiteName": "Fact vs opinion"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No full evidence-backed coverage of the 25-item expanded revision.",
+          "Need current empirical sources before teaching claims about effect strength, universality or interventions.",
+          "Representative course submodels cover incentives, social proof, confirmation, availability, commitment, authority, liking/disliking and lollapalooza."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Pause before accepting a tempting claim.",
+          "learnerAction": "Compare a bright pretend poster with a plain evidence card.",
+          "observableCheck": "Ask for a checkable fact and explain one reason to pause.",
+          "transferTask": "Use the same pause with a new fictional toy advert."
+        },
+        "9-12": {
+          "objective": "Notice more than one influence on a decision.",
+          "learnerAction": "Annotate a school-fair story with a reward, a crowd cue and a strong feeling.",
+          "observableCheck": "Explain two possible influences without labeling a person as biased by diagnosis.",
+          "transferTask": "Use a checklist on an unfamiliar fictional scenario."
+        },
+        "13-17": {
+          "objective": "Separate observed evidence from proposed psychological mechanisms.",
+          "learnerAction": "Compare alternative explanations of a fictional persuasion outcome.",
+          "observableCheck": "State which tendency is a hypothesis, what evidence could discriminate it and a proportionate safeguard.",
+          "transferTask": "Audit a new decision and note what the checklist cannot establish."
+        }
+      },
+      "limitations": [
+        "Historical anecdotes and older psychology experiments in the collection are not independently validated here. Do not reenact coercive obedience studies or use children as undisclosed manipulation subjects."
+      ]
+    },
+    {
+      "id": "confirmation",
+      "title": "Confirmation bias and motivated belief",
+      "priority": 17,
+      "attribution": "editorial_course_extension_from_munger",
+      "definition": "People may favor evidence supporting an existing belief; deliberately compare stronger opposing evidence and state what would change the conclusion.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "confirmation",
+          "claim": "The 1986 school commencement text describes preserving an original belief despite disconfirming information; the modern confirmation-bias course label is editorial.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Disconfirmation",
+        "Compare evidence quality",
+        "Distinguish confidence from correctness"
+      ],
+      "proposedPrerequisiteModelIds": [
+        "falsification"
+      ],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_gMSFymQlrW",
+            "topicName": "Evaluating Arguments in Non-Fiction",
+            "ageRange": [
+              11,
+              14
+            ],
+            "coverageRole": "foundation",
+            "supports": "Compare opposing arguments with reasons",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Identify the main claim in an argument text and evaluate whether the evidence presented is sufficient"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Compare two opposing arguments on the same issue and evaluate which is more convincing, with reasons"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_dmFnJzxKwz",
+                "strength": "hard",
+                "reason": "Assessing whether evidence is sufficient requires textual evidence skills",
+                "prerequisiteName": "Using and Evaluating Textual Evidence"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_jIcgbCmziD",
+                "strength": "hard",
+                "reason": "Evaluating claims requires understanding purpose, audience, and context",
+                "prerequisiteName": "Purpose, audience, and context"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_V6456X6pJE",
+                "strength": "hard",
+                "reason": "Evaluating arguments builds on KS2 distinguishing fact from opinion",
+                "prerequisiteName": "Fact vs opinion"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_obF-6VYRya",
+            "topicName": "Changing Your Mind with Evidence",
+            "ageRange": [
+              6,
+              8
+            ],
+            "coverageRole": "foundation",
+            "supports": "Respond to evidence against a prediction",
+            "sourceSupport": [
+              {
+                "field": "description",
+                "text": "Be willing to change your mind when evidence doesn't support your prediction — a result that surprises you is more valuable than one that confirms what you already thought"
+              },
+              {
+                "field": "assessmentPrompt",
+                "text": "If {{name}} predicts what will happen in an experiment and gets a different result, do they accept the evidence rather than deciding the experiment must have gone wrong?"
+              }
+            ],
+            "hasMappedEvidenceCriteria": false,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Evidence array contains references, not performance criteria.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_obF-6VYRya",
+                "prerequisiteId": "mt_Hw70LI5xza",
+                "strength": "hard",
+                "reason": "Being willing to revise a hypothesis requires first distinguishing observation from interpretation — you can only update your interpretation if you recognise it as separate from the data",
+                "prerequisiteName": "Observation vs Interpretation"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No direct confirmation-bias mechanism or intervention criterion.",
+          "Modern label is an editorial connection to Munger’s disconfirmation and inconsistency discussion, not a one-to-one item title."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Listen to a clue that disagrees with a first guess.",
+          "learnerAction": "Choose between mystery-object guesses after seeing a contrary clue.",
+          "observableCheck": "Explain a changed guess using the clue.",
+          "transferTask": "Try a new mystery where the first guess happens to be right."
+        },
+        "9-12": {
+          "objective": "Compare supporting and challenging evidence fairly.",
+          "learnerAction": "Sort evidence for two fictional explanations before choosing.",
+          "observableCheck": "Identify the strongest challenging item and revise or retain the claim with reasons.",
+          "transferTask": "Check a claim in a different subject using the same procedure."
+        },
+        "13-17": {
+          "objective": "Precommit to a test that could change a view.",
+          "learnerAction": "Record a prediction and disconfirmation rule before inspecting a fictional dataset.",
+          "observableCheck": "Explain whether the agreed rule was met and resist moving the goalposts.",
+          "transferTask": "Audit a fresh claim with an opponent’s strongest evidence."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "availability",
+      "title": "Availability and salience",
+      "priority": 18,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Ease of recall or vividness can distort an estimate of frequency; compare memorable examples with an appropriate denominator and reference set.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "available",
+          "claim": "The expanded misjudgment text explicitly names availability misweighing and discusses recall-driven misjudgment.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Counts and denominators",
+        "Representative samples",
+        "Memorable does not mean common"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_JiZ3H90Xg8",
+            "topicName": "Risk, Uncertainty, and Cognitive Bias",
+            "ageRange": [
+              11,
+              12
+            ],
+            "coverageRole": "foundation",
+            "supports": "Availability heuristic is explicitly described",
+            "sourceSupport": [
+              {
+                "field": "description",
+                "text": "Distinguish between risk (decisions with known probabilities) and uncertainty (decisions with unknown outcomes); identify cognitive biases that distort risk assessment: availability heuristic (judging likelihood by how easily examples come to mind), present bias (overvaluing the immediate over the future), optimism bias (underestimating personal risk), and groupthink; understand why adolescent brains are biologically calibrated toward higher risk tolerance; apply a structured decision-making framework to real choices; understand the role of personal values in decisions where facts alone cannot determine the answer"
+              },
+              {
+                "field": "assessmentPrompt",
+                "text": "Can {{name}} explain why taking a risk isn't always irrational — and describe one cognitive bias that causes people to misjudge risk in their everyday decisions, such as why teenagers tend to underestimate certain dangers?"
+              }
+            ],
+            "hasMappedEvidenceCriteria": false,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Evidence array is empty; direct conceptual mention has no supplied evidence criterion.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_JiZ3H90Xg8",
+                "prerequisiteId": "mt_6xj94tmpi-",
+                "strength": "hard",
+                "reason": "Advanced decision-making depends on earlier critical thinking skills",
+                "prerequisiteName": "Difficult Ethical Choices"
+              },
+              {
+                "topicId": "mt_JiZ3H90Xg8",
+                "prerequisiteId": "mt_RNeEF1JU4J",
+                "strength": "hard",
+                "reason": "Advanced decision-making depends on earlier problem-solving skills",
+                "prerequisiteName": "Ethics in Real-World Issues"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_sHJqh6UUya",
+            "topicName": "Experimental probability",
+            "ageRange": [
+              11,
+              13
+            ],
+            "coverageRole": "foundation",
+            "supports": "Record outcomes and calculate relative frequencies",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Conduct a coin-toss experiment, record results in a frequency table, and calculate relative frequencies"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_sHJqh6UUya",
+                "prerequisiteId": "mt_-bMnJcPJy8",
+                "strength": "hard",
+                "reason": "The formal KS3 frequency analysis of experimental probability extends the bridging work on long-run behaviour introduced at age 10-11",
+                "prerequisiteName": "Experimental vs Theoretical"
+              },
+              {
+                "topicId": "mt_sHJqh6UUya",
+                "prerequisiteId": "mt_vmQJAtAFuy",
+                "strength": "hard",
+                "reason": "Experimental probability requires understanding the 0–1 probability scale first",
+                "prerequisiteName": "The Probability Scale"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "Need a criterion separating recall, actual frequency and selection effects; no claim that one debiasing exercise reliably generalizes."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Distinguish easy to remember from many.",
+          "learnerAction": "Compare a bright fictional animal card with a tally of the whole set.",
+          "observableCheck": "Count the set before saying which type is most common.",
+          "transferTask": "Repeat with different colors and counts."
+        },
+        "9-12": {
+          "objective": "Use a denominator to check a vivid claim.",
+          "learnerAction": "Compare a fictional news collage with a complete event table.",
+          "observableCheck": "Explain how selected stories differ from the full count.",
+          "transferTask": "Check a new sports-highlight example."
+        },
+        "13-17": {
+          "objective": "Choose an appropriate reference class.",
+          "learnerAction": "Estimate fictional event rates before and after a salient story, then inspect counts and sample selection.",
+          "observableCheck": "Use the denominator, state uncertainty and explain limits of a small sample.",
+          "transferTask": "Evaluate a new risk comparison without extrapolating from one anecdote."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "commitment",
+      "title": "Commitment, consistency and sunk costs",
+      "priority": 19,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "A prior statement, habit or investment can make revision uncomfortable; separate useful reliability from defending an error and compare future consequences.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "consistency",
+          "claim": "The expanded misjudgment text explicitly names inconsistency avoidance and discusses persistence of beliefs and habits. Sunk-cost exercises are a related course extension.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Opportunity cost",
+        "Past versus future costs",
+        "Reasons for revising a plan"
+      ],
+      "proposedPrerequisiteModelIds": [
+        "opportunity-cost"
+      ],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_obF-6VYRya",
+            "topicName": "Changing Your Mind with Evidence",
+            "ageRange": [
+              6,
+              8
+            ],
+            "coverageRole": "foundation",
+            "supports": "Change one’s mind when evidence contradicts a prediction",
+            "sourceSupport": [
+              {
+                "field": "description",
+                "text": "Be willing to change your mind when evidence doesn't support your prediction — a result that surprises you is more valuable than one that confirms what you already thought"
+              },
+              {
+                "field": "assessmentPrompt",
+                "text": "If {{name}} predicts what will happen in an experiment and gets a different result, do they accept the evidence rather than deciding the experiment must have gone wrong?"
+              }
+            ],
+            "hasMappedEvidenceCriteria": false,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Literature-reference evidence is not an observable mastery criterion.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_obF-6VYRya",
+                "prerequisiteId": "mt_Hw70LI5xza",
+                "strength": "hard",
+                "reason": "Being willing to revise a hypothesis requires first distinguishing observation from interpretation — you can only update your interpretation if you recognise it as separate from the data",
+                "prerequisiteName": "Observation vs Interpretation"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_Qzbh-_v0Gq",
+            "topicName": "Budgeting Pocket Money",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "foundation",
+            "supports": "Evaluate a constrained choice",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Identify a trade-off (choosing one thing means not having enough for another)"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_Qzbh-_v0Gq",
+                "prerequisiteId": "mt__ab4knIaSL",
+                "strength": "hard",
+                "reason": "Must understand needs vs wants to make budget trade-offs",
+                "prerequisiteName": "Needs & Wants"
+              },
+              {
+                "topicId": "mt_Qzbh-_v0Gq",
+                "prerequisiteId": "mt_zrCyqhngYm",
+                "strength": "hard",
+                "reason": "Must understand saving concept before budgeting a fixed amount",
+                "prerequisiteName": "Saving Money"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No explicit commitment/consistency pressure, sunk-cost fallacy or escalation-of-commitment assessment.",
+          "Do not teach abandoning obligations whenever they become inconvenient; distinguish ethical commitments and changed evidence."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Change a harmless guess without shame.",
+          "learnerAction": "Rechoose a puzzle route after a new obstacle appears.",
+          "observableCheck": "Explain the new evidence rather than insisting on the first route.",
+          "transferTask": "Revise a pretend picnic plan after a weather card."
+        },
+        "9-12": {
+          "objective": "Separate spent effort from the next useful action.",
+          "learnerAction": "Choose between continuing a fictional craft plan or switching after a failed test.",
+          "observableCheck": "Compare remaining time and goals while treating already-used paper as unrecoverable.",
+          "transferTask": "Use the reasoning on a new game strategy."
+        },
+        "13-17": {
+          "objective": "Distinguish reliability from escalation.",
+          "learnerAction": "Evaluate a fictional project with sunk costs, promises and new evidence.",
+          "observableCheck": "Justify a future-focused choice while accounting for genuine obligations and switching costs.",
+          "transferTask": "Write a transparent revision note for a changed team plan."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "authority",
+      "title": "Authority, expertise and evidence",
+      "priority": 20,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Expertise can be valuable evidence, but status alone does not settle a claim. Check the domain, supporting reasons and opportunities for independent verification.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "authority",
+          "claim": "The expanded misjudgment text explicitly discusses authority misinfluence; the course adds checking relevant expertise and evidence.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Claims need reasons",
+        "Domain-specific expertise",
+        "Respectful questioning"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_gMSFymQlrW",
+            "topicName": "Evaluating Arguments in Non-Fiction",
+            "ageRange": [
+              11,
+              14
+            ],
+            "coverageRole": "foundation",
+            "supports": "Assess claims and irrelevant evidence",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Identify the main claim in an argument text and evaluate whether the evidence presented is sufficient"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Spot logical fallacies or irrelevant evidence introduced to distract from weak reasoning"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_dmFnJzxKwz",
+                "strength": "hard",
+                "reason": "Assessing whether evidence is sufficient requires textual evidence skills",
+                "prerequisiteName": "Using and Evaluating Textual Evidence"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_jIcgbCmziD",
+                "strength": "hard",
+                "reason": "Evaluating claims requires understanding purpose, audience, and context",
+                "prerequisiteName": "Purpose, audience, and context"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_V6456X6pJE",
+                "strength": "hard",
+                "reason": "Evaluating arguments builds on KS2 distinguishing fact from opinion",
+                "prerequisiteName": "Fact vs opinion"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_My0OL6fhGL",
+            "topicName": "Advertising & Spending",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "foundation",
+            "supports": "Recognize a celebrity persuasion technique",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Spot at least two persuasion techniques in a real advert (bright colours, celebrity, special offer)"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_My0OL6fhGL",
+                "prerequisiteId": "mt__ab4knIaSL",
+                "strength": "hard",
+                "reason": "Must understand needs vs wants to critically evaluate advertising",
+                "prerequisiteName": "Needs & Wants"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No explicit authority-bias criterion or expert-consensus assessment.",
+          "Do not encourage children to ignore caregivers, safety instructions or medical advice; practise respectful questions in fictional low-stakes examples."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Ask how a pretend expert knows.",
+          "learnerAction": "Compare a famous character’s guess with a builder’s demonstrated bridge test.",
+          "observableCheck": "Choose evidence and explain why being famous was insufficient.",
+          "transferTask": "Ask an adult for the reason behind a harmless design rule."
+        },
+        "9-12": {
+          "objective": "Check whether expertise matches the claim.",
+          "learnerAction": "Sort fictional sources by relevant experience and provided evidence.",
+          "observableCheck": "Identify a respected speaker outside their domain and a reliable check.",
+          "transferTask": "Repeat with a new science-versus-advertising claim."
+        },
+        "13-17": {
+          "objective": "Weigh expertise without either blind trust or blanket rejection.",
+          "learnerAction": "Compare fictional specialist consensus, an out-of-domain celebrity and a transparent dataset.",
+          "observableCheck": "Explain why relevant expertise matters and what evidence could change the conclusion.",
+          "transferTask": "Evaluate a new claim using domain, methods and independence."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "liking-disliking",
+      "title": "Liking, disliking and association",
+      "priority": 21,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Feelings toward a person or associated image can color evaluation of unrelated claims; separate the relationship from the checkable proposition.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "liking",
+          "claim": "The expanded misjudgment text discusses liking/loving and the adjacent disliking/hating tendency.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Claims versus feelings",
+        "Fair comparisons",
+        "Emotional awareness"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_My0OL6fhGL",
+            "topicName": "Advertising & Spending",
+            "ageRange": [
+              7,
+              9
+            ],
+            "coverageRole": "foundation",
+            "supports": "Recognize celebrity persuasion and emotional influence",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Spot at least two persuasion techniques in a real advert (bright colours, celebrity, special offer)"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Describe a time when advertising made them want something they didn't really need"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_My0OL6fhGL",
+                "prerequisiteId": "mt__ab4knIaSL",
+                "strength": "hard",
+                "reason": "Must understand needs vs wants to critically evaluate advertising",
+                "prerequisiteName": "Needs & Wants"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_KA5j5OeGvw",
+            "topicName": "Emotions and Decision-Making",
+            "ageRange": [
+              9,
+              11
+            ],
+            "coverageRole": "foundation",
+            "supports": "Recognize feelings can change decisions",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Give an example of a time a strong emotion led them or someone else to a poor decision"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Describe how the same situation looks different when you're calm versus upset"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_KA5j5OeGvw",
+                "prerequisiteId": "mt_Ytd8XC3eQr",
+                "strength": "hard",
+                "reason": "Emotions influencing decisions builds on body-emotion awareness",
+                "prerequisiteName": "How Emotions Feel in Your Body"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No direct liking/disliking effect or association-transfer assessment.",
+          "This is a claim-checking skill, not a rule to suppress affection or distrust friends."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Judge an idea separately from a friendly picture.",
+          "learnerAction": "Choose a pretend toy using a test card before seeing its mascot.",
+          "observableCheck": "Explain the choice using a test result.",
+          "transferTask": "Repeat with a different mascot and hidden brand."
+        },
+        "9-12": {
+          "objective": "Notice when feelings change evaluation.",
+          "learnerAction": "Rate the same fictional claim with source names hidden, then revealed.",
+          "observableCheck": "Explain any changed rating and check whether new relevant evidence appeared.",
+          "transferTask": "Apply a name-blind rubric to a fictional design contest."
+        },
+        "13-17": {
+          "objective": "Separate identity cues from evidence without pretending context never matters.",
+          "learnerAction": "Compare anonymized and attributed arguments with disclosed conflicts of interest.",
+          "observableCheck": "Distinguish irrelevant liking from relevant trust evidence and explain the final judgment.",
+          "transferTask": "Audit a new proposal using a transparent rubric."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "social-proof",
+      "title": "Social proof and independent judgment",
+      "priority": 22,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Others’ behavior can supply useful information but can also spread error, especially when everyone copies the same source; ask whether the evidence is independent.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "social",
+          "claim": "The expanded misjudgment text explicitly discusses social proof and imitation; source-independence exercises extend the discussion.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Independent evidence",
+        "Reasons for agreement",
+        "Safe and respectful disagreement"
+      ],
+      "proposedPrerequisiteModelIds": [],
+      "taxonomyCoverage": {
+        "direct_support": [
+          {
+            "topicId": "mt_JivEBTD_KV",
+            "topicName": "Peer Pressure and Resisting It",
+            "ageRange": [
+              9,
+              11
+            ],
+            "coverageRole": "direct_support",
+            "supports": "Recognize peer pressure and explain resistance strategies",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Define peer pressure in their own words and give a real-world example"
+              },
+              {
+                "field": "evidence",
+                "index": 1,
+                "text": "Describe at least two strategies for resisting peer pressure, such as walking away or using humour"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Peer-pressure resistance is one component; informative social learning and source independence are not covered.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_JivEBTD_KV",
+                "prerequisiteId": "mt_h-z88yf9Pn",
+                "strength": "hard",
+                "reason": "Peer pressure as a concept requires knowing the term 'peer pressure' and vocabulary of 'rights' and 'responsibility'",
+                "prerequisiteName": "Vocabulary: ethics and citizenship"
+              },
+              {
+                "topicId": "mt_JivEBTD_KV",
+                "prerequisiteId": "mt_RhntJz7p_6",
+                "strength": "hard",
+                "reason": "Resisting peer pressure builds on decision-making process",
+                "prerequisiteName": "Stop, Think, Then Choose"
+              },
+              {
+                "topicId": "mt_JivEBTD_KV",
+                "prerequisiteId": "mt_yCmYV9ruQu",
+                "strength": "hard",
+                "reason": "Peer pressure resistance builds on bystander/upstander awareness",
+                "prerequisiteName": "Bystanders and Upstanders"
+              }
+            ]
+          }
+        ],
+        "foundation": [
+          {
+            "topicId": "mt_gMSFymQlrW",
+            "topicName": "Evaluating Arguments in Non-Fiction",
+            "ageRange": [
+              11,
+              14
+            ],
+            "coverageRole": "foundation",
+            "supports": "Compare claims and evidence",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Identify the main claim in an argument text and evaluate whether the evidence presented is sufficient"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Compare two opposing arguments on the same issue and evaluate which is more convincing, with reasons"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_dmFnJzxKwz",
+                "strength": "hard",
+                "reason": "Assessing whether evidence is sufficient requires textual evidence skills",
+                "prerequisiteName": "Using and Evaluating Textual Evidence"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_jIcgbCmziD",
+                "strength": "hard",
+                "reason": "Evaluating claims requires understanding purpose, audience, and context",
+                "prerequisiteName": "Purpose, audience, and context"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_V6456X6pJE",
+                "strength": "hard",
+                "reason": "Evaluating arguments builds on KS2 distinguishing fact from opinion",
+                "prerequisiteName": "Fact vs opinion"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "Need evidence independence, cascades, correlated errors and distinction between popularity and expert consensus."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Ask for a reason before copying a crowd.",
+          "learnerAction": "Choose a mystery-box answer privately before seeing fictional crowd cards.",
+          "observableCheck": "Explain why a tally alone may not reveal what is inside.",
+          "transferTask": "Try a cooperative puzzle where others do have useful clues."
+        },
+        "9-12": {
+          "objective": "Distinguish many repeats from many independent checks.",
+          "learnerAction": "Trace three fictional messages back to one original claim.",
+          "observableCheck": "Count independent sources and request better evidence.",
+          "transferTask": "Apply the check to a new rumor story."
+        },
+        "13-17": {
+          "objective": "Analyze information cascades.",
+          "learnerAction": "Run an explicitly disclosed toy voting simulation with private signals and public choices.",
+          "observableCheck": "Explain how copying creates correlated errors and when independent expertise deserves weight.",
+          "transferTask": "Audit a fictional online consensus using source independence and methods."
+        }
+      },
+      "limitations": []
+    },
+    {
+      "id": "lollapalooza",
+      "title": "Lollapalooza: interacting causes and pressures",
+      "priority": 23,
+      "attribution": "munger_emphasized_existing_idea",
+      "definition": "Several aligned forces can produce an unusually large outcome; identify mechanisms and interactions rather than treating every collection of factors as a multiplicative law.",
+      "status": "provisional research/course-design proposal; no built or learner-tested lesson",
+      "citations": [
+        {
+          "sourceId": "almanack-mirror",
+          "anchorId": "lolla",
+          "claim": "The expanded misjudgment text explicitly describes extreme consequences from aligned psychological tendencies. The factorial toy-data analysis is an editorial assessment design.",
+          "confidence": "provisional: retrieved unofficial transcript, independent corroboration unavailable"
+        }
+      ],
+      "prerequisiteConcepts": [
+        "Multiple causal influences",
+        "Incentives and social proof",
+        "Interaction versus addition",
+        "Counterfactual comparison"
+      ],
+      "proposedPrerequisiteModelIds": [
+        "incentives",
+        "social-proof",
+        "probabilistic-thinking"
+      ],
+      "taxonomyCoverage": {
+        "direct_support": [],
+        "foundation": [
+          {
+            "topicId": "mt_JiZ3H90Xg8",
+            "topicName": "Risk, Uncertainty, and Cognitive Bias",
+            "ageRange": [
+              11,
+              12
+            ],
+            "coverageRole": "foundation",
+            "supports": "Several risk-assessment biases appear together in the description",
+            "sourceSupport": [
+              {
+                "field": "description",
+                "text": "Distinguish between risk (decisions with known probabilities) and uncertainty (decisions with unknown outcomes); identify cognitive biases that distort risk assessment: availability heuristic (judging likelihood by how easily examples come to mind), present bias (overvaluing the immediate over the future), optimism bias (underestimating personal risk), and groupthink; understand why adolescent brains are biologically calibrated toward higher risk tolerance; apply a structured decision-making framework to real choices; understand the role of personal values in decisions where facts alone cannot determine the answer"
+              }
+            ],
+            "hasMappedEvidenceCriteria": false,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Evidence array is empty and no interaction criterion is supplied.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_JiZ3H90Xg8",
+                "prerequisiteId": "mt_6xj94tmpi-",
+                "strength": "hard",
+                "reason": "Advanced decision-making depends on earlier critical thinking skills",
+                "prerequisiteName": "Difficult Ethical Choices"
+              },
+              {
+                "topicId": "mt_JiZ3H90Xg8",
+                "prerequisiteId": "mt_RNeEF1JU4J",
+                "strength": "hard",
+                "reason": "Advanced decision-making depends on earlier problem-solving skills",
+                "prerequisiteName": "Ethics in Real-World Issues"
+              }
+            ]
+          },
+          {
+            "topicId": "mt_gMSFymQlrW",
+            "topicName": "Evaluating Arguments in Non-Fiction",
+            "ageRange": [
+              11,
+              14
+            ],
+            "coverageRole": "foundation",
+            "supports": "Evaluate evidence sufficiency and alternative arguments",
+            "sourceSupport": [
+              {
+                "field": "evidence",
+                "index": 0,
+                "text": "Identify the main claim in an argument text and evaluate whether the evidence presented is sufficient"
+              },
+              {
+                "field": "evidence",
+                "index": 2,
+                "text": "Compare two opposing arguments on the same issue and evaluate which is more convincing, with reasons"
+              }
+            ],
+            "hasMappedEvidenceCriteria": true,
+            "assessmentStatus": "proposed course checks required; learner mastery unknown",
+            "limitation": "Does not establish transfer to general judgment or model mastery.",
+            "directHardPrerequisites": [
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_dmFnJzxKwz",
+                "strength": "hard",
+                "reason": "Assessing whether evidence is sufficient requires textual evidence skills",
+                "prerequisiteName": "Using and Evaluating Textual Evidence"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_jIcgbCmziD",
+                "strength": "hard",
+                "reason": "Evaluating claims requires understanding purpose, audience, and context",
+                "prerequisiteName": "Purpose, audience, and context"
+              },
+              {
+                "topicId": "mt_gMSFymQlrW",
+                "prerequisiteId": "mt_V6456X6pJE",
+                "strength": "hard",
+                "reason": "Evaluating arguments builds on KS2 distinguishing fact from opinion",
+                "prerequisiteName": "Fact vs opinion"
+              }
+            ]
+          }
+        ],
+        "analogy_only": [],
+        "missing": [
+          "No direct interacting-bias, factorial comparison, nonlinear amplification or lollapalooza criterion.",
+          "Do not invent numerical effect sizes or assume all influences multiply. Munger’s label is a heuristic, not a universal equation."
+        ]
+      },
+      "ageBands": {
+        "6-8": {
+          "objective": "Notice two reasons acting together.",
+          "learnerAction": "Compare a pretend poster with one friendly mascot, one crowd cue, both and neither.",
+          "observableCheck": "Name both cues without claiming they prove how real children behave.",
+          "transferTask": "Find two helpful supports for a safe classroom routine."
+        },
+        "9-12": {
+          "objective": "Separate a combination from a proved interaction.",
+          "learnerAction": "Compare four fictional versions of an advert with disclosed invented outcome counts.",
+          "observableCheck": "Explain what the counts show and why fictional data do not establish a real psychological effect.",
+          "transferTask": "Design a transparent check for a different fictional rule."
+        },
+        "13-17": {
+          "objective": "Test an interaction claim rather than merely list biases.",
+          "learnerAction": "Use a 2-by-2 toy dataset with incentive and popularity cues; compare to an additive prediction.",
+          "observableCheck": "Calculate the contrast, state sampling and causal limits and suggest a noncoercive safeguard.",
+          "transferTask": "Analyze a different multi-cause scenario and identify a missing mechanism."
+        }
+      },
+      "limitations": [
+        "Use fictional scenarios and fully disclosed toy data; do not optimize manipulation of children or reenact coercive studies."
+      ]
+    }
+  ],
+  "priorityMeaning": "Editorial sequence for inspecting this curated catalog; not a canonical Munger ranking or a replacement for prerequisite ordering."
+}

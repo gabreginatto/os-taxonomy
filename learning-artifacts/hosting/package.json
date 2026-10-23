@@ -1,0 +1,20 @@
+{
+  "name": "family-learning-hosting",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/firebase.mjs check",
+    "provision": "node scripts/firebase.mjs provision",
+    "connect": "node scripts/firebase.mjs connect",
+    "deploy": "node scripts/firebase.mjs deploy",
+    "preview": "node scripts/firebase.mjs preview",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "firebase-tools": "15.34.0",
+    "https-proxy-agent": "7.0.6"
+  }
+}
