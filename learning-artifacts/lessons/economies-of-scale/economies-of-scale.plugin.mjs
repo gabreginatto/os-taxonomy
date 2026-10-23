@@ -2,249 +2,922 @@ import * as THREE from 'three';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {gsap} from 'gsap';
 
-// Fictional daily configurations, money in integer pence. Rendering never decides truth.
-const phases=['share','bottleneck','grow','quiet','transfer'];
-const answers={share:['spread','materials','total'],bottleneck:['packing','assembly','equal'],grow:['coordination','biggest','cheapest'],quiet:['demand','bulk','free'],transfer:['profit','bigger','rent']};
-const money=c=>'£'+(c/100).toFixed(2).replace(/\.00$/,'');
-const fresh=(phase='share',history=[])=>({phase,batch:10,upgrade:'none',teams:phase==='grow'?2:4,plan:'small',answer:null,seenBatches:[10],history,help:false,complete:false});
-function costs(s,teamsOverride){
- let requested,assembly,packing,fixed,coordination=0,variableRate;
- if(s.phase==='share'){requested=s.batch;assembly=packing=20;fixed=10000;variableRate=400;}
- else if(s.phase==='bottleneck'){requested=80;assembly=s.upgrade==='assembly'?160:80;packing=s.upgrade==='packing'?80:40;fixed=24000+(s.upgrade==='assembly'?10000:s.upgrade==='packing'?4000:0);variableRate=300;}
- else if(s.phase==='grow'||s.phase==='quiet'){
-  const n=teamsOverride??s.teams;requested=s.phase==='grow'?80:20;assembly=packing=20*n;fixed=10000+2500*(n-1);coordination=1500*(n-1)**2;variableRate=400;
- }else{requested=40;assembly=packing=s.plan==='small'?40:120;fixed=s.plan==='small'?12000:30000;coordination=s.plan==='small'?0:18000;variableRate=s.plan==='small'?300:200;}
- const capacity=Math.min(assembly,packing),produced=Math.min(requested,capacity),variable=produced*variableRate,total=fixed+coordination+variable,revenue=produced*1500;
- return {requested,assembly,packing,capacity,fixed,coordination,variableRate,variable,total,produced,unfilled:requested-produced,idle:capacity-produced,average:total/produced,revenue,profit:revenue-total};
+// Press Club: five working weeks in one fictional print studio (plus a noodle-stall transfer).
+// Money is integer pence. The pure model below decides every quantity and every assessment;
+// the presentation only replays results that were already computed.
+
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DAY_SHORT=['M','Tu','W','Th','F','Sa'];
+const DAYS_PER_WEEK=DAYS.length;
+
+const STUDIO={
+  kind:'studio',base:48000,variable:400,baseLabel:'Studio lease',variableLabel:'Blanks & ink',
+  s1:{one:'press',many:'presses',cap:30,cost:6000,included:0,verb:'printed',can:'print',does:'prints'},
+  s2:{one:'tunnel',many:'tunnels',cap:40,cost:6000,included:1,verb:'cured',can:'cure',does:'cures'},
+  sync:{station:'s1',cost:6000,label:'Sync between press teams'}
+};
+const NOODLES={
+  kind:'noodles',base:20000,variable:240,baseLabel:'Pitch fee',variableLabel:'Ingredients',
+  s1:{one:'prep bench',many:'prep benches',cap:80,cost:6000,included:1,verb:'prepped',can:'prep',does:'preps'},
+  s2:{one:'wok',many:'woks',cap:50,cost:4500,included:0,verb:'cooked',can:'cook',does:'cooks'},
+  sync:{station:'s2',cost:3500,label:'Sync between cooks'}
+};
+const LEVELS=[
+  {id:'rent',biz:STUDIO,unit:'hoodie',units:'hoodies',price:2400,orderChoices:[10,20,30],start:{orders:10,s1:1,s2:1},limits:{s1:[1,1],s2:[1,1]},target:'profit',gate:{type:'volumes',count:2},chartX:'orders',ink:'#7c3aed',correct:'shared'},
+  {id:'jam',biz:STUDIO,unit:'tee',units:'tees',price:2000,orders:60,start:{s1:2,s2:1},limits:{s1:[1,2],s2:[1,2]},target:'profit',gate:{type:'stuck'},chartX:'s1',ink:'#e11d74',correct:'slowest'},
+  {id:'size',biz:STUDIO,unit:'shirt',units:'shirts',price:1500,orders:200,buyerTakesAll:true,start:{s1:1,s2:1},limits:{s1:[1,6],s2:[1,5]},target:'best',gate:{type:'sizes',count:3},chartX:'s1',ink:'#2563eb',correct:'sync'},
+  {id:'fall',biz:STUDIO,unit:'shirt',units:'shirts',price:1700,orders:60,start:{s1:4,s2:3},limits:{s1:[1,6],s2:[1,5]},target:'profit',gate:{type:'idle'},chartX:'s1',ink:'#16a34a',correct:'idle'},
+  {id:'noodles',biz:NOODLES,unit:'bowl',units:'bowls',price:600,orders:150,start:{s1:1,s2:1},limits:{s1:[1,3],s2:[1,4]},target:'profit',gate:{type:'configs',count:2},chartX:'s2',ink:'#f59e0b',correct:'carried'}
+];
+
+const money=p=>{const v=Math.abs(p)/100;return '£'+(Number.isInteger(v)?v.toLocaleString('en-GB'):v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2}));};
+const money2=p=>'£'+(p/100).toFixed(2);
+const signed=p=>p>0?'+'+money(p):p<0?'−'+money(p):'£0';
+const plural=(n,one,many)=>n+' '+(n===1?one:many);
+
+const COPY={
+  rent:{
+    week:'The rent doesn’t care',
+    client:'Year 11 leavers want hoodies at £24 each. They’ll take 10, 20 or 30 — you decide how many to accept.',
+    goal:'Make a profit on the day.',
+    gate:'Run at least two different order sizes. Then a question appears here.',
+    question:'Why did the cost per hoodie fall when you printed more?',
+    reasons:[['shared','The same £540 of leases was shared by more hoodies.'],['ink','Blanks and ink got cheaper per hoodie.'],['total','The day’s total cost went down.']],
+    counters:{ink:'Look at the yellow part of the cost bar: every hoodie still uses £4 of blank and ink, whatever the volume. Which part of the bar stayed the same size?',total:'Compare the day-cost tiles: the total went up with volume. The saving is per hoodie, not in total.'},
+    hint:'Before you run, look at the navy and teal blocks: £540 of leases, paid however many you print. Each hoodie also uses £4 of blank and ink. How many hoodies have to share the £540 before £24 each covers everything?',
+    onlyOne:'That day hits the goal. Before you answer, run a different number of hoodies as well, so you have something to compare it with.',
+    debrief:'Fixed-cost spreading. The leases are a fixed cost: £540 whether you print 10 hoodies or 30. Over 10 hoodies each carries £54 of it; over 30, only £18. Total cost rises with volume (£580 → £660) but cost per hoodie falls (£58 → £22). The studio is the same size: you used it more fully.'
+  },
+  jam:{
+    week:'Where does it jam?',
+    client:'A local band wants 60 tour tees at £20 each. Last night you leased a second press.',
+    goal:'Deliver the order at a profit.',
+    gate:'This question unlocks after a day when some tees get stuck. Monday is already set up — try it.',
+    question:'On the day tees got stuck, what decided how many you could sell?',
+    reasons:[['slowest','The slowest station: one tunnel cures only 40 a day.'],['late','Two presses gave the studio room for 60; the other 20 were just late.'],['price','The second press raised the price per tee, so fewer were bought.']],
+    counters:{late:'Stuck tees weren’t late: they were never cured, so they couldn’t be sold today, yet their ink was already paid for. A chain moves only as fast as its slowest step.',price:'The band wanted 60 all along and the price stayed £20. Look at where the red pile formed.'},
+    hint:'Follow one pallet: press, then tunnel, then dock. Each press prints 30 a day; each tunnel cures 40. Which station can’t keep up?',
+    onlyOne:'That day hits the goal. This question unlocks after you’ve seen a day where tees get stuck.',
+    debrief:'A bottleneck. Finished output is set by the smallest capacity in the chain. Two presses print 60, but one tunnel cures 40, so 20 printed tees were paid for and never sold. A second tunnel (+£60) delivers all 60: £960 in total, £16 a tee, £240 profit. Extra capacity anywhere except the bottleneck only adds cost.'
+  },
+  size:{
+    week:'How big?',
+    client:'A festival merch tent buys every shirt you cure today at £15 — up to 200.',
+    goal:'Find the most profitable size of studio. Map at least three different press counts on your ledger.',
+    gate:'Run at least three different numbers of presses. Then a question appears here.',
+    question:'Past a certain size, cost per shirt rises again. Why?',
+    reasons:[['sync','Every new press team must sync with every existing one, so overhead grows faster than the saving.'],['ink','Blanks and ink cost more per shirt in a bigger studio.'],['lease','The studio lease gets bigger.']],
+    counters:{ink:'Blanks and ink are £4 a shirt at every size here. Look at the grey part of the cost bar as you add presses.',lease:'The navy studio lease is £480 at every size. What else grows as you add presses?'},
+    hint:'Use the preview before you run: committed cost ÷ shirts you can cure, plus £4. Keep the tunnels just big enough for the presses — each press prints 30, each tunnel cures 40.',
+    onlyOne:'Good day. Map at least three different press counts so you can see how size changes cost per shirt.',
+    debrief:'Economies, then diseconomies, of scale. Up to four presses the shared lease is spread over more shirts and cost per shirt falls (£22 → £16 → £14.67 → £14). After that, sync grows with every pair of teams — 6 pairs at four presses, 10 at five, 15 at six — and outruns the saving: £14.40 at five, £15 at six. In this model, four presses and three tunnels is the sweet spot.'
+  },
+  fall:{
+    week:'Orders fall',
+    client:'The festival is back, but this time it wants only 60 shirts, at £17 each. Last week’s setup is still leased.',
+    goal:'Make a profit on 60 shirts.',
+    gate:'This question unlocks after a day where some of your capacity sits idle. Last week’s setup is ready to run.',
+    question:'Why does last week’s best setup lose money now?',
+    reasons:[['idle','Leases and sync cost the same whether a press is busy or idle; now only 60 shirts share them.'],['ink','Blanks and ink got more expensive.'],['slow','The tunnels slowed down.']],
+    counters:{ink:'Still £4 a shirt. Compare the yellow block with the rest of the bar.',slow:'Each tunnel still cures 40 a day. Look for the dimmed stations: what are they costing?'},
+    hint:'Each press prints 30 and each tunnel cures 40. What is the smallest studio that can still deliver all 60?',
+    onlyOne:'That day hits the goal. This question unlocks after a day where some leased capacity sits idle — last week’s setup would show it.',
+    debrief:'Idle capacity. The best size depends on demand. At 60 shirts, four presses and three tunnels cost £24 a shirt and lose £420; two and two cost £16 and make £60. These leases are fresh every day, so shrinking is free here. Equipment you’ve already bought is different: that money is spent either way.'
+  },
+  noodles:{
+    week:'Night Noodles',
+    client:'New business, same rules? Your night-market noodle stall has 150 bowls ordered at £6. The £200 pitch fee includes one prep bench.',
+    goal:'Serve all 150 bowls at a profit.',
+    gate:'Run at least two different setups. Then a question appears here.',
+    question:'Which ideas from the print studio carried over to the stall?',
+    reasons:[['carried','The slowest station caps output, the pitch fee is cheaper per bowl at higher volume, and every extra cook adds sync with every other.'],['bigger','Bigger always serves cheaper.'],['flat','Cost per bowl doesn’t depend on how many you sell.']],
+    counters:{bigger:'Check your ledger: past a point, adding woks raises the cost per bowl, because every cook has to sync with every other.',flat:'Compare a day that sold 80 bowls with one that sold 150: the same pitch fee is shared very differently.'},
+    hint:'Each bench preps 80 bowls and each wok cooks 50. Too few benches leave woks waiting; too few woks leave prepped bowls to waste.',
+    onlyOne:'That day hits the goal. Run one more, different setup to compare before you answer.',
+    debrief:'The same three rules in a new place. The slowest station caps output (too few benches starve the woks; too few woks waste prepped bowls), the £200 pitch fee is shared across more bowls, and sync between cooks grows with every pair. Three woks and two benches: £860 for 150 bowls, £5.73 a bowl, £40 profit. That’s one more fictional case handled — a good sign, not proof of mastering scale.'
+  }
+};
+
+const ordersFor=(level,dials)=>level.orderChoices?dials.orders:level.orders;
+export function dayResult(level,dials){
+  const b=level.biz,n1=dials.s1,n2=dials.s2,orders=ordersFor(level,dials);
+  const syncN=b.sync.station==='s1'?n1:n2,pairs=syncN*(syncN-1)/2;
+  const lease=b.base,s1Cost=b.s1.cost*(n1-b.s1.included),s2Cost=b.s2.cost*(n2-b.s2.included),sync=b.sync.cost*pairs;
+  const committed=lease+s1Cost+s2Cost+sync,cap1=b.s1.cap*n1,cap2=b.s2.cap*n2;
+  const entered=Math.min(orders,cap1),done=Math.min(entered,cap2),stuck=entered-done;
+  const variable=b.variable*entered,total=committed+variable,revenue=level.price*done;
+  return {orders,s1:n1,s2:n2,pairs,lease,s1Cost,s2Cost,sync,committed,cap1,cap2,entered,done,stuck,
+    unfilled:level.buyerTakesAll?0:orders-done,variable,total,revenue,profit:revenue-total,average:total/done,
+    idle1:n1-Math.ceil(entered/b.s1.cap),idle2:n2-Math.ceil(done/b.s2.cap)};
 }
-function curve(s){return [1,2,3,4,5,6].map(teams=>{
- const day=costs({...s,phase:s.phase==='quiet'?'quiet':'grow'},teams);
- const capacity=teams*20,fullTotal=day.fixed+day.coordination+capacity*400;
- return {teams,...day,fullAverage:fullTotal/capacity};
-});}
-function observe(s){const day=costs(s);return {...s,...day,curve:curve(s),label:day.produced+' completed / '+day.requested+' orders · '+money(day.total)+' total · '+money(day.average)+' per item'};}
+function configs(level){
+  const out=[];
+  for(const orders of level.orderChoices||[null])for(let s1=level.limits.s1[0];s1<=level.limits.s1[1];s1++)for(let s2=level.limits.s2[0];s2<=level.limits.s2[1];s2++)out.push(orders===null?{s1,s2}:{orders,s1,s2});
+  return out;
+}
+const bestProfit=level=>Math.max(...configs(level).map(d=>dayResult(level,d).profit));
+const maxScale=level=>Math.max(...configs(level).map(d=>{const r=dayResult(level,d);return Math.max(r.total,r.revenue);}));
+const sameDials=(a,b)=>a.s1===b.s1&&a.s2===b.s2&&a.orders===b.orders;
+const levelRuns=s=>s.runs.filter(r=>r.level===s.level);
+const currentRuns=s=>s.runs.filter(r=>r.level===s.level&&r.attempt===s.attempt);
+function gateOpen(s){
+  const level=LEVELS[s.level],results=levelRuns(s).map(r=>dayResult(level,r.dials)),g=level.gate;
+  if(g.type==='volumes')return new Set(results.map(r=>r.orders)).size>=g.count;
+  if(g.type==='sizes')return new Set(results.map(r=>r.s1)).size>=g.count;
+  if(g.type==='configs')return new Set(levelRuns(s).map(r=>JSON.stringify(r.dials))).size>=g.count;
+  if(g.type==='stuck')return results.some(r=>r.stuck>0);
+  return results.some(r=>r.idle1>0||r.idle2>0);
+}
+const targetMet=(level,r)=>level.target==='best'?r.profit===bestProfit(level):r.profit>0;
+
+function startLevel(level,history,runs){const L=LEVELS[level];return {level,attempt:0,dials:{...L.start},runs,reason:null,help:false,history,complete:false};}
+const initialState=()=>startLevel(0,[],[]);
+
+function outcome(level,r){
+  const b=level.biz,parts=[];
+  if(level.buyerTakesAll)parts.push('Sold all '+r.done+' '+level.units+' you finished');
+  else parts.push(r.unfilled?'Sold '+r.done+' of '+r.orders:'All '+r.orders+' delivered');
+  if(r.stuck)parts.push(r.stuck+' '+b.s1.verb+' but never '+b.s2.verb);
+  if(r.unfilled)parts.push(r.unfilled+' orders unfilled');
+  if(r.idle1)parts.push(plural(r.idle1,b.s1.one,b.s1.many)+' idle');
+  if(r.idle2)parts.push(plural(r.idle2,b.s2.one,b.s2.many)+' idle');
+  return parts.join(' · ');
+}
+function missMessage(level,r){
+  const b=level.biz,parts=[];
+  if(r.stuck)parts.push(r.stuck+' '+level.units+' were '+b.s1.verb+' but never '+b.s2.verb+': paid for, not sold.');
+  if(r.unfilled)parts.push(r.unfilled+' orders went unfilled.');
+  const idle=[r.idle1&&plural(r.idle1,b.s1.one,b.s1.many),r.idle2&&plural(r.idle2,b.s2.one,b.s2.many)].filter(Boolean);
+  if(idle.length)parts.push(idle.join(' and ')+' sat idle, still leased.');
+  if(r.profit<0)parts.push('The day lost '+money(-r.profit)+'. Fixed costs of '+money(r.committed)+' were shared by '+r.done+' '+level.units+': '+money2(r.committed/r.done)+' each before '+b.variableLabel.toLowerCase()+'.');
+  else if(r.profit===0)parts.push('The day only broke even — a profit means revenue above cost.');
+  else parts.push('Profitable ('+signed(r.profit)+') — but is it the most profitable size? Your ledger only shows the sizes you’ve run.');
+  return parts.join(' ');
+}
 function assess(s){
- const day=costs(s);let correct=false,message;
- if(s.phase==='share'){
-  correct=s.seenBatches.includes(20)&&s.batch===20&&s.answer==='spread';
-  message=correct?'Exactly. £100 is shared across more toys. Total cost rises from £140 to £180, while cost per toy falls from £14 to £9. The £4 variable cost per toy stayed the same. This is fuller use of an existing workshop.':!s.seenBatches.includes(20)||s.batch!==20?'Run the 20-toy day as well as the 10-toy day, then compare total cost with cost per toy.':s.answer==='materials'?'The materials and labor still cost £4 per toy. Look at how much of the £100 fixed cost each toy must carry.':'The 20-toy day costs £180 in total, more than £140. The saving is per toy, because the same £100 is shared.';
- }else if(s.phase==='bottleneck'){
-  correct=s.upgrade==='packing'&&s.answer==='packing';
-  message=correct?'Yes. Packing limited the workshop to 40 finished toys. Faster assembly alone left output at 40 and added cost. Upgrading packing delivers all 80 at £6.50 per toy.':s.upgrade==='assembly'?'Assembly can now handle 160, but packing still handles only 40. The extra £100 buys no extra finished output. Try the packing station.':s.upgrade==='none'?'Try an upgrade and inspect completed toys, not just one machine’s capacity.':'This plan fulfills 80. Which stage was limiting the original workshop?';
- }else if(s.phase==='grow'){
-  correct=s.teams===4&&s.answer==='coordination';
-  message=correct?'Four teams fulfill all 80 orders at £630 total (£7.875 per toy, rounded to £7.88). Six teams add idle capacity and coordination costs: £920 for the same 80 toys. Under these assumptions, extra size is expensive.':day.unfilled?'This plan leaves '+day.unfilled+' orders unfilled. The goal is to fulfill all 80 before comparing cost per toy.':s.teams!==4?'This plan fulfills the order, but compare four teams: £630 total. Extra teams add fixed and coordination costs without more sales.':'The graph’s full-capacity curve turns upward because coordination costs eventually outweigh shared-cost savings. That is the model’s diseconomy of scale.';
- }else if(s.phase==='quiet'){
-  correct=s.teams===1&&s.answer==='demand';
-  message=correct?'With only 20 confirmed orders, one team costs £180 (£9 per toy). Four teams cost £390 (£19.50 per toy). Idle capacity still incurs daily fixed and coordination costs. This compares fresh rental plans for tomorrow; past sunk costs are not refunded.':s.teams!==1?'There are only 20 customers in this scenario. Compare one team with the unused capacity and overhead of a larger plan.':'The order changed from 80 to 20. The cheapest sufficient size changed with it; the £4 variable cost did not change.';
- }else{
-  correct=s.plan==='small'&&s.answer==='profit';
-  message=correct?'At 40 meals, one stall earns £600 revenue − £240 cost = £360 profit. Three stalls earn £600 − £560 = £40. Cheaper ingredients do not overcome their extra fixed and coordination costs. This is a justified choice for this scenario, not a rule that small always wins.':s.plan!=='small'?'The larger operation saves £1 per meal, only £40 across these customers. It adds £360 in fixed and coordination costs. Compare the whole plan.':'The £120 rent is shared over 40 meals. Check revenue minus the whole day’s cost for each plan.';
- }
- return {correct,message,scope:'this_response_only',kind:s.phase==='transfer'?'new_context_cost_and_profit_comparison':'authored_scale_experiment',assistance:s.help?'help_requested':'help_not_requested',mastery_claim:false};
+  const base={scope:'this_response_only',mastery_claim:false,assistance:s.help?'help_requested':'help_not_requested'};
+  if(s.complete)return {...base,correct:true,kind:'course_complete',message:'All five weeks are done. Your finishing ledger is below. These were bounded responses to fictional cases, not a test of everything about scale.'};
+  const level=LEVELS[s.level],c=COPY[level.id],runs=currentRuns(s),last=runs.at(-1);
+  const kind=level.id==='noodles'?'transfer_configuration_and_reason':'configuration_and_reason';
+  if(!last)return {...base,correct:false,kind,message:'Nothing has run yet. Set up '+DAYS[0]+' and press Run.'};
+  if(!sameDials(last.dials,s.dials))return {...base,correct:false,kind,message:'You’ve changed the setup since your last run. Only a day you actually ran counts: run this setup, or put it back.'};
+  const r=dayResult(level,last.dials);
+  if(!targetMet(level,r))return {...base,correct:false,kind,message:missMessage(level,r)};
+  if(!gateOpen(s))return {...base,correct:false,kind,message:c.onlyOne};
+  if(!s.reason)return {...base,correct:false,kind,message:'That run hits the goal. Now answer the question: '+c.question};
+  if(s.reason!==level.correct)return {...base,correct:false,kind,message:'Your setup works. Your reason doesn’t fit the evidence yet: '+c.counters[s.reason]};
+  return {...base,correct:true,kind,message:c.debrief};
 }
-const afterShare=[{type:'batch',value:20},{type:'answer',value:'spread'},{type:'next'}];
-const afterPacking=[...afterShare,{type:'upgrade',value:'packing'},{type:'answer',value:'packing'},{type:'next'}];
-const afterGrowth=[...afterPacking,{type:'teams',value:4},{type:'answer',value:'coordination'},{type:'next'}];
-const afterQuiet=[...afterGrowth,{type:'teams',value:1},{type:'answer',value:'demand'},{type:'next'}];
-const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export const plugin={
- id:'economies-of-scale',version:'1.0.0',topicIds:['mt_9gpUHWVKMR'],representation:'threejs',audienceLabel:'Age 15 · Costs, capacity & growth',
- title:'Little Works. Grow wisely.',prompt:'Build enough to meet the order. Discover when getting bigger makes each toy cheaper—and when it does the opposite.',
- reason:'Requested colorful 3D workshop, directly picked assembly and packing stations, replicated team pods, visible capacity and an HTML cost curve. GSAP animates presentation only; the pure cost model determines output and assessment.',
- coverage:[{index:0,mode:'partial',assessed_subclaim:'Interpret fictional fixed/variable/coordination cost and revenue/profit readouts; not a free explanation of every accounting definition.'},{index:1,mode:'partial',assessed_subclaim:'Recognize the correct revenue-minus-total-cost profit comparison in a disclosed food-stall scenario.'}],
- assumptions:[
-  'Fictional teaching data. Every daily configuration is available to rent for a fresh next day; changing size does not recover a past sunk investment.',
-  'All completed output is sold at £15 per item to confirmed orders. Production stops at demand; no inventory, defects, uncertainty, credit or tax.',
-  'Finished output is min(orders, assembly capacity, packing capacity). Variable cost is charged only for finished output; this idealization omits work-in-progress costs.',
-  'Coordination = £15(n−1)² and fixed = £100+£25(n−1) in the expansion experiments. These are disclosed authored functions, not empirical business laws.',
-  'Fuller utilization within one workshop differs from economies of scale across prospective configurations. Full-capacity comparison makes the distinction explicit.',
-  'The objective is fulfill all confirmed orders at the lowest cost per completed item, not maximize total output regardless of demand.',
-  'Whole-number arithmetic, division, graph reading and the idea of a daily cost are assumed; age or reported IQ does not establish mastery.',
-  'A representative toy is an illustration, not a one-to-one count. Exact outputs, queues and capacity are displayed as model numbers.',
-  'Supplier bargaining, advertising, brand psychology, network effects, learning curves and financing are discussed as extensions, not simulated or assessed here.',
-  'Local Munger attribution relies on an unofficial transcript mirror. This lesson quotes no speech and makes no invention claim. No economics expert, learner or physical-device review.'
- ],
- sources:['https://github.com/gabreginatto/os-taxonomy/blob/main/data/topics.json','Munger_Models/mental-models.json#scale','Munger_Models/course-guidelines.md'],
- contentReview:{status:'source_reviewed',reviewer:'Codex',scope:'Exact local Costs & Revenue evidence, local scale research, explicit fictional equations and independent arithmetic examples. Official OpenStax access blocked; no claim of retrieved external corroboration or expert review.'},
- scenario:[{time:1,action:{type:'batch',value:20}},{time:2,action:{type:'answer',value:'spread'}}],
- fixtures:[
-  {actions:[],expectedObservation:{produced:10,total:14000,average:1400},expectedCorrect:false},
-  {actions:[{type:'batch',value:20},{type:'answer',value:'spread'}],expectedObservation:{produced:20,total:18000,average:900},expectedCorrect:true},
-  {actions:[{type:'batch',value:20},{type:'answer',value:'total'}],expectedObservation:{total:18000},expectedCorrect:false},
-  {actions:[...afterShare,{type:'upgrade',value:'assembly'},{type:'answer',value:'packing'}],expectedObservation:{produced:40,total:46000,unfilled:40},expectedCorrect:false},
-  {actions:[...afterShare,{type:'upgrade',value:'packing'},{type:'answer',value:'packing'}],expectedObservation:{produced:80,total:52000,average:650},expectedCorrect:true},
-  {actions:[...afterPacking,{type:'teams',value:2},{type:'answer',value:'coordination'}],expectedObservation:{produced:40,total:30000,unfilled:40},expectedCorrect:false},
-  {actions:[...afterPacking,{type:'teams',value:4},{type:'answer',value:'coordination'}],expectedObservation:{produced:80,total:63000,average:787.5},expectedCorrect:true},
-  {actions:[...afterPacking,{type:'teams',value:6},{type:'answer',value:'coordination'}],expectedObservation:{produced:80,total:92000,idle:40},expectedCorrect:false},
-  {actions:[...afterGrowth,{type:'teams',value:1},{type:'answer',value:'demand'}],expectedObservation:{produced:20,total:18000,average:900},expectedCorrect:true},
-  {actions:[...afterQuiet,{type:'plan',value:'big'},{type:'answer',value:'profit'}],expectedObservation:{revenue:60000,total:56000,profit:4000},expectedCorrect:false},
-  {actions:[...afterQuiet,{type:'answer',value:'profit'}],expectedObservation:{revenue:60000,total:24000,profit:36000},expectedCorrect:true},
- ],
- acceptance:[{action:'click',selector:'#sc-batch-20'},{action:'assert_text',selector:'#sc-average',text:'£9'},{action:'click',selector:'#sc-answer-spread'},{action:'assert_observed',field:'produced',value:20}],
- initialState(){return fresh();},observe,assess,
- applyAction(s,{type,value}){
-  if(type==='restart')return fresh();
+
+function observe(s){
+  const level=LEVELS[s.level],c=COPY[level.id],b=level.biz,runs=currentRuns(s),day=runs.length,last=runs.at(-1);
+  const matches=Boolean(last&&sameDials(last.dials,s.dials)),preview=dayResult(level,s.dials),result=matches?dayResult(level,last.dials):null;
+  const ledger=levelRuns(s).map(r=>{const x=dayResult(level,r.dials);return {day:r.day,attempt:r.attempt,current:r.attempt===s.attempt,dials:r.dials,orders:x.orders,s1:x.s1,s2:x.s2,average:x.average,profit:x.profit,stuck:x.stuck,unfilled:x.unfilled,done:x.done};});
+  const history=s.history.map((h,i)=>{const L=LEVELS[i],x=dayResult(L,h.dials);return {...h,week:COPY[L.id].week,unit:L.unit,units:L.units,s1:x.s1,s2:x.s2,orders:x.orders,done:x.done,average:x.average,profit:x.profit};});
+  const cash=runs.reduce((sum,r)=>sum+dayResult(level,r.dials).profit,0);
+  const label='Week '+(s.level+1)+', '+(s.complete?'all five weeks complete':result?DAYS[day-1]+': '+outcome(level,result)+'; '+money(result.total)+' total, '+money2(result.average)+' per '+level.unit+', profit '+signed(result.profit):'next day '+(day<DAYS_PER_WEEK?DAYS[day]:'none — week over')+'; not run yet');
+  return {
+    level:s.level,levelId:level.id,kind:b.kind,week:s.level+1,weeks:LEVELS.length,title:c.week,client:c.client,goal:c.goal,
+    unit:level.unit,units:level.units,price:level.price,orderChoices:level.orderChoices||null,limits:level.limits,
+    s1Name:b.s1,s2Name:b.s2,variableRate:b.variable,syncStation:b.sync.station,chartX:level.chartX,ink:level.ink,baseLabel:b.baseLabel,variableLabel:b.variableLabel,syncLabel:b.sync.label,
+    day,daysLeft:DAYS_PER_WEEK-day,nextDay:day<DAYS_PER_WEEK?DAYS[day]:null,weekOver:day>=DAYS_PER_WEEK,attempt:s.attempt,
+    dials:{...s.dials},preview,matches,result,lastDay:last?last.day:null,ledger,history,cash,
+    gateOpen:gateOpen(s),gate:c.gate,question:c.question,reasons:c.reasons,reason:s.reason,help:s.help,hint:c.hint,
+    complete:s.complete,maxScale:maxScale(level),
+    outcome:result?outcome(level,result):null,
+    committed:preview.committed,cured:result?result.done:null,stuck:result?result.stuck:null,unfilled:result?result.unfilled:null,
+    total:result?result.total:null,average:result?result.average:null,profit:result?result.profit:null,
+    label
+  };
+}
+
+function validDials(level,d){
+  if(!d||typeof d!=='object')return false;
+  const keys=Object.keys(d).sort().join(',');
+  if(keys!==(level.orderChoices?'orders,s1,s2':'s1,s2'))return false;
+  if(level.orderChoices&&!level.orderChoices.includes(d.orders))return false;
+  return ['s1','s2'].every(k=>Number.isInteger(d[k])&&d[k]>=level.limits[k][0]&&d[k]<=level.limits[k][1]);
+}
+function validateInvariants(s){
+  if(!s||!Number.isInteger(s.level)||s.level<0||s.level>=LEVELS.length||!Number.isInteger(s.attempt)||s.attempt<0)return false;
+  if(typeof s.help!=='boolean'||typeof s.complete!=='boolean'||(s.complete&&s.level!==LEVELS.length-1))return false;
+  const level=LEVELS[s.level];
+  if(!validDials(level,s.dials)||!Array.isArray(s.runs)||!Array.isArray(s.history))return false;
+  if(s.history.length!==(s.complete?LEVELS.length:s.level))return false;
+  if(!s.history.every((h,i)=>h.level===LEVELS[i].id&&validDials(LEVELS[i],h.dials)&&targetMet(LEVELS[i],dayResult(LEVELS[i],h.dials))&&h.reason===LEVELS[i].correct))return false;
+  const counts=new Map();
+  for(const r of s.runs){
+    if(!Number.isInteger(r.level)||r.level<0||r.level>s.level||!Number.isInteger(r.attempt)||r.attempt<0||(r.level===s.level&&r.attempt>s.attempt))return false;
+    if(!validDials(LEVELS[r.level],r.dials))return false;
+    const key=r.level+':'+r.attempt,n=counts.get(key)||0;
+    if(r.day!==n||n>=DAYS_PER_WEEK)return false;
+    counts.set(key,n+1);
+  }
+  if(s.reason!==null&&!COPY[level.id].reasons.some(([id])=>id===s.reason))return false;
+  if(s.reason!==null&&!gateOpen(s))return false;
+  return true;
+}
+function applyAction(s,action){
+  const {type,key,value}=action||{};
+  if(type==='restart')return initialState();
   if(type==='help')return {...s,help:true};
-  if(s.complete)throw Error('Completed experiment; restart to change it.');
-  if(type==='batch'&&s.phase==='share'&&[10,20].includes(value))return {...s,batch:value,answer:null,seenBatches:[...new Set([...s.seenBatches,value])]};
-  if(type==='upgrade'&&s.phase==='bottleneck'&&['none','assembly','packing'].includes(value))return {...s,upgrade:value,answer:null};
-  if(type==='teams'&&['grow','quiet'].includes(s.phase)&&Number.isInteger(value)&&value>=1&&value<=6)return {...s,teams:value,answer:null};
-  if(type==='plan'&&s.phase==='transfer'&&['small','big'].includes(value))return {...s,plan:value,answer:null};
-  if(type==='answer'&&answers[s.phase].includes(value))return {...s,answer:value};
-  if(type==='next'&&assess(s).correct){
-   const history=[...s.history,{phase:s.phase,answer:s.answer,help:s.help,...costs(s)}];
-   const i=phases.indexOf(s.phase);return i===phases.length-1?{...s,history,complete:true}:fresh(phases[i+1],history);
+  if(s.complete)throw Error('All five weeks are complete; restart to play again.');
+  const level=LEVELS[s.level];
+  if(type==='set'){
+    const dials={...s.dials,[key]:value};
+    if(!['orders','s1','s2'].includes(key)||!validDials(level,dials))throw Error('That setup is not available this week.');
+    return {...s,dials};
   }
-  throw Error('Unsupported scale action or premature progression');
- },
- validateInvariants(s){
-  if(!phases.includes(s.phase)||!Number.isInteger(s.teams)||s.teams<1||s.teams>6||![10,20].includes(s.batch)||!['none','assembly','packing'].includes(s.upgrade)||!['small','big'].includes(s.plan)||!Array.isArray(s.seenBatches)||s.seenBatches.some(x=>![10,20].includes(x))||!s.seenBatches.includes(10)||typeof s.help!=='boolean'||typeof s.complete!=='boolean')return false;
-  if(s.answer!==null&&!answers[s.phase].includes(s.answer))return false;
-  const expected=s.complete?5:phases.indexOf(s.phase);return Array.isArray(s.history)&&s.history.length===expected&&s.history.every((h,i)=>h.phase===phases[i]&&answers[h.phase].includes(h.answer)&&h.produced>0&&h.total===h.fixed+h.coordination+h.variable)&&(!s.complete||s.phase==='transfer'&&assess(s).correct);
- },
- createPresentation
-};
-
-const copy={
- share:{kicker:'01 / SHARE THE SETUP',question:'Can a more expensive day produce cheaper toys?',guide:'Tap an order crate to run a 10- or 20-toy day. The workshop costs £100 per day, plus £4 for each finished toy.',quiz:'Why did the 20-toy day cost less per toy?',options:[['spread','The same £100 was shared across more toys.'],['materials','The variable cost fell below £4 per toy.'],['total','The total bill became smaller.']],hint:'Compare £100 ÷ 10 with £100 ÷ 20. Then add the unchanged £4 per toy.'},
- bottleneck:{kicker:'02 / FIND THE BOTTLENECK',question:'80 orders. Why are only 40 toys leaving?',guide:'Try one upgrade at a time. Tap a station or its button. Watch finished output, not just a machine’s capacity.',quiz:'Which stage originally limited finished output?',options:[['packing','Packing: it could finish only 40 per day.'],['assembly','Assembly: faster robots always mean more deliveries.'],['equal','Both upgrades deliver the same extra output.']],hint:'Finished output is limited by the slowest stage. A faster robot cannot make the packing station finish more than 40.'},
- grow:{kicker:'03 / CHOOSE YOUR SCALE',question:'Fulfill 80 orders. How many teams should you rent?',guide:'New expansion model: each team can finish 20 toys. Tap a production pod or a point on the curve to compare tomorrow’s plan.',quiz:'Why can a larger operation become more expensive per toy?',options:[['coordination','Coordination and extra capacity can outweigh shared-cost savings.'],['biggest','The biggest plan must always have the lowest cost.'],['cheapest','The lowest number on the curve wins even if orders go unfilled.']],hint:'First cross out plans that cannot fulfill 80 orders. Then compare total costs. Coordination grows with the square of teams minus one.'},
- quiet:{kicker:'04 / DEMAND CHANGES THE ANSWER',question:'Tomorrow, only 20 customers order. Keep four teams?',guide:'Same rental model, new demand. Compare fresh plans for tomorrow. There is no refund of past investment or sunk costs.',quiz:'Why did the cheapest sufficient workshop change?',options:[['demand','Fewer orders leave expensive capacity idle.'],['bulk','The £4 variable cost fell when orders fell.'],['free','Unused teams stop charging rent automatically.']],hint:'Every team still adds daily rent and coordination overhead. Production stops once the 20 confirmed orders are filled.'},
- transfer:{kicker:'05 / TRY ANOTHER BUSINESS',question:'40 festival customers. One food stall or three?',guide:'Every meal sells for £15. One stall can serve all 40 customers. The larger operation has cheaper ingredients but more overhead.',quiz:'Which comparison justifies your choice?',options:[['profit','One stall earns £360 profit; three earn £40.'],['bigger','Cheaper ingredients make the larger operation more profitable.'],['rent','The £120 daily rent is the cost of each meal.']],hint:'Both plans earn £600. One costs £120 + 40 × £3. The larger plan costs £300 + £180 + 40 × £2.'}
-};
-function createPresentation(root,{controlsRoot,dispatch}){
- const app=root.closest('.app');app.classList.add('scale-lab');
- const style=document.createElement('style');style.textContent=css;root.append(style);
- const surface=document.createElement('div');surface.className='sc-surface';root.append(surface);
- surface.innerHTML=`<nav class="sc-progress" aria-label="Five experiments">${phases.map((p,i)=>`<span data-step="${p}">${i+1}<small>${['Shared costs','Bottleneck','Expansion','Demand','Transfer'][i]}</small></span>`).join('')}</nav>
- <section class="sc-board"><header class="sc-task"><span class="sc-kicker" id="sc-kicker"></span><h2 id="sc-question" tabindex="-1"></h2><p id="sc-guide"></p></header>
- <div class="sc-world" id="sc-world"><div id="sc-scene-labels" class="sc-scene-labels"></div><div id="sc-capacity-caption" class="sc-capacity-caption"></div><div class="sc-world-note">A miniature illustration · exact quantities below</div></div><div id="sc-config" class="sc-config"></div>
- <p class="sc-outcome" id="sc-outcome" role="status"></p><div class="sc-metrics"><div><span id="sc-output-label">FINISHED / ORDERED</span><strong id="sc-output"></strong></div><div><span>TOTAL DAY COST</span><strong id="sc-total"></strong></div><div class="sc-average"><span>COST / FINISHED ITEM</span><strong id="sc-average"></strong></div></div>
- <div class="sc-ledger" id="sc-ledger"></div><section class="sc-curve" id="sc-curve" hidden><div class="sc-curve-title"><strong>Cost per toy at full capacity</strong><span>Same quality · every available slot used</span></div><div id="sc-bars" class="sc-bars"></div><p>This curve uses full capacity. Your day’s figures above use confirmed orders; unused capacity still costs money.</p></section></section>`;
- controlsRoot.innerHTML=`<section class="sc-challenge" id="sc-challenge"><span class="sc-kicker">MAKE YOUR CASE</span><h2 id="sc-quiz"></h2><div id="sc-answers" class="sc-answers"></div><div class="sc-submit"><button id="sc-help" class="sc-text">Show me a hint</button><span id="sc-check-slot"></span></div><p id="sc-hint" class="sc-hint" hidden></p></section>
- <section id="sc-result" class="sc-result" hidden><h2 id="sc-result-heading" tabindex="-1"></h2><div id="sc-feedback-slot"></div><button id="sc-next" class="sc-primary" hidden></button></section>
- <section id="sc-complete" class="sc-complete" hidden><span class="sc-kicker">FIVE EXPERIMENTS / ONE MODEL</span><h2 tabindex="-1" id="sc-complete-heading">Grow for a reason.</h2><p>Ask what is shared, what limits output, how much demand exists, and what extra coordination costs. Then compare whole plans.</p><div class="sc-recap"><p><strong>Utilization</strong> uses an existing workshop more fully.</p><p><strong>Economies of scale</strong> lower average cost across larger operating configurations.</p><p><strong>Diseconomies of scale</strong> raise average cost when additional overhead outweighs savings.</p></div><p class="sc-small">You checked five fictional scenarios. Try the questions on a new business before drawing a broader conclusion.</p></section>
- <div class="sc-bottom"><span id="sc-reset-slot"></span><details><summary>Equations, assumptions & next questions</summary><div id="sc-notes"></div></details></div>`;
- const $=id=>app.querySelector('#'+id),check=$('check'),feedback=$('feedback'),reset=$('reset'),readout=$('readout');
- const original={check:check.parentNode,feedback:feedback.parentNode,reset:reset.parentNode};$('sc-check-slot').append(check);$('sc-feedback-slot').append(feedback);$('sc-reset-slot').append(reset);readout.classList.add('sr-only');reset.textContent='Restart all experiments';
- app.querySelector('.brand').innerHTML='<span>✦</span> LITTLE WORKS / BIG IDEAS';app.querySelector('.topbar .pill').textContent='For curious minds · age 15';
- $('sc-notes').innerHTML='<p><b>Shared costs:</b> total = £100 + £4 × completed toys. Existing capacity is 20.</p><p><b>Bottleneck:</b> completed = min(orders, assembly capacity, packing capacity). One upgrade at a time; all its extra cost is a daily rental charge.</p><p><b>Expansion:</b> capacity = 20n; fixed = £100 + £25(n−1); coordination = £15(n−1)²; variable = £4 × completed toys. n is the number of teams, 1–6.</p><p><b>Accounting:</b> average cost = total ÷ completed items. Revenue = £15 × sold items. Profit = revenue − total cost. Coordination is another fixed daily charge within each configuration, shown separately to make its growth visible. Everyone meets the same quality standard; every completed item is sold. No stock or work-in-progress is charged in this toy model.</p><p><b>Planning:</b> the goal is to fulfill confirmed orders at the lowest cost per item. These are prospective daily rental plans. Real businesses also face sunk investments, uncertain demand, defects, switching costs and financing.</p><p><b>Beyond this game:</b> bulk purchasing, distribution, specialization and brand familiarity can create other advantages. Network effects and learning from experience are related ideas with different mechanisms. The coordination formula here is invented, not a universal law. Munger’s historical attribution in our local research uses an unofficial transcript mirror; no quotation or authorship claim is made.</p>';
- const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,preserveDrawingBuffer:true,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.4));renderer.setClearColor('#c5b3f2');renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
- renderer.domElement.setAttribute('role','img');renderer.domElement.setAttribute('aria-label','A colorful miniature workshop. Tap an order crate, production station, or team pod. Every action also has a keyboard button below.');$('sc-world').prepend(renderer.domElement);
- const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(-10,10,6,-6,.1,100);camera.position.set(12,12,16);camera.lookAt(0,1,0);
- scene.add(new THREE.HemisphereLight('#fff7eb','#8273b4',1.8));const key=new THREE.DirectionalLight('#fff4de',2.5);key.position.set(-5,13,7);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-12;key.shadow.camera.right=12;key.shadow.camera.top=12;key.shadow.camera.bottom=-12;key.shadow.normalBias=.04;key.shadow.bias=-.0002;scene.add(key);
- const world=new THREE.Group();scene.add(world);
- const mats=new Map(),geos=new Map(),textures=[];let pickables=[],targets=[],observed=null,signature='',phaseBefore='',disposed=false,tween=null;
- const info={renderer:'threejs',tool:'Three.js + GSAP',pick_targets:[],geometry:'procedural miniature workshop',device_performance:'not_measured'};
- function mat(color,opacity=1){const id=color+':'+opacity;if(!mats.has(id))mats.set(id,new THREE.MeshStandardMaterial({color,roughness:.72,metalness:.03,transparent:opacity<1,opacity}));return mats.get(id);}
- function box(parent,w,h,d,color,x=0,y=0,z=0,opacity=1){const id=[w,h,d].join(':');if(!geos.has(id))geos.set(id,new RoundedBoxGeometry(w,h,d,2,Math.min(.13,w*.17,h*.17,d*.17)));const m=new THREE.Mesh(geos.get(id),mat(color,opacity));m.position.set(x,y,z);m.castShadow=opacity===1;m.receiveShadow=true;parent.add(m);return m;}
- function ball(parent,r,color,x,y,z,opacity=1){const id='sphere'+r;if(!geos.has(id))geos.set(id,new THREE.SphereGeometry(r,12,9));const m=new THREE.Mesh(geos.get(id),mat(color,opacity));m.position.set(x,y,z);m.castShadow=true;parent.add(m);return m;}
- function label(parent,text,x,y,z,width=2.8){
-  const canvas=document.createElement('canvas');canvas.width=512;canvas.height=112;const ctx=canvas.getContext('2d');ctx.fillStyle='#fbf6ed';ctx.beginPath();ctx.roundRect(3,3,506,106,23);ctx.fill();ctx.font='700 54px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#403452';ctx.fillText(text,256,56,470);
-  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;textures.push(texture);const material=new THREE.SpriteMaterial({map:texture,depthTest:false});const sprite=new THREE.Sprite(material);sprite.position.set(x,y,z);sprite.scale.set(width,width*112/512,1);sprite.renderOrder=9;parent.add(sprite);return sprite;
- }
- function pick(group,action,point,name){group.userData.action=action;pickables.push(group);targets.push({point:new THREE.Vector3(...point),action,name});}
- function toy(parent,x,y,z,color='#f4c355',size=1){
-  const g=new THREE.Group();g.position.set(x,y,z);g.scale.setScalar(size);parent.add(g);box(g,.65,.62,.48,color,0,.46,0);box(g,.5,.4,.45,'#a1e5d7',0,.98,0);ball(g,.055,'#30324c',-.12,1.02,.235);ball(g,.055,'#30324c',.12,1.02,.235);box(g,.21,.22,.35,'#514c79',-.2,.05,0);box(g,.21,.22,.35,'#514c79',.2,.05,0);return g;
- }
- function person(parent,x,z,color='#fa9d91'){
-  box(parent,.36,.62,.32,color,x,.76,z);ball(parent,.23,'#ffe0b3',x,1.31,z);box(parent,.53,.12,.44,'#4a5884',x,1.5,z);box(parent,.13,.42,.15,'#49465f',x-.11,.24,z);box(parent,.13,.42,.15,'#49465f',x+.11,.24,z);
- }
- function floor(){box(world,14,.45,8.4,'#a698d2',0,-.42,0);box(world,13.6,.12,8.05,'#f4e8ce',0,-.14,0);for(const x of [-6.1,6.1])for(const z of [-3.2,3.2]){box(world,.6,.5,.6,'#ddd0b9',x,.16,z);ball(world,.48,'#7cbda2',x,.82,z);ball(world,.32,'#96d6ad',x+.15,1.1,z);}box(world,10,.03,.72,'#d2c6bc',0,-.05,3.25);for(let i=0;i<7;i++)box(world,.65,.015,.06,'#fbf5e5',-3.9+i*1.3,-.025,3.25);}
- function truck(){const g=new THREE.Group();g.position.set(4.8,.07,2.8);box(g,1.8,.18,.85,'#4d4b66',0,.25,0);box(g,.6,.8,.84,'#ffb490',.6,.73,0);box(g,.2,.32,.7,'#79bec5',.9,.85,0);box(g,1.1,.45,.76,'#d5f39b',-.25,.57,0);for(const x of [-.6,.6])for(const z of [-.45,.45])ball(g,.21,'#3e3c54',x,.22,z);world.add(g);}
- function station(x,kind,capacity,active=true){const g=new THREE.Group();g.position.set(x,0,-.45);world.add(g);const tint=kind==='assembly'?'#83dace':'#f0a4bb';box(g,3.35,.18,3,'#b9aad8',0,.04,0);box(g,2.6,.8,1.9,tint,0,.53,0);box(g,2.8,.15,2.05,'#f5ecd5',0,1.02,0);
-  if(kind==='assembly'){
-   for(const dx of [-.9,.9]){box(g,.23,1.35,.24,'#568fa5',dx,1.72,-.6);box(g,.9,.23,.35,'#8ee2df',dx*.55,2.25,-.6);ball(g,.2,'#fff0bc',dx*.55,2.1,-.6);}toy(g,0,1.14,.2,'#f6c96c',.8);person(g,-1.4,1.13,'#94c8f1');
-  }else{box(g,1.7,.13,1.1,'#7c739e',0,1.15,0);for(let i=0;i<3;i++)box(g,.45,.4,.45,'#e8bd89',-.5+i*.5,1.4,0);box(g,.14,1.25,.2,'#a66f99',-1.12,1.7,-.6);box(g,.14,1.25,.2,'#a66f99',1.12,1.7,-.6);box(g,2.4,.22,.25,'#ffc3d5',0,2.3,-.6);person(g,1.4,1.2,'#e2b1ee');}
-  label(g,(kind==='assembly'?'BUILD ':'PACK ')+capacity+'/day',0,3,0,3.1);return g;
- }
- function build(o){
-  if(tween){tween.kill();tween=null;}world.scale.setScalar(1);for(const child of [...world.children])world.remove(child);
-  // Sprite labels are the only per-scene resources. Geometry/material caches are reused.
-  for(const t of textures.splice(0))t.dispose();for(const m of sceneLabels.splice(0))m.dispose();pickables=[];targets=[];floor();truck();
-  if(o.phase==='share'){
-   const s=station(0,'assembly',20);label(world,'£100 / day',0,4,-1,3);
-   for(const [n,x]of[[10,-4],[20,4]]){const g=new THREE.Group();g.position.set(x,0,.8);world.add(g);box(g,1.8,.85,1.45,n===o.batch?'#d7f38f':'#dfc997',0,.42,0);for(let j=0;j<(n===10?1:3);j++)toy(g,-.4+(j%2)*.7,.88,-.15+Math.floor(j/2)*.6,'#f6b97d',.42);label(g,n+' orders',0,2,0,2.5);pick(g,{type:'batch',value:n},[x,.8,.8],n+' orders');}
-   label(s,'£4 / finished toy',0,-.1,1.75,2.7);
-  }else if(o.phase==='bottleneck'){
-   const a=station(-3,'assembly',o.assembly),b=station(3,'packing',o.packing);pick(a,{type:'upgrade',value:'assembly'},[-3,1,-.45],'assembly');pick(b,{type:'upgrade',value:'packing'},[3,1,-.45],'packing');box(world,2.3,.15,.8,'#8273a7',0,.63,-.45);for(let j=0;j<(o.upgrade==='packing'?1:4);j++)toy(world,-.6+j*.45,.72,-.45,'#f4c35b',.42);label(world,o.unfilled+' orders waiting',0,3.8,-2.8,3.9);
-  }else if(o.phase==='grow'||o.phase==='quiet'){
-   const mobile=$('sc-world').clientWidth<600;
-   for(let n=1;n<=6;n++){
-    const x=mobile?(n%2===1?-2.8:2.8):((n-1)%3-1)*4.1,z=mobile?Math.floor((n-1)/2)*2.4-2.4:Math.floor((n-1)/3)*3.1-1.9;
-    const g=new THREE.Group();g.position.set(x,0,z);world.add(g);const enabled=n<=o.teams,op=enabled?1:.3;
-    box(g,3.2,.14,2.3,enabled?'#b6d4ba':'#b6acc6',0,.04,0,op);box(g,2.55,.56,1.55,n===o.teams?'#cdf089':'#8fd5c5',0,.39,0,op);box(g,2.75,.16,1.7,'#fff2d4',0,.75,0,op);box(g,.2,.8,.2,'#658fa3',-.92,1.18,-.45,op);box(g,.2,.8,.2,'#658fa3',.92,1.18,-.45,op);box(g,2.2,.18,.24,'#93c6e5',0,1.64,-.45,op);if(enabled){toy(g,-.4,.87,0,'#f2bb73',.52);box(g,.5,.46,.5,'#e5bb87',.65,1.02,0);}
-    label(g,'TEAM '+n,0,2.25,0,2);pick(g,{type:'teams',value:n},[x,.6,z],'team-'+n);
-   }
-   label(world,'Coordination '+money(o.coordination),0,4.2,-3.6,4.4);
-  }else{
-   for(const [plan,x]of[['small',-3.4],['big',3.2]]){
-    const g=new THREE.Group();g.position.set(x,0,-.4);world.add(g);const selected=plan===o.plan;box(g,4,.15,3.3,selected?'#d7efa3':'#c4b2db',0,.04,0);
-    const count=plan==='small'?1:3;for(let i=0;i<count;i++){const dx=count===1?0:(i-1)*1.15;box(g,.95,.9,1,'#fab799',dx,.55,0);for(const sx of [-.4,.4])box(g,.08,1.2,.09,'#6d738d',dx+sx,1.55,-.35);box(g,1.06,.18,1.1,i%2?'#b0d99c':'#f5db7f',dx,2.23,0);ball(g,.14,'#f5d58c',dx,1.12,.2);}
-    label(g,plan==='small'?'ONE STALL':'THREE STALLS',0,3,0,3.2);pick(g,{type:'plan',value:plan},[x,.7,-.4],plan);
-   }
+  if(type==='run'){
+    const day=currentRuns(s).length;
+    if(day>=DAYS_PER_WEEK)throw Error('The week is over; restart the week to run more days.');
+    return {...s,runs:[...s.runs,{level:s.level,attempt:s.attempt,day,dials:{...s.dials}}]};
   }
-  // Track sprite materials separately; they are not cached across scene rebuilds.
-  world.traverse(x=>{if(x.isSprite)sceneLabels.push(x.material);});resize();
- }
- const sceneLabels=[];
- function resize(){
-  if(disposed)return;const width=$('sc-world').clientWidth,height=$('sc-world').clientHeight;if(!width||!height)return;renderer.setSize(width,height,false);world.updateMatrixWorld(true);
-  const bounds=new THREE.Box3().setFromObject(world),center=bounds.getCenter(new THREE.Vector3());camera.position.copy(center).add(new THREE.Vector3(12,12,16));camera.lookAt(center);camera.updateMatrixWorld(true);
-  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
-  const include=(p)=>{minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minY=Math.min(minY,p.y);maxY=Math.max(maxY,p.y);};
-  // Fit actual rendered parts, rather than the empty upper corners of one giant box.
-  world.traverse(node=>{
-   if(node.isSprite){const p=node.getWorldPosition(new THREE.Vector3()).applyMatrix4(camera.matrixWorldInverse),scale=node.getWorldScale(new THREE.Vector3());include(new THREE.Vector3(p.x-scale.x/2,p.y-scale.y/2,0));include(new THREE.Vector3(p.x+scale.x/2,p.y+scale.y/2,0));}
-   else if(node.isMesh){node.geometry.computeBoundingBox();const b=node.geometry.boundingBox;for(const x of [b.min.x,b.max.x])for(const y of [b.min.y,b.max.y])for(const z of [b.min.z,b.max.z])include(new THREE.Vector3(x,y,z).applyMatrix4(node.matrixWorld).applyMatrix4(camera.matrixWorldInverse));}
-  });
-  const halfY=Math.max((maxY-minY)/2,(maxX-minX)/2/(width/height))*1.1,cx=(minX+maxX)/2,cy=(minY+maxY)/2;
-  camera.top=cy+halfY;camera.bottom=cy-halfY;camera.left=cx-halfY*width/height;camera.right=cx+halfY*width/height;camera.updateProjectionMatrix();paint();
-  info.pick_targets=targets.map(t=>{const p=t.point.clone().project(camera);return {name:t.name,action:t.action,x:(p.x+1)/2,y:(1-p.y)/2};});
- }
- function paint(){if(!disposed)renderer.render(scene,camera);}
- const resizeObserver=new ResizeObserver(()=>{if(!observed)return;const mobile=$('sc-world').clientWidth<600;if(['grow','quiet'].includes(observed.phase)&&mobile!==wasMobile){wasMobile=mobile;build(observed);}else resize();});let wasMobile=$('sc-world').clientWidth<600;resizeObserver.observe($('sc-world'));
- const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();let down=null;
- function hit(e){const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(pointer,camera);for(const h of ray.intersectObjects(pickables,true)){let node=h.object;while(node&&!node.userData.action)node=node.parent;if(node?.userData.action)return node.userData.action;}return null;}
- const onDown=e=>{down={x:e.clientX,y:e.clientY};},onUp=e=>{if(!down||Math.hypot(e.clientX-down.x,e.clientY-down.y)>10){down=null;return;}down=null;const action=hit(e);if(action&&!observed.complete)dispatch(action);},onMove=e=>{renderer.domElement.style.cursor=hit(e)&&!observed.complete?'pointer':'default';};renderer.domElement.addEventListener('pointerdown',onDown);renderer.domElement.addEventListener('pointerup',onUp);renderer.domElement.addEventListener('pointermove',onMove);
- const onCancel=()=>{down=null;};renderer.domElement.addEventListener('pointercancel',onCancel);
- const focus=(element)=>{element.focus({preventScroll:true});const r=element.getBoundingClientRect();if(r.top<10||r.bottom>innerHeight-50)element.scrollIntoView({behavior:'instant',block:'start'});};
- function button(id,text,type,value,selected=false){return `<button id="${id}" data-sc-type="${type}" data-sc-value="${value}" aria-pressed="${selected}">${text}</button>`;}
- function actions(event){const b=event.target.closest('[data-sc-type]');if(!b)return;const type=b.dataset.scType;dispatch({type,value:['batch','teams'].includes(type)?Number(b.dataset.scValue):b.dataset.scValue});}
- $('sc-config').addEventListener('click',actions);$('sc-bars').addEventListener('click',actions);$('sc-answers').addEventListener('click',actions);$('sc-help').onclick=()=>dispatch({type:'help'});$('sc-next').onclick=()=>dispatch({type:'next'});
- function render(o,time,{seeking=false}={}){
-  const active=document.activeElement?.id;observed=o;const c=copy[o.phase],changed=phaseBefore!==o.phase;
-  $('sc-kicker').textContent=c.kicker;$('sc-question').textContent=c.question;$('sc-guide').textContent=c.guide;
-  surface.querySelectorAll('[data-step]').forEach(n=>n.setAttribute('aria-current',n.dataset.step===o.phase?'step':'false'));
-  let config='';
-  if(o.phase==='share')config='<span>RUN A DAY</span>'+[10,20].map(n=>button('sc-batch-'+n,n+' toys','batch',n,o.batch===n)).join('');
-  else if(o.phase==='bottleneck')config='<span>ONE UPGRADE AT A TIME</span>'+[['none','Original workshop'],['assembly','Assembly ×2 · +£100/day'],['packing','Packing ×2 · +£40/day']].map(([id,title])=>button('sc-upgrade-'+id,title,'upgrade',id,o.upgrade===id)).join('');
-  else if(['grow','quiet'].includes(o.phase))config='<span>RENT TOMORROW’S TEAM COUNT</span>'+[1,2,3,4,5,6].map(n=>button('sc-teams-'+n,String(n),'teams',n,o.teams===n)).join('');
-  else config='<span>COMPARE THE WHOLE PLAN</span>'+button('sc-plan-small','One stall · capacity 40','plan','small',o.plan==='small')+button('sc-plan-big','Three stalls · capacity 120','plan','big',o.plan==='big');
-  $('sc-config').innerHTML=config;$('sc-capacity-caption').textContent=o.phase==='bottleneck'?'Assembly '+o.assembly+'/day → Packing '+o.packing+'/day':'';$('sc-capacity-caption').hidden=o.phase!=='bottleneck';$('sc-output').textContent=o.produced+' / '+o.requested;$('sc-total').textContent=money(o.total);$('sc-average').textContent=money(o.average);
-  $('sc-outcome').dataset.met=String(o.unfilled===0);$('sc-outcome').textContent=o.unfilled?o.unfilled+' orders still unfilled · capacity '+o.capacity+'/day':'All '+o.requested+' orders fulfilled'+(o.idle?' · '+o.idle+' unused slots':' · capacity fully used');
-  const transfer=o.phase==='transfer';
-  $('sc-ledger').innerHTML=`<div><span>Base fixed / day</span><strong>${money(o.fixed)}</strong></div><b>+</b><div><span>Coordination / day</span><strong>${money(o.coordination)}</strong></div><b>+</b><div><span>${o.produced} × ${money(o.variableRate)} variable</span><strong>${money(o.variable)}</strong></div><b>=</b><div><span>Total / day</span><strong>${money(o.total)}</strong></div><p class="sc-unit-equation">${money(o.total)} total ÷ ${o.produced} finished = <strong>${money(o.average)} per item</strong></p>`+(transfer?`<p class="sc-profit">${money(o.revenue)} revenue − ${money(o.total)} total cost = <strong>${money(o.profit)} profit</strong></p>`:'');
-  $('sc-curve').hidden=!['grow','quiet'].includes(o.phase);
-  if(!$('sc-curve').hidden){$('sc-bars').innerHTML=o.curve.map(point=>`<button id="sc-curve-${point.teams}" data-sc-type="teams" data-sc-value="${point.teams}" aria-pressed="${o.teams===point.teams}" aria-label="${point.teams} teams, ${point.capacity} capacity, full-capacity cost ${money(point.fullAverage)}, ${point.unfilled} unfilled orders"><strong>${money(point.fullAverage)}</strong><i style="height:${point.fullAverage/900*72}px"></i><b>${point.teams} ${point.teams===1?'team':'teams'}</b><small>${point.capacity} capacity</small><em data-met="${point.unfilled===0}">${point.unfilled?point.unfilled+' short':'Order fits'}</em></button>`).join('');}
-  $('sc-quiz').textContent=c.quiz;$('sc-answers').innerHTML=c.options.map(([id,text])=>button('sc-answer-'+id,esc(text),'answer',id,o.answer===id)).join('');
-  check.textContent='Check my reasoning →';check.disabled=!o.answer;$('sc-hint').hidden=!o.help;$('sc-hint').textContent=c.hint;
-  $('sc-result').hidden=true;$('sc-next').hidden=true;$('sc-challenge').hidden=o.complete||(o.phase==='share'&&o.batch!==20)||(o.phase==='bottleneck'&&o.upgrade==='none');$('sc-complete').hidden=!o.complete;
-  surface.querySelectorAll('button').forEach(b=>b.disabled=o.complete);
-  const nextSignature=[o.phase,o.batch,o.upgrade,o.teams,o.plan].join(':');
-  if(nextSignature!==signature){signature=nextSignature;build(o);if(!seeking&&!matchMedia('(prefers-reduced-motion: reduce)').matches){tween=gsap.fromTo(world.scale,{x:.97,y:.97,z:.97},{x:1,y:1,z:1,duration:.28,ease:'power2.out',onUpdate:paint,onComplete:()=>{tween=null;}});}}
-  if(seeking){if(tween){tween.kill();tween=null;}world.scale.setScalar(1);paint();}
-  if(active&&!changed&&!seeking){const target=app.querySelector('#'+active);if(target&&!target.disabled)target.focus({preventScroll:true});}
-  if(changed){phaseBefore=o.phase;if(!seeking&&phases.indexOf(o.phase)>0)focus($('sc-question'));}
-  if(o.complete&&!seeking)focus($('sc-complete-heading'));
- }
- function onAssessment(a){$('sc-result').hidden=false;$('sc-result').dataset.correct=String(a.correct);$('sc-result-heading').textContent=a.correct?'Your reasoning fits this scenario.':'Recheck the evidence.';$('sc-next').hidden=!a.correct;$('sc-next').textContent=observed.phase==='transfer'?'Finish the experiments →':'Next experiment →';focus($('sc-result-heading'));}
- return {render,onAssessment,info,dispose(){disposed=true;if(tween)tween.kill();resizeObserver.disconnect();renderer.domElement.removeEventListener('pointerdown',onDown);renderer.domElement.removeEventListener('pointerup',onUp);renderer.domElement.removeEventListener('pointermove',onMove);renderer.domElement.removeEventListener('pointercancel',onCancel);for(const t of textures)t.dispose();for(const m of sceneLabels)m.dispose();for(const m of mats.values())m.dispose();for(const g of geos.values())g.dispose();renderer.dispose();original.check.prepend(check);original.feedback.append(feedback);original.reset.append(reset);readout.classList.remove('sr-only');app.classList.remove('scale-lab');style.remove();}};
+  if(type==='reason'){
+    if(!gateOpen(s)||!COPY[level.id].reasons.some(([id])=>id===value))throw Error('That question is not open yet.');
+    return {...s,reason:value};
+  }
+  if(type==='retry')return {...s,attempt:s.attempt+1,dials:{...level.start},reason:null};
+  if(type==='next'){
+    if(!assess(s).correct)throw Error('Finish this week before moving on.');
+    const history=[...s.history,{level:level.id,dials:{...s.dials},reason:s.reason,help:s.help,attempts:s.attempt+1,days:currentRuns(s).length}];
+    return s.level===LEVELS.length-1?{...s,history,complete:true}:startLevel(s.level+1,history,s.runs);
+  }
+  throw Error('Unsupported Press Club action');
 }
 
-const css=`
-body:has(.scale-lab){background:#191a2d;color:#fcf9f2}.scale-lab{max-width:1120px;padding:25px 34px;font-family:"Avenir Next",ui-rounded,system-ui,sans-serif}.scale-lab .topbar{margin-bottom:30px}.scale-lab .brand{font-size:11px;letter-spacing:.12em}.scale-lab .brand span{background:#d4f393;color:#35452a;width:29px;height:29px}.scale-lab .pill{border-color:#51465f;color:#c0b6d2;font-size:11px}.scale-lab #title{font-size:clamp(34px,5vw,53px);letter-spacing:-.05em;margin:0 0 10px;max-width:none;line-height:1.1}.scale-lab #prompt{color:#c2b8d2;font-size:16px;line-height:1.6;max-width:820px;margin:0 0 26px}.scale-lab .layout{display:block}.scale-lab .stage,.scale-lab .stage-wrap{height:auto;min-height:0;padding:0;border:0;border-radius:0;overflow:visible;background:transparent;display:block}.scale-lab .panel{padding:0;background:transparent;border:0}.scale-lab #eyebrow,.scale-lab .lesson-nav,.scale-lab .stage-note,.scale-lab .panel>h2,.scale-lab .panel>.buttons{display:none}.scale-lab [hidden]{display:none!important}.scale-lab button{font:inherit;min-height:44px;cursor:pointer}.scale-lab button:disabled{cursor:default}.scale-lab button:focus-visible{outline:3px solid #ffcb86;outline-offset:3px}.sc-progress{display:flex;justify-content:space-between;gap:12px;margin:0 0 18px;color:#a296b4}.sc-progress span{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700}.sc-progress small{font-size:10px;font-weight:500}.sc-progress [aria-current=step]{color:#d9fa9f}.sc-board{background:#e6d9ff;color:#3b2d4b;border-radius:24px;overflow:hidden}.sc-task{padding:24px 28px 0}.sc-kicker{font-size:10px;font-weight:800;letter-spacing:.12em;color:#8b77a8}.sc-task .sc-kicker{color:#766085}.sc-task h2{font-size:clamp(23px,3vw,31px);line-height:1.2;letter-spacing:-.025em;margin:10px 0}.sc-task p{font-size:14px;line-height:1.6;margin:0;max-width:780px;color:#6c577d}.sc-world{height:380px;position:relative;background:#c5b3f2;margin-top:17px;touch-action:pan-y}.sc-world canvas{position:absolute;display:block;width:100%;height:100%;inset:0;touch-action:pan-y}.sc-capacity-caption{position:absolute;top:12px;left:16px;right:16px;text-align:center;font-size:12px;line-height:1.7;font-weight:700;color:#594574;background:#e8d9ffcc;border-radius:12px;padding:7px;pointer-events:none}.sc-world-note{position:absolute;bottom:9px;left:0;right:0;text-align:center;font-size:9px;color:#71578e;pointer-events:none}.sc-config{display:flex;gap:9px;align-items:center;padding:17px 24px 10px;flex-wrap:wrap}.sc-config>span{font-size:9px;letter-spacing:.08em;font-weight:800;color:#7e6895;margin-right:auto}.scale-lab .sc-config button{background:#f8f3ff;color:#49385e;border:1px solid #bfa8da;border-radius:11px;font-size:12px;padding:10px 14px}.scale-lab .sc-config button[aria-pressed=true]{background:#d4ef9f;border:2px solid #69883e;color:#344b23;padding:9px 13px}.sc-outcome{margin:0;padding:8px 24px 14px;font-size:12px;color:#876177}.sc-outcome[data-met=true]{color:#4d6e35}.sc-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:0 24px 18px}.sc-metrics>div{background:#f9f3ff;border-radius:15px;padding:16px 17px}.sc-metrics span{display:block;font-size:9px;letter-spacing:.07em;font-weight:800;color:#887296}.sc-metrics strong{display:block;font-size:32px;line-height:1.2;letter-spacing:-.04em;margin-top:9px;color:#43314e}.sc-metrics .sc-average{background:#d6f39e}.sc-average span{color:#637b46}.sc-average strong{color:#344e20}.sc-ledger{background:#d8c6f0;display:flex;gap:16px;justify-content:space-between;align-items:center;padding:15px 25px;flex-wrap:wrap}.sc-ledger div>span{display:block;font-size:10px;color:#755e8b;line-height:1.5}.sc-ledger strong{display:block;font-size:14px;margin-top:4px;color:#523b68}.sc-ledger>b{color:#a58ab9;font-size:13px}.sc-ledger .sc-unit-equation{width:100%;margin:3px 0 0;padding-top:11px;border-top:1px solid #c4acd9;font-size:12px;color:#775b8f}.sc-unit-equation strong{display:inline;font-size:14px;color:#523b68}.sc-ledger .sc-profit{width:100%;margin:4px 0 0;border-top:1px solid #c4acd9;padding-top:12px;font-size:13px}.sc-profit strong{display:inline;font-size:16px;color:#36562a}.sc-curve{padding:21px 25px 18px;background:#f3eaff}.sc-curve-title{display:flex;justify-content:space-between;align-items:center;gap:15px;font-size:13px;color:#665375}.sc-curve-title span{font-size:10px;color:#9882aa}.sc-bars{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:14px}.scale-lab .sc-bars button{background:#e5d7f5;border:1px solid #ccbadf;border-radius:10px;padding:9px 4px 8px;display:flex;align-items:center;flex-direction:column;justify-content:flex-end;min-height:156px;min-width:0;color:#6d5485}.sc-bars button[aria-pressed=true]{background:#deefbe;border:2px solid #8cab62;padding:8px 3px 7px}.sc-bars button>strong{font-size:12px;font-weight:750}.sc-bars i{display:block;width:50%;background:#b798d4;border-radius:6px 6px 0 0;margin-top:7px;min-height:12px}.sc-bars button[aria-pressed=true] i{background:#8aac65}.sc-bars b{font-size:11px;margin-top:7px}.sc-bars small{font-size:9px;margin-top:4px;white-space:nowrap}.sc-bars em{font-size:9px;font-style:normal;color:#a7616e;margin-top:4px}.sc-bars em[data-met=true]{color:#64824b}.sc-curve>p{font-size:11px;line-height:1.65;color:#8d769e;margin-bottom:0}.sc-challenge{padding:25px 0 0}.sc-challenge h2{font-size:21px;line-height:1.35;margin:9px 0 16px;letter-spacing:-.015em}.sc-answers{display:grid;gap:9px}.scale-lab .sc-answers button{text-align:left;background:#302b45;color:#d8cce8;border:1px solid #504461;border-radius:12px;padding:14px 17px;font-size:13px;line-height:1.5}.scale-lab .sc-answers button[aria-pressed=true]{background:#3a4b2d;color:#e5f8c8;border:2px solid #95b969;padding:13px 16px}.sc-submit{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:17px}.scale-lab .sc-text,.scale-lab #reset{background:transparent;border:0;padding:8px 0;color:#b9aacc;font-size:12px}.scale-lab #check,.scale-lab .sc-primary{background:#d3f394;color:#314121;border:0;border-radius:12px;padding:14px 23px;min-height:48px;font-size:13px;font-weight:750}.scale-lab #check:disabled{background:#454151;color:#a19aa8}.sc-hint{padding:17px 20px;background:#302c40;border:1px solid #55465f;border-radius:13px;color:#cec0df;font-size:13px;line-height:1.7}.sc-result{margin-top:22px;background:#f6f0df;color:#40333f;border:1px solid #e6dbbb;border-radius:20px;padding:23px 27px}.sc-result[data-correct=false]{background:#3b2b3b;color:#f5d5de;border-color:#8c5d76}.sc-result h2{font-size:25px;margin:0 0 10px;line-height:1.2;letter-spacing:-.025em}.scale-lab .sc-result .feedback{min-height:0;padding:5px 0 17px;color:inherit;font-size:14px;line-height:1.75}.sc-result .sc-primary{background:#36512b;color:#f2f8e8}.sc-complete{background:#e5efce;color:#3e5130;border-radius:20px;padding:27px 30px;margin-top:24px}.sc-complete h2{font-size:37px;letter-spacing:-.04em;margin:9px 0 14px}.sc-complete>p{font-size:16px;line-height:1.7}.sc-recap{border-top:1px solid #bacd99;margin-top:20px;padding-top:8px}.sc-recap p{font-size:13px;line-height:1.7}.sc-complete .sc-small{font-size:12px;color:#71815b}.sc-bottom{margin-top:17px}.sc-bottom details{margin:12px 0;border-top:1px solid #44384f;padding:16px 0;font-size:12px;line-height:1.8;color:#b8a9c9}.sc-bottom summary{cursor:pointer;min-height:44px;font-weight:650}.scale-lab .explain{border-color:#44384f;color:#a896bd;font-size:11px}.scale-lab .footer{font-size:9px;color:#9986aa}
-@media(max-width:650px){.scale-lab{padding:19px 13px}.scale-lab .topbar{margin-bottom:25px}.scale-lab .pill{display:none}.scale-lab #title{font-size:36px}.scale-lab #prompt{font-size:14px;margin-bottom:21px}.sc-progress{gap:5px;margin-bottom:14px}.sc-progress span{display:block;text-align:center;font-size:10px}.sc-progress small{display:block;margin-top:6px;font-size:8px}.sc-board{border-radius:19px}.sc-task{padding:20px 16px 0}.sc-task h2{font-size:24px}.sc-task p{font-size:12px;line-height:1.7}.sc-kicker{font-size:9px}.sc-world{height:265px;margin-top:13px}.sc-world-note{font-size:8px;bottom:8px}.sc-config{gap:6px;padding:14px 12px 7px}.sc-config>span{width:100%;margin:0 0 4px;font-size:8px}.scale-lab .sc-config button{font-size:10px;padding:9px 10px;flex:1}.scale-lab .sc-config button[aria-pressed=true]{padding:8px 9px}.sc-outcome{padding:9px 14px 14px;font-size:11px;line-height:1.6}.sc-metrics{gap:6px;padding:0 10px 14px}.sc-metrics>div{padding:12px 10px;border-radius:12px}.sc-metrics span{font-size:7px;line-height:1.5;min-height:22px;letter-spacing:.02em}.sc-metrics strong{font-size:24px;margin-top:6px;white-space:nowrap}.sc-ledger{padding:13px 14px;gap:9px;display:grid;grid-template-columns:1fr auto 1fr}.sc-ledger>div:nth-of-type(4){grid-column:3}.sc-ledger>div:nth-of-type(3){grid-column:1}.sc-ledger>b:nth-of-type(2){display:none}.sc-ledger strong{font-size:12px}.sc-ledger div>span{font-size:9px}.sc-ledger .sc-unit-equation{grid-column:1/-1;font-size:10px;line-height:1.7}.sc-unit-equation strong{font-size:12px}.sc-ledger .sc-profit{grid-column:1/-1;font-size:11px;line-height:1.65}.sc-profit strong{font-size:13px}.sc-curve{padding:17px 10px 15px}.sc-curve-title{display:block;font-size:12px}.sc-curve-title span{display:block;font-size:9px;margin-top:5px}.sc-bars{gap:4px}.scale-lab .sc-bars button{border-radius:8px;min-height:150px;padding:8px 2px}.sc-bars button[aria-pressed=true]{padding:7px 1px}.sc-bars button>strong{font-size:10px}.sc-bars b{font-size:9px}.sc-bars small{font-size:7px}.sc-bars em{font-size:7px}.sc-curve>p{font-size:10px}.sc-challenge{padding-top:23px}.sc-challenge h2{font-size:19px;line-height:1.4}.scale-lab .sc-answers button{padding:12px 14px;font-size:12px}.scale-lab .sc-answers button[aria-pressed=true]{padding:11px 13px}.scale-lab #check,.scale-lab .sc-primary{font-size:12px;padding:13px 17px}.scale-lab .sc-text,.scale-lab #reset{font-size:11px}.sc-result{padding:22px 19px}.sc-result h2{font-size:23px}.scale-lab .sc-result .feedback{font-size:13px}.sc-result .sc-primary{width:100%}.sc-complete{padding:24px 21px}.sc-complete h2{font-size:33px}.sc-complete>p{font-size:14px}.sc-recap p{font-size:12px}}
-@media(max-width:350px){.sc-metrics>div{padding:10px 7px}.sc-metrics strong{font-size:22px}.sc-metrics span{font-size:6px}.sc-progress small{font-size:7px}.sc-bars b{font-size:8px}.sc-bars small,.sc-bars em{font-size:6px}.sc-task h2{font-size:22px}}
+// Action scripts used by fixtures (and mirrored in the unit tests).
+const set=(key,value)=>({type:'set',key,value}),run={type:'run'},reason=value=>({type:'reason',value}),next={type:'next'};
+const winWeek1=[set('orders',20),run,set('orders',30),run,reason('shared'),next];
+const winWeek2=[...winWeek1,run,set('s2',2),run,reason('slowest'),next];
+const winWeek3=[...winWeek2,run,set('s1',2),set('s2',2),run,set('s1',4),set('s2',3),run,reason('sync'),next];
+const winWeek4=[...winWeek3,run,set('s1',2),set('s2',2),run,reason('idle'),next];
+
+export const plugin={
+  id:'economies-of-scale',version:'2.0.0',topicIds:['mt_9gpUHWVKMR'],representation:'threejs',audienceLabel:'Age 15 · Economies of scale',
+  title:'Press Club',
+  prompt:'Run a merch print studio for five weeks. Lease presses and curing tunnels, ship orders, and find out when getting bigger makes each shirt cheaper — and when it stops.',
+  reason:'Requested colorful, tactile 3D with meaningful direct interaction. The studio floor shows pallets flowing through presses and tunnels, a pile where the bottleneck jams, sync cables between press teams and a live cost bar; stations are added, removed and run by picking them in the scene, with matching buttons. GSAP replays results; the pure cost model determines every number and the assessment.',
+  coverage:[
+    {index:1,mode:'partial',assessed_subclaim:'Use computed revenue, total cost and profit for each day the learner ran to choose a profitable configuration; profit arithmetic is displayed rather than calculated unaided.'},
+    {index:2,mode:'partial',assessed_subclaim:'Recognise loss-making days (costs above revenue) from the learner’s own runs and change the configuration in response; no free-text explanation is graded.'}
+  ],
+  assumptions:[
+    'All figures are fictional teaching data. Leases are fresh daily contracts: any size can be leased each day and nothing is bought, so shrinking has no sunk cost here. Real equipment purchases do.',
+    'Sync cost = £60 per pair of press teams (week 5: £35 per pair of cooks) is an invented stand-in for coordination overhead. Real overhead grows with size, but not by this exact formula.',
+    'Blanks and ink cost £4 per printed shirt at every size. Bulk purchasing discounts, a real second source of economies of scale, are deliberately excluded.',
+    'Finished output = min(orders, first-station capacity, second-station capacity). The first station works until the order or its capacity is reached; anything it processes that the second station cannot finish is paid for and worth nothing that day (no inventory or carry-over).',
+    'Each client sets the price and buys only confirmed orders (week 3’s buyer takes everything up to 200). Quality is constant; no uncertainty, defects, wages beyond the leases, tax or finance.',
+    'Each pallet in the scene is exactly 10 units from the model. Six days per week limit trial and error; a restarted week keeps earlier days on the ledger, faded.',
+    'Costs & Revenue (ages 7–9) is a partial foundation. Fixed vs variable cost, bottlenecks, scale curves and coordination are authored extensions; whole-number money arithmetic and reading a simple chart are assumed, not inferred from age.',
+    'Not taught or assessed: marginal cost by name, short- vs long-run cost curves, demand curves and pricing, supplier bargaining, learning curves, network effects, inventory. A correct week is one bounded response, not mastery.',
+    'Local Munger attribution relies on an unofficial transcript mirror; this activity quotes no speech and makes no claim about who invented the idea. No economics expert, learner or physical-device review has been performed.'
+  ],
+  sources:['https://github.com/gabreginatto/os-taxonomy/blob/main/data/topics.json','Munger_Models/mental-models.json#scale','Munger_Models/course-guidelines.md','learning-artifacts/lessons/economies-of-scale/design-brief.md'],
+  contentReview:{status:'source_reviewed',reviewer:'Claude (engineer) with Fable (design advisor)',scope:'Exact local Costs & Revenue evidence, local scale research, explicit fictional equations, and an independent re-derivation of every tabulated outcome. No external economics source retrieved; no expert, learner or device review.'},
+  scenario:[{time:1,action:set('orders',20)},{time:2,action:run},{time:3,action:set('orders',30)},{time:4,action:run}],
+  fixtures:[
+    {actions:[],expectedObservation:{day:0,committed:54000,cured:null,matches:false},expectedCorrect:false},
+    {actions:[run],expectedObservation:{cured:10,total:58000,average:5800,profit:-34000},expectedCorrect:false},
+    {actions:[set('orders',30),run],expectedObservation:{cured:30,total:66000,average:2200,profit:6000,gateOpen:false},expectedCorrect:false},
+    {actions:[set('orders',10),run,set('orders',30),run,reason('total')],expectedObservation:{cured:30,profit:6000,gateOpen:true},expectedCorrect:false},
+    {actions:winWeek1.slice(0,5),expectedObservation:{cured:30,total:66000,average:2200,profit:6000},expectedCorrect:true},
+    {actions:[...winWeek1.slice(0,5),set('orders',20)],expectedObservation:{matches:false},expectedCorrect:false},
+    {actions:[...winWeek1,run],expectedObservation:{level:1,cured:40,stuck:20,unfilled:20,total:90000,average:2250,profit:-10000},expectedCorrect:false},
+    {actions:[...winWeek1,run,set('s2',2),run,reason('slowest')],expectedObservation:{cured:60,stuck:0,total:96000,average:1600,profit:24000},expectedCorrect:true},
+    {actions:[...winWeek1,run,set('s1',1),set('s2',2),run],expectedObservation:{cured:30,unfilled:30,total:72000,profit:-12000},expectedCorrect:false},
+    {actions:[...winWeek2,run,set('s1',2),set('s2',2),run,set('s1',5),set('s2',4),run,reason('sync')],expectedObservation:{cured:150,total:216000,average:1440,profit:9000},expectedCorrect:false},
+    {actions:[...winWeek2,run,set('s1',4),set('s2',2),run],expectedObservation:{cured:80,stuck:40,total:162000,average:2025,profit:-42000},expectedCorrect:false},
+    {actions:winWeek3.slice(0,-1),expectedObservation:{cured:120,total:168000,average:1400,profit:12000},expectedCorrect:true},
+    {actions:[...winWeek3,run],expectedObservation:{level:3,cured:60,total:144000,average:2400,profit:-42000},expectedCorrect:false},
+    {actions:[...winWeek3,run,set('s1',2),run],expectedObservation:{cured:60,total:102000,average:1700,profit:0},expectedCorrect:false},
+    {actions:winWeek4.slice(0,-1),expectedObservation:{cured:60,total:96000,average:1600,profit:6000},expectedCorrect:true},
+    {actions:[...winWeek4,set('s2',3),run],expectedObservation:{level:4,cured:80,stuck:0,unfilled:70,total:63200,profit:-15200},expectedCorrect:false},
+    {actions:[...winWeek4,set('s1',2),set('s2',2),run],expectedObservation:{cured:100,stuck:50,total:74500,profit:-14500},expectedCorrect:false},
+    {actions:[...winWeek4,run,set('s1',2),set('s2',3),run,reason('carried')],expectedObservation:{cured:150,total:86000,profit:4000},expectedCorrect:true},
+    {actions:[run,run,run,run,run,run],expectedObservation:{day:6,daysLeft:0,weekOver:true},expectedCorrect:false}
+  ],
+  acceptance:[
+    {action:'click',selector:'#pc-orders-20'},
+    {action:'click',selector:'#pc-run'},
+    {action:'assert_text',selector:'#pc-tile-avg',text:'£31.00'},
+    {action:'click',selector:'#pc-orders-30'},
+    {action:'click',selector:'#pc-run'},
+    {action:'assert_text',selector:'#pc-tile-avg',text:'£22.00'},
+    {action:'click',selector:'#pc-reason-shared'},
+    {action:'assert_observed',field:'profit',value:6000}
+  ],
+  initialState,applyAction,observe,validateInvariants,assess,createPresentation
+};
+
+// ---------- Presentation: Three.js studio floor + DOM HUD ----------
+
+const PALETTE={
+  floor:'#f4efe6',floorEdge:'#d9cfbe',mat:'#ebe2d2',dock:'#e4dac8',sky:'#fbf7f0',
+  lease:'#1e2a44',s1:'#2bb3a3',s2:'#f08a4b',sync:'#94a3b8',variable:'#facc15',revenue:'#16a34a',
+  cable:'#334155',stuck:'#dc2626',wood:'#c9a36b',blank:'#ffffff',kraft:'#c08a5b',ghost:'#ffffff',dark:'#24303f',run:'#22c55e',runOff:'#9ca3af',
+  bench:'#c8915a',stove:'#3b3b3b',raw:'#f5f5f4',prepped:'#a3e635',cooked:'#f59e0b',flame:'#f97316',minus:'#f43f5e'
+};
+const ROWS={intake:3.05,s1:1.25,pile:-0.05,s2:-1.35,dock:-3.2,bar:4.05};
+const UNIT={press:{w:1.0,d:1.15,gap:0.35},tunnel:{w:1.6,d:1.0,gap:0.3},bench:{w:1.6,d:1.0,gap:0.3},wok:{w:1.0,d:1.0,gap:0.35}};
+const VIEW=new THREE.Box3(new THREE.Vector3(-5.5,-0.45,-4.45),new THREE.Vector3(5.5,1.6,4.5));
+const BAR_LEFT=-5,BAR_LENGTH=10;
+
+function createPresentation(root,{dispatch}){
+  const app=root.closest('.app')||document.body;
+  app.classList.add('press-club');
+  const style=document.createElement('style');style.textContent=CSS;document.head.append(style);
+  const surface=document.createElement('div');surface.className='pc';surface.innerHTML=TEMPLATE;root.append(surface);
+  const $=id=>surface.querySelector('#'+id);
+  const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Adopt the host's shared Check / Start again / feedback controls so they sit inside the game.
+  const adopted=[['check','pc-check-slot'],['feedback','pc-feedback-slot'],['reset','pc-reset-slot'],['readout','pc-readout-slot']].map(([id,slot])=>{
+    const el=app.querySelector('#'+id);if(!el)return null;
+    const home={el,parent:el.parentNode,next:el.nextSibling,text:el.textContent};$(slot).replaceWith(el);return home;
+  }).filter(Boolean);
+  const check=app.querySelector('#check'),reset=app.querySelector('#reset'),readout=app.querySelector('#readout');
+  if(check)check.textContent='Check my week';
+  if(reset)reset.textContent='Restart the game';
+  readout?.classList.add('pc-sr');
+  const pill=app.querySelector('.topbar .pill'),pillText=pill?.textContent;if(pill)pill.textContent='Age 15 · Economies of scale';
+
+  // Renderer and fixed camera.
+  const worldEl=$('pc-world'),badges=$('pc-badges');
+  const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,powerPreference:'low-power'});
+  renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio||1,1.5));
+  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.setClearColor(PALETTE.sky,1);
+  renderer.domElement.setAttribute('role','img');
+  worldEl.prepend(renderer.domElement);
+  const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(-1,1,1,-1,0.1,100);
+  scene.add(new THREE.HemisphereLight('#ffffff','#b9a98f',1.7));
+  const sun=new THREE.DirectionalLight('#fff6e8',2.3);sun.position.set(-5,11,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
+  Object.assign(sun.shadow.camera,{left:-9,right:9,top:9,bottom:-9,near:1,far:40});sun.shadow.bias=-0.0008;scene.add(sun);
+  const world=new THREE.Group();scene.add(world);
+
+  const geos=new Map(),mats=new Map(),owned=[];
+  const geo=(key,make)=>{if(!geos.has(key))geos.set(key,make());return geos.get(key);};
+  const rbox=(w,h,d)=>geo('rb:'+w+':'+h+':'+d,()=>new RoundedBoxGeometry(w,h,d,2,Math.min(0.06,w*0.2,h*0.3,d*0.2)));
+  const boxGeo=(w,h,d)=>geo('b:'+w+':'+h+':'+d,()=>new THREE.BoxGeometry(w,h,d));
+  const mat=(color,{dim=false,opacity=1,emissive=null}={})=>{
+    const key=[color,dim,opacity,emissive].join('|');
+    if(!mats.has(key)){
+      const c=new THREE.Color(color);if(dim)c.lerp(new THREE.Color('#cfc9bf'),0.62);
+      mats.set(key,new THREE.MeshStandardMaterial({color:c,roughness:0.62,metalness:0.04,transparent:opacity<1,opacity,depthWrite:opacity>=1,...(emissive?{emissive:new THREE.Color(emissive),emissiveIntensity:0.6}:{})}));
+    }
+    return mats.get(key);
+  };
+  const ownMat=(color,extra={})=>{const m=new THREE.MeshStandardMaterial({color,roughness:0.55,metalness:0.04,...extra});owned.push(m);return m;};
+  function mesh(parent,geometry,material,x=0,y=0,z=0,{shadow=true,tint=null}={}){
+    const m=new THREE.Mesh(geometry,material);m.position.set(x,y,z);m.castShadow=shadow;m.receiveShadow=true;
+    if(tint)m.userData.tint=tint;parent.add(m);return m;
+  }
+  const block=(parent,w,h,d,color,x,y,z,opts={})=>mesh(parent,rbox(w,h,d),mat(color,opts),x,y+h/2,z,{tint:opts.dimmable?color:null});
+
+  let view=null,observed=null,previous=null,clock={t:0},tween=null,pulse=null,signature='',disposed=false;
+  const info={renderer:'threejs',tool:'Three.js + GSAP',pick_targets:[],geometry:'procedural print studio and noodle stall',device_performance:'not_measured'};
+  let pickables=[];
+
+  // ----- Scene construction for one (week, setup) layout -----
+  // Rows are centred on the slots they show (leased units plus an add slot), so a small studio sits mid-floor.
+  function unitX(spec,i){const slots=spec.slots||1,width=slots*(spec.w+spec.gap)-spec.gap;return -width/2+spec.w/2+i*(spec.w+spec.gap);}
+  function rowSpecs(o){
+    const [a,b]=o.kind==='studio'?[{...UNIT.press,type:'press'},{...UNIT.tunnel,type:'tunnel'}]:[{...UNIT.bench,type:'bench'},{...UNIT.wok,type:'wok'}];
+    a.slots=o.dials.s1+(o.dials.s1<o.limits.s1[1]?1:0);b.slots=o.dials.s2+(o.dials.s2<o.limits.s2[1]?1:0);
+    return {s1:a,s2:b};
+  }
+  function addHit(parent,w,h,d,x,y,z,action,name){
+    const m=new THREE.Mesh(boxGeo(w,h,d),mat('#000000'));m.position.set(x,y,z);m.visible=false;m.userData.action=action;m.userData.name=name;parent.add(m);pickables.push(m);return m;
+  }
+  function press(g,ink){
+    block(g,1.0,0.5,1.15,PALETTE.s1,0,0,0,{dimmable:true});
+    block(g,0.72,0.05,0.62,PALETTE.dark,0,0.5,0.14);
+    for(const x of [-0.42,0.42])block(g,0.09,0.86,0.09,'#1f7f76',x,0.5,-0.44,{dimmable:true});
+    block(g,0.98,0.1,0.12,'#1f7f76',0,1.32,-0.44,{dimmable:true});
+    const head=new THREE.Group();head.position.set(0,1.18,0.12);g.add(head);
+    block(head,0.12,0.1,0.56,'#1f7f76',0,0.06,-0.28,{dimmable:true});
+    block(head,0.62,0.13,0.5,'#5fd0c3',0,-0.1,0,{dimmable:true});
+    block(g,0.24,0.07,0.18,ink,0.34,0.5,0.47);
+    return {head,headY:1.18};
+  }
+  function arch(){
+    return geo('arch',()=>{
+      const s=new THREE.Shape();s.moveTo(-0.66,0);s.lineTo(-0.66,0.42);s.absarc(0,0.42,0.66,Math.PI,0,true);s.lineTo(0.66,0);s.lineTo(0.5,0);s.lineTo(0.5,0.42);s.absarc(0,0.42,0.5,0,Math.PI,false);s.lineTo(-0.5,0);s.closePath();
+      const e=new THREE.ExtrudeGeometry(s,{depth:0.86,bevelEnabled:true,bevelSize:0.03,bevelThickness:0.03,bevelSegments:2,curveSegments:16});e.translate(0,0,-0.43);return e;
+    });
+  }
+  function tunnel(g){
+    block(g,1.32,0.14,1.0,PALETTE.dark,0,0,0);
+    for(const x of [-0.72,0.72])block(g,0.14,0.42,0.86,'#c46a35',x,0,0,{dimmable:true});
+    const a=mesh(g,arch(),mat(PALETTE.s2),0,0.14,0,{tint:PALETTE.s2});
+    const glowMat=ownMat('#ffd6a8',{emissive:new THREE.Color('#ff9a3c'),emissiveIntensity:0});
+    mesh(g,boxGeo(0.9,0.04,0.8),glowMat,0,0.86,0,{shadow:false});
+    return {arch:a,glow:glowMat};
+  }
+  function bench(g){
+    block(g,1.5,0.1,0.9,PALETTE.bench,0,0.5,0,{dimmable:true});
+    for(const x of [-0.65,0.65])for(const z of [-0.35,0.35])block(g,0.08,0.5,0.08,'#8a5d34',x,0,z,{dimmable:true});
+    block(g,0.6,0.04,0.42,'#f3e6cf',-0.25,0.6,0.05);
+    for(const [x,c] of [[0.35,'#65a30d'],[0.55,'#ea580c'],[0.45,'#84cc16']])mesh(g,geo('veg',()=>new THREE.SphereGeometry(0.09,12,8)),mat(c),x,0.69,x===0.45?-0.2:0.15);
+    return {};
+  }
+  function wok(g){
+    block(g,0.95,0.5,0.95,PALETTE.stove,0,0,0,{dimmable:true});
+    const flame=mesh(g,geo('flame',()=>new THREE.ConeGeometry(0.17,0.3,12)),ownMat(PALETTE.flame,{emissive:new THREE.Color(PALETTE.flame),emissiveIntensity:0.9}),0,0.62,0,{shadow:false});
+    flame.scale.setScalar(0.35);
+    mesh(g,geo('wok',()=>new THREE.SphereGeometry(0.4,20,10,0,Math.PI*2,Math.PI/2,Math.PI/2)),mat('#52525b'),0,0.86,0,{tint:'#52525b'});
+    mesh(g,geo('handle',()=>new THREE.CylinderGeometry(0.035,0.035,0.42,8)),mat('#7c4a24'),0.55,0.86,0).rotation.z=Math.PI/2;
+    return {flame};
+  }
+  function ghost(parent,spec,x,z,action,name){
+    const g=new THREE.Group();g.position.set(x,0,z);parent.add(g);
+    mesh(g,rbox(spec.w,0.42,spec.d),mat(PALETTE.ghost,{opacity:0.45}),0,0.21,0,{shadow:false});
+    block(g,0.46,0.07,0.12,PALETTE.s1,0,0.42,0);block(g,0.12,0.07,0.46,PALETTE.s1,0,0.42,0);
+    addHit(g,spec.w+spec.gap*0.8,0.9,spec.d+0.3,0,0.45,0,action,name);
+  }
+  function minusToken(parent,spec,x,z,action,name){
+    const g=new THREE.Group();g.position.set(x+spec.w/2-0.12,0,z+spec.d/2+0.28);parent.add(g);
+    mesh(g,geo('token',()=>new THREE.CylinderGeometry(0.2,0.2,0.07,20)),mat(PALETTE.minus),0,0.035,0);
+    block(g,0.22,0.03,0.06,'#ffffff',0,0.07,0);
+    addHit(g,0.7,0.5,0.6,0,0.2,0,action,name);
+  }
+  function palletMesh(o){
+    const g=new THREE.Group();
+    const studio=o.kind==='studio';
+    mesh(g,rbox(0.6,0.08,0.6),mat(studio?PALETTE.wood:'#e7e5e4'),0,0.04,0);
+    const load=mesh(g,studio?rbox(0.5,0.26,0.5):geo('bowls',()=>new THREE.CylinderGeometry(0.25,0.18,0.24,18)),mat(studio?PALETTE.blank:PALETTE.raw),0,0.08+0.13,0);
+    const tag=new THREE.Group();tag.position.set(0.24,0.34,0.24);g.add(tag);
+    block(tag,0.03,0.34,0.03,'#7f1d1d',0,0,0);block(tag,0.22,0.14,0.03,PALETTE.stuck,0.11,0.2,0);
+    tag.visible=false;
+    return {g,load,tag};
+  }
+  function cables(parent,o,spec,n){
+    const row=o.syncStation==='s1'?ROWS.s1:ROWS.s2,top=spec.type==='press'?1.5:spec.type==='wok'?1.05:0.95;
+    for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+      const a=new THREE.Vector3(unitX(spec,i),top,row-0.05),b=new THREE.Vector3(unitX(spec,j),top,row-0.05);
+      const mid=a.clone().add(b).multiplyScalar(0.5);mid.y+=0.35+0.3*(j-i);
+      const curve=new THREE.QuadraticBezierCurve3(a,mid,b);
+      mesh(parent,geo('cable:'+spec.type+':'+spec.slots+':'+i+':'+j,()=>new THREE.TubeGeometry(curve,28,0.045,8,false)),mat(PALETTE.cable),0,0,0,{shadow:false});
+    }
+  }
+  function runButton(parent){
+    const g=new THREE.Group();g.position.set(4.1,0,ROWS.dock);parent.add(g);
+    block(g,1.5,0.16,1.3,'#d4c8b4',0,0,0);
+    const cap=mesh(g,geo('runcap',()=>new THREE.CylinderGeometry(0.5,0.54,0.24,32)),mat(PALETTE.run),0,0.28,0);
+    const tri=geo('play',()=>{const s=new THREE.Shape();s.moveTo(-0.13,-0.18);s.lineTo(0.21,0);s.lineTo(-0.13,0.18);s.closePath();const e=new THREE.ExtrudeGeometry(s,{depth:0.04,bevelEnabled:false});e.rotateX(-Math.PI/2);return e;});
+    mesh(g,tri,mat('#ffffff'),0,0.4,0,{shadow:false});
+    const lampMat=ownMat('#fbbf24',{emissive:new THREE.Color('#f59e0b'),emissiveIntensity:0.35});
+    block(g,0.07,0.6,0.07,'#6b7280',-0.62,0.16,-0.45);
+    const lamp=mesh(g,geo('lamp',()=>new THREE.SphereGeometry(0.13,16,10)),lampMat,-0.62,0.86,-0.45);
+    addHit(g,1.5,0.8,1.3,0,0.4,0,{type:'run'},'run');
+    return {cap,lampMat,lamp};
+  }
+
+  function build(o){
+    killTweens();
+    for(const child of [...world.children])world.remove(child);
+    for(const m of owned.splice(0))m.dispose();
+    pickables=[];
+    const specs=rowSpecs(o),n1=o.dials.s1,n2=o.dials.s2,studio=o.kind==='studio';
+    // Floor, zones and cost bar track.
+    block(world,11.2,0.4,9.1,PALETTE.floorEdge,0,-0.42,0);
+    block(world,10.9,0.06,8.8,PALETTE.floor,0,-0.06,0);
+    block(world,10.4,0.02,1.55,PALETTE.mat,0,0,ROWS.intake-0.35);
+    block(world,10.4,0.02,1.6,PALETTE.dock,0,0,ROWS.dock-0.05);
+    block(world,BAR_LENGTH+0.3,0.08,0.66,'#3f3a33',0,0,ROWS.bar);
+    // Stations.
+    const s1Units=[],s2Units=[];
+    for(let i=0;i<n1;i++){const g=new THREE.Group();g.position.set(unitX(specs.s1,i),0,ROWS.s1);world.add(g);s1Units.push({g,parts:studio?press(g,o.ink):bench(g)});}
+    for(let i=0;i<n2;i++){const g=new THREE.Group();g.position.set(unitX(specs.s2,i),0,ROWS.s2);world.add(g);s2Units.push({g,parts:studio?tunnel(g):wok(g)});}
+    const syncSpec=o.syncStation==='s1'?specs.s1:specs.s2,syncN=o.syncStation==='s1'?n1:n2;
+    cables(world,o,syncSpec,syncN);
+    // Add / remove affordances (only where this week allows a change).
+    for(const [key,spec,n,row] of [['s1',specs.s1,n1,ROWS.s1],['s2',specs.s2,n2,ROWS.s2]]){
+      const [min,max]=o.limits[key];
+      if(n<max)ghost(world,spec,unitX(spec,n),row,{type:'set',key,value:n+1},'add-'+key);
+      if(n>min)minusToken(world,spec,unitX(spec,n-1),row,{type:'set',key,value:n-1},'remove-'+key);
+    }
+    // Week 1: order pads at intake.
+    if(o.orderChoices)o.orderChoices.forEach((v,i)=>{
+      const p=intakeSlot(i,3);const pad=block(world,0.78,0.03,0.78,i<o.dials.orders/10?o.ink:'#d6ccba',p.x,0.01,p.z);pad.receiveShadow=true;
+      addHit(world,0.85,0.6,0.95,p.x,0.3,p.z,{type:'set',key:'orders',value:v},'orders-'+v);
+    });
+    const runBtn=runButton(world);
+    // Cost bar segments and revenue flag.
+    const bar={};
+    for(const key of ['lease','s1Cost','s2Cost','sync','variable']){
+      const color={lease:PALETTE.lease,s1Cost:PALETTE.s1,s2Cost:PALETTE.s2,sync:PALETTE.sync,variable:PALETTE.variable}[key];
+      bar[key]=mesh(world,boxGeo(1,0.3,0.46),mat(color),0,0.23,ROWS.bar);bar[key].visible=false;
+    }
+    const flag=new THREE.Group();flag.position.set(BAR_LEFT,0,ROWS.bar+0.42);world.add(flag);
+    block(flag,0.05,0.95,0.05,'#14532d',0,0,0);block(flag,0.46,0.26,0.03,PALETTE.revenue,0.25,0.66,0);
+    const revStrip=mesh(world,boxGeo(1,0.05,0.12),mat(PALETTE.revenue),0,0.1,ROWS.bar+0.42,{shadow:false});revStrip.visible=false;
+    // Pallets: each one is 10 units from the model.
+    const result=dayResultFromObserved(o),P=result.entered/10,D=result.done/10;
+    const pallets=[];for(let i=0;i<P;i++){const p=palletMesh(o);world.add(p.g);pallets.push(p);}
+    view={o,specs,s1Units,s2Units,runBtn,bar,flag,revStrip,pallets,schedule:schedule(o,specs,result,P,D),result,P,D};
+    pickables.forEach(p=>p.updateMatrixWorld(true));
+    fit();
+  }
+  const dayResultFromObserved=o=>o.result||o.preview;
+
+  // ----- Deterministic playback schedule: pallet i's path and timing -----
+  function intakeSlot(i,P){const perRow=P>12?Math.ceil(P/2):Math.max(P,3),row=Math.floor(i/perRow),col=i%perRow,sp=Math.min(0.82,9.4/perRow);return {x:-(perRow-1)*sp/2+col*sp,z:ROWS.intake-row*0.72};}
+  function dockSlot(i){const col=i%8,row=Math.floor(i/8)%2,layer=Math.floor(i/16);return {x:-4.65+col*0.74,y:layer*0.36,z:ROWS.dock+0.32-row*0.7};}
+  function pileSlot(i){const col=i%3,row=Math.floor(i/3)%2,layer=Math.floor(i/6);return {x:3.35+col*0.68,y:layer*0.36,z:ROWS.pile+0.34-row*0.66};}
+  function schedule(o,specs,r,P,D){
+    const gap=Math.min(0.42,Math.max(0.12,2.6/Math.max(P,1))),n1=o.dials.s1,n2=o.dials.s2,s1Top=specs.s1.type==='press'?0.55:0.6;
+    const items=[];
+    for(let i=0;i<P;i++){
+      const u=i%n1,cured=i<D,j=cured?i%n2:null,a0=i*gap;
+      const intake=intakeSlot(i,P),sx=unitX(specs.s1,u);
+      const k={i,u,j,cured,a0,a1:a0+0.38,a2:a0+0.7,a3:a0+1.05,a4:a0+1.4,a5:a0+1.75};
+      k.points=[{x:intake.x,y:0.02,z:intake.z},{x:sx,y:s1Top,z:ROWS.s1+0.12},{x:sx,y:s1Top,z:ROWS.s1+0.12}];
+      if(cured){
+        const tx=unitX(specs.s2,j),dock=dockSlot(i),wokTop=specs.s2.type==='wok'?0.58:0.16;
+        k.points.push({x:tx,y:wokTop,z:ROWS.s2+0.55},{x:tx,y:wokTop,z:ROWS.s2-0.15},{x:dock.x,y:0.02+dock.y,z:dock.z});
+      }else{
+        const pile=pileSlot(i-D);k.points.push({x:pile.x,y:0.02+pile.y,z:pile.z});
+      }
+      items.push(k);
+    }
+    const T=P?Math.max(...items.map(k=>k.cured?k.a5:k.a3))+0.05:0;
+    return {items,T,gap};
+  }
+  const ease=t=>t<=0?0:t>=1?1:t*t*(3-2*t);
+  function lerpPoint(a,b,t){const e=ease(t);return {x:a.x+(b.x-a.x)*e,y:a.y+(b.y-a.y)*e+Math.sin(Math.PI*e)*0.22,z:a.z+(b.z-a.z)*e};}
+  function palletPose(k,t){
+    const p=k.points,seg=(from,to,t0,t1)=>lerpPoint(p[from],p[to],(t-t0)/(t1-t0));
+    if(t<=k.a0)return {pos:p[0],stage:0};
+    if(t<k.a1)return {pos:seg(0,1,k.a0,k.a1),stage:0};
+    if(t<k.a2)return {pos:p[1],stage:t>(k.a1+k.a2)/2?1:0,busy1:(t-k.a1)/(k.a2-k.a1)};
+    if(!k.cured){if(t<k.a3)return {pos:seg(2,3,k.a2,k.a3),stage:1};return {pos:p[3],stage:1,stuck:true};}
+    if(t<k.a3)return {pos:seg(2,3,k.a2,k.a3),stage:1};
+    if(t<k.a4)return {pos:seg(3,4,k.a3,k.a4),stage:t>(k.a3+k.a4)/2?2:1,busy2:(t-k.a3)/(k.a4-k.a3)};
+    if(t<k.a5)return {pos:seg(4,5,k.a4,k.a5),stage:2};
+    return {pos:p[5],stage:2,docked:true};
+  }
+
+  // Apply the scene at playback time t. t<0 means "not run yet" (pre-run setup).
+  function apply(t){
+    if(!view||disposed)return;
+    const o=observed,result=o.result||o.preview,{s1Units,s2Units,runBtn,bar,flag,revStrip,pallets,schedule:sch,D}=view;
+    const pre=t<0,studio=o.kind==='studio',final=!pre&&t>=sch.T;
+    const loadMats=studio?[mat(PALETTE.blank),mat(o.ink),mat(PALETTE.kraft)]:[mat(PALETTE.raw),mat(PALETTE.prepped),mat(PALETTE.cooked)];
+    let entered=0,done=0;const busy1=new Array(s1Units.length).fill(0),busy2=new Array(s2Units.length).fill(0);
+    sch.items.forEach((k,i)=>{
+      const pose=pre?{pos:k.points[0],stage:0}:palletPose(k,t),p=pallets[i];
+      p.g.position.set(pose.pos.x,pose.pos.y,pose.pos.z);
+      p.load.material=loadMats[pose.stage];p.tag.visible=Boolean(pose.stuck);
+      if(!pre&&t>=k.a2)entered+=10;
+      if(!pre&&k.cured&&t>=k.a5)done+=10;
+      if(pose.busy1!==undefined)busy1[k.u]=Math.max(busy1[k.u],Math.sin(Math.PI*pose.busy1));
+      if(pose.busy2!==undefined)busy2[k.j]=Math.max(busy2[k.j],Math.sin(Math.PI*pose.busy2));
+    });
+    if(final){entered=result.entered;done=result.done;}
+    // Stations: stamping heads, tunnel glow, wok flames; idle units dim at the end of the day.
+    s1Units.forEach((u,i)=>{if(u.parts.head)u.parts.head.position.y=u.parts.headY-0.42*busy1[i];setDim(u.g,final&&i>=s1Units.length-result.idle1);});
+    s2Units.forEach((u,i)=>{
+      if(u.parts.glow)u.parts.glow.emissiveIntensity=1.4*busy2[i];
+      if(u.parts.flame)u.parts.flame.scale.setScalar(0.35+0.85*busy2[i]);
+      setDim(u.g,final&&i>=s2Units.length-result.idle2);
+    });
+    // Cost bar: committed blocks are there before the first pallet; variable cost grows per pallet.
+    const scale=BAR_LENGTH/o.maxScale,variableSoFar=o.variableRate*entered;
+    const values=[['lease',result.lease],['s1Cost',result.s1Cost],['s2Cost',result.s2Cost],['sync',result.sync],['variable',pre?0:final?result.variable:variableSoFar]];
+    let x=BAR_LEFT;
+    for(const [key,value] of values){const m=bar[key];m.visible=value>0;if(value>0){const len=value*scale;m.scale.x=len;m.position.x=x+len/2;x+=len;}}
+    const revenue=pre?0:o.price*done;
+    flag.visible=revenue>0;flag.position.x=BAR_LEFT+revenue*scale;
+    revStrip.visible=revenue>0;if(revenue>0){revStrip.scale.x=revenue*scale;revStrip.position.x=BAR_LEFT+revenue*scale/2;}
+    runBtn.cap.material=mat(o.weekOver?PALETTE.runOff:PALETTE.run);
+    paint();
+    tiles(o,pre?null:{entered,done,cost:result.committed+(final?result.variable:variableSoFar),final});
+    placeBadges(o,pre,final);
+  }
+  function setDim(group,dim){group.traverse(n=>{if(n.isMesh&&n.userData.tint)n.material=mat(n.userData.tint,{dim});});}
+
+  // ----- Camera fit to a constant box, and projected HTML badges -----
+  function fit(){
+    const w=Math.max(worldEl.clientWidth,1),h=Math.max(worldEl.clientHeight,1);
+    renderer.setSize(w,h,false);
+    const narrow=w<600,az=THREE.MathUtils.degToRad(narrow?12:20),el=THREE.MathUtils.degToRad(narrow?48:44);
+    camera.position.set(Math.sin(az)*Math.cos(el)*30,Math.sin(el)*30,Math.cos(az)*Math.cos(el)*30);camera.up.set(0,1,0);camera.lookAt(0,0,0);camera.updateMatrixWorld(true);
+    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+    for(const x of [VIEW.min.x,VIEW.max.x])for(const y of [VIEW.min.y,VIEW.max.y])for(const z of [VIEW.min.z,VIEW.max.z]){
+      const v=new THREE.Vector3(x,y,z).applyMatrix4(camera.matrixWorldInverse);minX=Math.min(minX,v.x);maxX=Math.max(maxX,v.x);minY=Math.min(minY,v.y);maxY=Math.max(maxY,v.y);
+    }
+    let hw=(maxX-minX)/2*1.02,hh=(maxY-minY)/2*1.02;const cx=(minX+maxX)/2,cy=(minY+maxY)/2,aspect=w/h;
+    if(hw/hh>aspect)hh=hw/aspect;else hw=hh*aspect;
+    Object.assign(camera,{left:cx-hw,right:cx+hw,top:cy+hh,bottom:cy-hh});camera.updateProjectionMatrix();
+    world.updateMatrixWorld(true);
+    info.pick_targets=pickables.filter(p=>p.userData.action).map(p=>{const v=p.getWorldPosition(new THREE.Vector3()).project(camera);return {name:p.userData.name,action:p.userData.action,x:(v.x+1)/2,y:(1-v.y)/2};});
+  }
+  function project(x,y,z){const v=new THREE.Vector3(x,y,z).project(camera);return {x:(v.x+1)/2*worldEl.clientWidth,y:(1-v.y)/2*worldEl.clientHeight};}
+  function placeBadges(o,pre,final){
+    const specs=view.specs,list=[],r=o.result||o.preview,wide=worldEl.clientWidth>=400;
+    const rowText=(key,n,idle)=>{const name=key==='s1'?o.s1Name:o.s2Name;return plural(n,name.one,name.many)+(final&&idle?' · '+idle+' idle':'');};
+    if(wide){
+      list.push({cls:'row',text:rowText('s1',o.dials.s1,r.idle1),at:project(unitX(specs.s1,0)-specs.s1.w/2,0.15,ROWS.s1+specs.s1.d/2+0.05),align:'left'});
+      list.push({cls:'row',text:rowText('s2',o.dials.s2,r.idle2),at:project(unitX(specs.s2,0)-specs.s2.w/2,0.15,ROWS.s2+specs.s2.d/2+0.05),align:'left'});
+    }
+    if(final&&r.stuck)list.push({cls:'stuck',text:r.stuck+' '+o.units+' stuck'+(wide?' — never '+o.s2Name.verb:''),at:project(4.0,0.85,ROWS.pile),align:'center'});
+    badges.innerHTML=list.map(b=>'<span class="pc-badge pc-badge-'+b.cls+'">'+esc(b.text)+'</span>').join('');
+    // Keep every badge fully inside the scene: anchor it, then clamp to the stage edges.
+    const W=worldEl.clientWidth;
+    [...badges.children].forEach((el,i)=>{const b=list[i],w=el.offsetWidth,h=el.offsetHeight;let x=b.align==='center'?b.at.x-w/2:b.at.x-4,y=b.align==='center'?b.at.y-h:b.at.y-h/2;x=Math.min(Math.max(x,6),W-w-6);el.style.left=x.toFixed(1)+'px';el.style.top=Math.max(y,6).toFixed(1)+'px';});
+  }
+  const paint=()=>{if(!disposed)renderer.render(scene,camera);};
+
+  // ----- DOM HUD -----
+  function stepper(key,o){
+    const name=key==='s1'?o.s1Name:o.s2Name,[min,max]=o.limits[key],n=o.dials[key];
+    const cost=money(name.cost)+'/day '+(name.included?'each extra · first included':'each');
+    return '<div class="pc-stepper" role="group" aria-label="'+esc(cap(name.many))+'"><div class="pc-stepper-name"><strong>'+esc(cap(name.many))+'</strong><small>Each '+esc(name.does)+' '+name.cap+'/day · '+cost+'</small></div>'
+      +'<div class="pc-stepper-controls"><button id="pc-'+key+'-minus" data-pc="set" data-key="'+key+'" data-value="'+(n-1)+'" aria-label="One fewer '+esc(name.one)+'"'+(n<=min?' disabled':'')+'>−</button><output id="pc-'+key+'-value" aria-live="polite">'+n+'</output><button id="pc-'+key+'-plus" data-pc="set" data-key="'+key+'" data-value="'+(n+1)+'" aria-label="One more '+esc(name.one)+'"'+(n>=max?' disabled':'')+'>+</button></div></div>';
+  }
+  function dials(o){
+    if(o.orderChoices)return '<div class="pc-orders" role="group" aria-label="Hoodies to accept"><span>Hoodies to accept</span><div>'+o.orderChoices.map(v=>'<button id="pc-orders-'+v+'" data-pc="set" data-key="orders" data-value="'+v+'" aria-pressed="'+(o.dials.orders===v)+'">'+v+'</button>').join('')+'</div></div><p class="pc-fixed-note">This week: 1 press (prints 30/day) and 1 tunnel (cures 40/day).</p>';
+    const fixed=o.limits.s1[0]===o.limits.s1[1]&&o.limits.s2[0]===o.limits.s2[1];
+    return fixed?'':stepper('s1',o)+stepper('s2',o);
+  }
+  function tiles(o,live){
+    const r=o.result||o.preview,u=o.unit,set=(id,label,value,cls='')=>{const el=$(id);el.querySelector('span').textContent=label;el.querySelector('strong').textContent=value;el.dataset.tone=cls;};
+    if(!live){
+      set('pc-tile-cured',o.orderChoices?'Sold / accepted':o.levelId==='size'?'Sold':'Sold / orders','—');set('pc-tile-cost','Day cost','—');set('pc-tile-avg','Cost per '+u,'—');set('pc-tile-profit','Profit','—');
+      $('pc-outcome').textContent=o.weekOver?'Week over.':'Not run yet. '+money(r.committed)+' is committed before the first '+u+'.';
+      $('pc-outcome').dataset.tone='';return;
+    }
+    const cost=live.cost;
+    set('pc-tile-cured',o.orderChoices?'Sold / accepted':o.levelId==='size'?'Sold':'Sold / orders',o.levelId==='size'?String(live.done):live.done+' / '+r.orders);
+    set('pc-tile-cost','Day cost',money(cost));
+    set('pc-tile-avg','Cost per '+u+(live.final?'':' so far'),live.done?money2(cost/live.done):'—');
+    set('pc-tile-profit','Profit',live.final?signed(r.profit):'…',live.final?(r.profit>0?'good':r.profit<0?'bad':''):'');
+    $('pc-outcome').textContent=live.final?DAYS[o.lastDay]+': '+o.outcome+'.':'Running '+DAYS[o.lastDay]+'…';
+    $('pc-outcome').dataset.tone=live.final?(r.stuck||r.unfilled?'bad':r.profit>0?'good':''):'';
+  }
+  function ledger(o,star=false){
+    const W=Math.max(280,Math.round($('pc-chart').clientWidth||320)),H=200,L=50,R=W-14,Tp=18,B=152,pts=o.ledger;
+    const cats=o.chartX==='orders'?o.orderChoices:Array.from({length:o.limits[o.chartX][1]},(_,i)=>i+1);
+    const xOf=v=>L+(cats.indexOf(v)+0.5)*(R-L)/cats.length;
+    const axisName=o.chartX==='orders'?'Hoodies accepted':o.chartX==='s1'?cap(o.s1Name.many)+' leased':cap(o.s2Name.many)+' leased';
+    let svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-labelledby="pc-ledger-title pc-ledger-desc"><title id="pc-ledger-title">Your ledger</title><desc id="pc-ledger-desc">'+esc(pts.length?pts.map(p=>DAYS[p.day]+(p.current?'':' (earlier attempt)')+': '+describeSetup(o,p)+', '+money2(p.average)+' per '+o.unit+', profit '+signed(p.profit)).join('; '):'No days run yet.')+'</desc>';
+    cats.forEach(c=>{svg+='<text x="'+xOf(c).toFixed(1)+'" y="'+(B+16)+'" class="pc-ax" text-anchor="middle">'+c+'</text>';});
+    svg+='<text x="'+((L+R)/2)+'" y="'+(B+34)+'" class="pc-axname" text-anchor="middle">'+esc(axisName)+'</text>';
+    svg+='<line x1="'+L+'" x2="'+R+'" y1="'+B+'" y2="'+B+'" class="pc-axis"/>';
+    if(!pts.length){svg+='<text x="'+((L+R)/2)+'" y="'+((Tp+B)/2)+'" class="pc-empty" text-anchor="middle">Run a day to plot it here.</text></svg>';return svg;}
+    const vals=pts.map(p=>p.average/100);let lo=Math.min(...vals),hi=Math.max(...vals);
+    if(hi-lo<2){const m=(hi+lo)/2;lo=m-1;hi=m+1;}
+    const span=hi-lo,step=[0.5,1,2,2.5,5,10,20].find(s=>span/s<=5)||20;lo=Math.floor(lo/step)*step;hi=Math.ceil(hi/step)*step;
+    const yOf=v=>B-(v-lo)/(hi-lo)*(B-Tp);
+    for(let v=lo;v<=hi+1e-9;v+=step){svg+='<line x1="'+L+'" x2="'+R+'" y1="'+yOf(v).toFixed(1)+'" y2="'+yOf(v).toFixed(1)+'" class="pc-grid"/><text x="'+(L-6)+'" y="'+(yOf(v)+4).toFixed(1)+'" class="pc-ax" text-anchor="end">£'+(Number.isInteger(v)?v:v.toFixed(1))+'</text>';}
+    svg+='<text x="12" y="'+((Tp+B)/2)+'" class="pc-axname" text-anchor="middle" transform="rotate(-90 12 '+((Tp+B)/2)+')">Cost per '+esc(o.unit)+'</text>';
+    const groups=new Map();pts.forEach(p=>{const k=p[o.chartX];groups.set(k,[...(groups.get(k)||[]),p]);});
+    for(const [k,group] of groups)group.forEach((p,i)=>{
+      const x=xOf(k)+(i-(group.length-1)/2)*Math.min(13,(R-L)/cats.length/Math.max(group.length,1)),y=yOf(p.average/100),ok=!p.stuck&&!p.unfilled;
+      svg+='<g class="pc-dot'+(p.current?'':' pc-old')+'"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="5.5" class="'+(ok?'pc-filled':'pc-hollow')+'"/>'+(p.stuck?'<line x1="'+(x-4).toFixed(1)+'" x2="'+(x+4).toFixed(1)+'" y1="'+(y+9).toFixed(1)+'" y2="'+(y+9).toFixed(1)+'" class="pc-tick"/>':'')+'<text x="'+x.toFixed(1)+'" y="'+(y-9).toFixed(1)+'" class="pc-day" text-anchor="middle">'+DAY_SHORT[p.day]+'</text></g>';
+    });
+    if(star&&o.result){const k=o.dials[o.chartX],x=xOf(k),y=yOf(o.result.average/100);svg+='<path class="pc-star" d="'+starPath(x,y-1,11,5)+'"/>';}
+    return svg+'</svg>';
+  }
+  function describeSetup(o,p){
+    if(o.chartX==='orders')return p.orders+' '+o.units;
+    return plural(p.s1,o.s1Name.one,o.s1Name.many)+' and '+plural(p.s2,o.s2Name.one,o.s2Name.many);
+  }
+  function think(o){
+    $('pc-question').textContent=o.gateOpen?o.question:'Your question';
+    $('pc-gate').textContent=o.gateOpen?'':o.gate;$('pc-gate').hidden=o.gateOpen;
+    $('pc-reasons').innerHTML=o.gateOpen?o.reasons.map(([id,text])=>'<button id="pc-reason-'+id+'" data-pc="reason" data-value="'+id+'" aria-pressed="'+(o.reason===id)+'">'+esc(text)+'</button>').join(''):'';
+    $('pc-hint').hidden=!o.help;$('pc-hint').textContent=o.hint;$('pc-help').hidden=o.help;
+    $('pc-next').hidden=true;
+  }
+  function finish(o){
+    $('pc-finish-list').innerHTML=o.history.map((h,i)=>'<li><span>Week '+(i+1)+' · '+esc(h.week)+'</span><strong>'+esc(i===0?h.orders+' hoodies':i===4?plural(h.s2,'wok','woks')+', '+plural(h.s1,'bench','benches'):plural(h.s1,'press','presses')+', '+plural(h.s2,'tunnel','tunnels'))+'</strong><em>'+money2(h.average)+' per '+esc(h.unit)+' · '+signed(h.profit)+(h.help?' · hint used':'')+'</em></li>').join('');
+  }
+
+  function render(o,time=0,{seeking=false}={}){
+    if(disposed)return;
+    const active=document.activeElement?.id;
+    const levelChanged=observed?.level!==o.level||observed?.complete!==o.complete;
+    observed=o;
+    surface.dataset.kind=o.kind;
+    $('pc-kicker').textContent=o.complete?'Five weeks complete':'Week '+o.week+' of '+o.weeks;
+    $('pc-title').textContent=o.complete?'Grow for a reason':o.title;
+    $('pc-client').textContent=o.complete?'Three rules carried you through five weeks: spread fixed costs, find the bottleneck, and stop growing when coordination costs outrun the saving.':o.client;
+    $('pc-goal').textContent=o.complete?'':'Goal: '+o.goal;$('pc-goal').hidden=o.complete;
+    $('pc-cash').textContent=o.complete?'':'Cash this week '+signed(o.cash);
+    $('pc-days').innerHTML=o.complete?'':DAY_SHORT.map((d,i)=>'<li data-state="'+(i<o.day?'done':i===o.day?'next':'')+'" title="'+DAYS[i]+'">'+d+'</li>').join('');
+    $('pc-days').setAttribute('aria-label',o.daysLeft+' of 6 days left this week');
+    $('pc-main').hidden=o.complete;$('pc-finish').hidden=!o.complete;
+    if(o.complete){finish(o);killTweens();if(active)app.querySelector('#'+active)?.focus({preventScroll:true});if(levelChanged&&!seeking)$('pc-title').focus({preventScroll:true});return;}
+    const b=o.preview;
+    $('pc-preview').innerHTML='<span><b>'+money(b.committed)+'</b> committed today</span><span>Can '+esc(o.s1Name.can)+' <b>'+b.cap1+'</b></span><span>Can '+esc(o.s2Name.can)+' <b>'+b.cap2+'</b></span><span>'+(o.levelId==='size'?'Buyer takes up to <b>200</b>':'Orders <b>'+b.orders+'</b>')+'</span><span>Price <b>'+money(o.price)+'</b></span>';
+    $('pc-dials').innerHTML=dials(o);
+    const runLabel=o.weekOver?'Week over':(o.kind==='noodles'?'Open the stall · ':'Run ')+o.nextDay;
+    $('pc-run').textContent=runLabel;$('pc-run').disabled=o.weekOver;
+    $('pc-weekover').hidden=!o.weekOver;
+    $('pc-legend').innerHTML=[[PALETTE.lease,o.baseLabel],[PALETTE.s1,o.kind==='studio'?'Presses':'Extra benches'],[PALETTE.s2,o.kind==='studio'?'Extra tunnels':'Woks'],[PALETTE.sync,o.syncLabel],[PALETTE.variable,o.variableLabel],[PALETTE.revenue,'Revenue flag']].map(([c,t])=>'<span><i style="background:'+c+'"></i>'+esc(t)+'</span>').join('');
+    $('pc-chart').innerHTML=ledger(o);
+    think(o);
+    renderer.domElement.setAttribute('aria-label',(o.kind==='studio'?'Print studio floor':'Noodle stall')+': '+plural(o.dials.s1,o.s1Name.one,o.s1Name.many)+', '+plural(o.dials.s2,o.s2Name.one,o.s2Name.many)+'. '+(o.result?o.outcome:'Not run yet')+'. Every scene action has a button beside the scene.');
+    // Rebuild the floor when the week or the setup changes; replay a fresh run, otherwise draw a still frame.
+    const nextSignature=[o.level,o.attempt,o.dials.orders,o.dials.s1,o.dials.s2,o.weekOver&&!o.matches].join(':');
+    // A run is replayed only when it is exactly one new day in the same week, and never while seeking.
+    const freshRun=!seeking&&!reduced()&&o.matches&&previous&&previous.level===o.level&&previous.attempt===o.attempt&&o.day===previous.day+1;
+    previous={level:o.level,attempt:o.attempt,day:o.day};
+    if(nextSignature!==signature||seeking||freshRun){signature=nextSignature;build(o);}
+    if(freshRun)play();else{killTweens();apply(o.matches?view.schedule.T:-1);}
+    if(levelChanged&&!seeking&&o.week>1)$('pc-title').focus({preventScroll:false});
+    else if(active&&!seeking){const el=app.querySelector('#'+active);if(el&&!el.disabled)el.focus({preventScroll:true});else if(active==='pc-run')$('pc-run').focus({preventScroll:true});}
+  }
+  function play(){
+    killTweens();clock={t:0};apply(0);
+    tween=gsap.to(clock,{t:view.schedule.T,duration:view.schedule.T,ease:'none',onUpdate:()=>apply(clock.t),onComplete:()=>{tween=null;apply(view.schedule.T);}});
+  }
+  function killTweens(){if(tween){tween.kill();tween=null;}if(pulse){pulse.kill();pulse=null;}}
+  function onAssessment(a){
+    if(!observed||observed.complete||!view)return;
+    $('pc-next').hidden=!a.correct;
+    if(a.correct){
+      $('pc-next').textContent=observed.level===LEVELS.length-1?'See your five weeks →':'Start week '+(observed.week+1)+' →';
+      $('pc-chart').innerHTML=ledger(observed,true);
+      view.runBtn.lampMat.color.set('#4ade80');view.runBtn.lampMat.emissive.set('#22c55e');view.runBtn.lampMat.emissiveIntensity=0.9;paint();
+      if(!reduced()){killTweens();const lamp=view.runBtn.lamp;pulse=gsap.fromTo(lamp.scale,{x:1,y:1,z:1},{x:1.6,y:1.6,z:1.6,duration:0.35,yoyo:true,repeat:3,onUpdate:paint,onComplete:()=>{lamp.scale.setScalar(1);paint();pulse=null;}});}
+      $('pc-next').focus({preventScroll:true});
+    }
+  }
+
+  // ----- Input: buttons and 3D picking -----
+  function onClick(event){
+    const b=event.target.closest('[data-pc]');if(!b||b.disabled)return;
+    const kind=b.dataset.pc;
+    if(kind==='set')dispatch({type:'set',key:b.dataset.key,value:Number(b.dataset.value)});
+    else if(kind==='reason')dispatch({type:'reason',value:b.dataset.value});
+  }
+  surface.addEventListener('click',onClick);
+  $('pc-run').addEventListener('click',()=>dispatch({type:'run'}));
+  $('pc-retry').addEventListener('click',()=>dispatch({type:'retry'}));
+  $('pc-help').addEventListener('click',()=>dispatch({type:'help'}));
+  $('pc-next').addEventListener('click',()=>dispatch({type:'next'}));
+  $('pc-again').addEventListener('click',()=>dispatch({type:'restart'}));
+  const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();let down=null;
+  function hit(e){
+    const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(pointer,camera);
+    const h=ray.intersectObjects(pickables,false).find(x=>x.object.userData.action);return h?h.object.userData.action:null;
+  }
+  const onDown=e=>{down={x:e.clientX,y:e.clientY};};
+  const onUp=e=>{
+    if(!down||Math.hypot(e.clientX-down.x,e.clientY-down.y)>10){down=null;return;}down=null;
+    const action=hit(e);if(!action||!observed||observed.complete)return;
+    if(action.type==='run'&&observed.weekOver)return;
+    dispatch(action);
+  };
+  const onMove=e=>{renderer.domElement.style.cursor=hit(e)?'pointer':'default';};
+  const onCancel=()=>{down=null;};
+  renderer.domElement.addEventListener('pointerdown',onDown);renderer.domElement.addEventListener('pointerup',onUp);renderer.domElement.addEventListener('pointermove',onMove);renderer.domElement.addEventListener('pointercancel',onCancel);
+  const resizeObserver=new ResizeObserver(()=>{if(!view||disposed)return;fit();apply(tween?clock.t:observed?.matches?view.schedule.T:-1);});
+  resizeObserver.observe(worldEl);
+
+  return {
+    render,onAssessment,info,
+    dispose(){
+      disposed=true;killTweens();resizeObserver.disconnect();
+      renderer.domElement.removeEventListener('pointerdown',onDown);renderer.domElement.removeEventListener('pointerup',onUp);renderer.domElement.removeEventListener('pointermove',onMove);renderer.domElement.removeEventListener('pointercancel',onCancel);
+      surface.removeEventListener('click',onClick);
+      for(const g of geos.values())g.dispose();for(const m of mats.values())m.dispose();for(const m of owned)m.dispose();
+      renderer.dispose();renderer.forceContextLoss?.();
+      for(const home of adopted){home.parent.insertBefore(home.el,home.next&&home.next.parentNode===home.parent?home.next:null);home.el.textContent=home.text;}
+      readout?.classList.remove('pc-sr');if(pill)pill.textContent=pillText;
+      surface.remove();style.remove();app.classList.remove('press-club');
+    }
+  };
+}
+
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+function starPath(cx,cy,R,r){let d='';for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rad=i%2?r:R;d+=(i?'L':'M')+(cx+Math.cos(a)*rad).toFixed(1)+' '+(cy+Math.sin(a)*rad).toFixed(1);}return d+'Z';}
+
+const TEMPLATE=`
+<header class="pc-week">
+  <div class="pc-week-top"><span class="pc-kicker" id="pc-kicker"></span><span class="pc-cash" id="pc-cash"></span></div>
+  <h2 id="pc-title" tabindex="-1"></h2>
+  <p class="pc-client" id="pc-client"></p>
+  <div class="pc-goal-row"><p class="pc-goal" id="pc-goal"></p><ol class="pc-days" id="pc-days"></ol></div>
+</header>
+<div class="pc-main" id="pc-main">
+  <section class="pc-stage" aria-label="Studio floor">
+    <div class="pc-world" id="pc-world"><div class="pc-badges" id="pc-badges" aria-hidden="true"></div></div>
+    <p class="pc-legend" id="pc-legend" aria-label="Cost bar colours"></p>
+    <div class="pc-card pc-ledger"><h3>Your ledger</h3><div id="pc-chart" class="pc-chart"></div><p class="pc-key"><span><i class="k-filled"></i>everything sold</span><span><i class="k-hollow"></i>orders missed or stuck</span><span><i class="k-tick"></i>stuck pile</span></p></div>
+  </section>
+  <section class="pc-side">
+    <div class="pc-card pc-setup">
+      <p class="pc-preview" id="pc-preview"></p>
+      <div id="pc-dials" class="pc-dials"></div>
+      <button id="pc-run" class="pc-run"></button>
+      <div id="pc-weekover" class="pc-weekover" hidden><p>All six days are used. Your days stay on the ledger, faded.</p><button id="pc-retry">Restart this week</button></div>
+    </div>
+    <div class="pc-card pc-result">
+      <p class="pc-outcome" id="pc-outcome" role="status"></p>
+      <div class="pc-tiles">
+        <div id="pc-tile-cured"><span></span><strong></strong></div>
+        <div id="pc-tile-cost"><span></span><strong></strong></div>
+        <div id="pc-tile-avg"><span></span><strong></strong></div>
+        <div id="pc-tile-profit"><span></span><strong></strong></div>
+      </div>
+    </div>
+    <div class="pc-card pc-think">
+      <h3 id="pc-question"></h3>
+      <p id="pc-gate" class="pc-gate"></p>
+      <div id="pc-reasons" class="pc-reasons" role="group" aria-labelledby="pc-question"></div>
+      <div class="pc-checkrow"><span id="pc-check-slot"></span><button id="pc-help" class="pc-quiet">Hint</button></div>
+      <p id="pc-hint" class="pc-hint" hidden></p>
+      <span id="pc-feedback-slot"></span>
+      <button id="pc-next" class="pc-next" hidden></button>
+    </div>
+  </section>
+</div>
+<section class="pc-finish" id="pc-finish" hidden>
+  <ol id="pc-finish-list" class="pc-finish-list"></ol>
+  <div class="pc-ideas"><p><b>Spread fixed costs.</b> A cost you pay whatever you make gets cheaper per unit the more you make.</p><p><b>Find the bottleneck.</b> Output is set by the slowest step; capacity anywhere else only adds cost.</p><p><b>Grow for a reason.</b> Size helps until coordination costs outrun the saving — and the right size moves with demand.</p></div>
+  <button id="pc-again" class="pc-run">Play again</button>
+</section>
+<footer class="pc-foot"><span id="pc-reset-slot"></span><span id="pc-readout-slot"></span>
+  <details><summary>How this studio is modelled</summary>
+    <p><b>Print studio (weeks 1–4).</b> Studio lease £480/day, includes one curing tunnel. Each press £60/day, prints 30 shirts. Each extra tunnel £60/day, cures 40. Sync: £60/day for every pair of press teams (n × (n − 1) ÷ 2 pairs). Blanks & ink £4 per shirt printed.</p>
+    <p>Printed = the smaller of orders and press capacity. Sold = the smaller of printed and tunnel capacity. Shirts printed but not cured are paid for and worth nothing that day. Cost per shirt = day cost ÷ shirts sold. Profit = price × sold − day cost.</p>
+    <p><b>Noodle stall (week 5).</b> Pitch £200/day, includes one prep bench; extra bench £60, preps 80 bowls. Wok £45/day, cooks 50. Sync £35 per pair of cooks. Ingredients £2.40 per bowl prepped. 150 bowls at £6.</p>
+    <p>All figures are invented for teaching. Leases are fresh each day, so shrinking costs nothing here; equipment you’ve already bought would be different. The sync rule stands in for coordination overhead and is not a real business law. Bulk discounts, demand changes within a day, inventory, wages and tax are left out. Finishing a week is one good response, not proof of mastering scale.</p>
+  </details>
+</footer>`;
+
+const CSS=`
+.press-club{--pc-bg:#fbf7f0;--pc-ink:#1c2433;--pc-soft:#5b6474;--pc-card:#ffffff;--pc-line:#e6ddcf;--pc-accent:#2bb3a3;--pc-accent-ink:#0f5f57;--pc-good:#15803d;--pc-bad:#b91c1c;--pc-chip:#f3ede3;max-width:1240px;padding:22px 28px;color:var(--pc-ink)}
+body:has(.press-club){background:var(--pc-page,#fbf7f0)}
+@media (prefers-color-scheme:dark){body:has(.press-club){--pc-page:#141a2b}.press-club{--pc-bg:#141a2b;--pc-ink:#eef1f6;--pc-soft:#aab3c3;--pc-card:#1e2a44;--pc-line:#2e3b58;--pc-accent:#3cc7b6;--pc-accent-ink:#8ff0e3;--pc-good:#4ade80;--pc-bad:#f87171;--pc-chip:#26345299}}
+.press-club .topbar{margin-bottom:6px}.press-club .brand{font-size:11px;letter-spacing:.14em}.press-club .pill{font-size:12px;border-color:var(--pc-line)}
+.press-club .lesson-nav,.press-club .eyebrow,.press-club .panel,.press-club .stage-note{display:none}
+.press-club h1{font-size:clamp(26px,3.2vw,38px);margin:8px 0 4px}.press-club .lede{font-size:15px;margin:0 0 14px;color:var(--pc-soft);max-width:900px}
+.press-club .layout{display:block}.press-club .stage-wrap{border:0;border-radius:0;background:none;height:auto;min-height:0;overflow:visible}
+.press-club .stage{height:auto;display:block;padding:0}.press-club .stage canvas{position:static;inset:auto;display:block;width:100%;height:100%}
+.press-club .explain,.press-club .footer{color:var(--pc-soft)}
+.pc{display:flex;flex-direction:column;gap:14px;font-family:ui-rounded,"Avenir Next","Segoe UI",system-ui,sans-serif}
+.pc button{font:inherit;min-height:44px;border-radius:12px;border:1px solid var(--pc-line);background:var(--pc-card);color:var(--pc-ink);padding:8px 14px;cursor:pointer}
+.pc button:hover:not(:disabled){border-color:var(--pc-accent)}.pc button:disabled{opacity:.45;cursor:not-allowed}
+.pc button:focus-visible,.pc [tabindex]:focus-visible{outline:3px solid #eab308;outline-offset:3px}
+.pc-week{background:var(--pc-card);border:1px solid var(--pc-line);border-radius:18px;padding:14px 18px}
+.pc-week-top{display:flex;justify-content:space-between;gap:10px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--pc-soft);font-weight:700}
+.pc-cash{letter-spacing:.02em;text-transform:none;font-size:13px;color:var(--pc-ink)}
+.pc-week h2{font-size:clamp(22px,2.6vw,30px);margin:4px 0 2px;letter-spacing:-.02em}.pc-week h2:focus,.pc .pc-week h2:focus-visible{outline:none}
+.pc-client{margin:0;color:var(--pc-soft);line-height:1.45;font-size:15px}
+.pc-goal-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}
+.pc-goal{margin:0;background:var(--pc-chip);border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px}
+.pc-days{display:flex;gap:5px;list-style:none;margin:0;padding:0}.pc-days li{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:11px;font-weight:800;border:1px solid var(--pc-line);color:var(--pc-soft)}
+.pc-days li[data-state=done]{background:var(--pc-ink);color:var(--pc-bg);border-color:var(--pc-ink)}.pc-days li[data-state=next]{border:2px solid var(--pc-accent);color:var(--pc-ink)}
+.pc-main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:14px;align-items:start}
+.pc-main[hidden],.pc-finish[hidden]{display:none}
+.pc-stage{display:flex;flex-direction:column;gap:10px}.pc-legend{margin-top:-2px}
+.pc-world{position:relative;aspect-ratio:16/10;border-radius:18px;overflow:hidden;border:1px solid var(--pc-line);background:#fbf7f0}
+.pc-badges{position:absolute;inset:0;pointer-events:none}
+.pc-badge{position:absolute;white-space:nowrap;font-size:12px;font-weight:800;padding:4px 9px;border-radius:999px;background:#ffffffee;color:#1c2433;box-shadow:0 1px 3px #0002}
+.pc-badge-stuck{background:#dc2626;color:#fff}
+.pc-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 2px 0;font-size:12px;color:var(--pc-soft)}.pc-legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px;box-shadow:0 0 0 1px var(--pc-line)}
+.pc-side{display:flex;flex-direction:column;gap:12px}
+.pc-card{background:var(--pc-card);border:1px solid var(--pc-line);border-radius:16px;padding:14px}
+.pc-card h3{margin:0 0 8px;font-size:15px}
+.pc-preview{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;font-size:13px}.pc-preview span{background:var(--pc-chip);border-radius:8px;padding:5px 8px}
+.pc-dials{display:flex;flex-direction:column;gap:8px}
+.pc-stepper{display:flex;justify-content:space-between;align-items:center;gap:10px}.pc-stepper-name{display:flex;flex-direction:column}.pc-stepper-name small{color:var(--pc-soft);font-size:12px}
+.pc-stepper-controls{display:flex;align-items:center;gap:6px}.pc-stepper-controls button{width:44px;padding:0;font-size:22px;font-weight:700}.pc-stepper-controls output{min-width:26px;text-align:center;font-size:20px;font-weight:800}
+.pc-orders{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.pc-orders span{font-weight:700}.pc-orders div{display:flex;gap:6px}.pc-orders button{min-width:56px;font-weight:800}
+.pc button[aria-pressed=true]{background:var(--pc-accent);border-color:var(--pc-accent);color:#062a26}
+.pc-fixed-note{margin:2px 0 0;font-size:12px;color:var(--pc-soft)}
+.pc .pc-run{width:100%;margin-top:12px;min-height:50px;background:#16a34a;border-color:#15803d;color:#fff;font-weight:800;font-size:17px}.pc .pc-run:disabled{background:#9ca3af;border-color:#9ca3af}
+.pc-weekover p{margin:10px 0 8px;font-size:14px}.pc-weekover button{width:100%}
+.pc-outcome{margin:0 0 10px;font-weight:700;font-size:14px;min-height:20px}.pc-outcome[data-tone=bad]{color:var(--pc-bad)}.pc-outcome[data-tone=good]{color:var(--pc-good)}
+.pc-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.pc-tiles div{background:var(--pc-chip);border-radius:12px;padding:9px 10px;min-width:0}
+.pc-tiles span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--pc-soft);font-weight:700}.pc-tiles strong{display:block;font-size:19px;margin-top:3px;white-space:nowrap}
+.pc-tiles div[data-tone=good] strong{color:var(--pc-good)}.pc-tiles div[data-tone=bad] strong{color:var(--pc-bad)}
+.pc-chart svg{width:100%;height:auto;display:block}.pc-ax{font-size:10px;fill:var(--pc-soft)}.pc-axname{font-size:10px;fill:var(--pc-soft);font-weight:700}.pc-axis{stroke:var(--pc-line);stroke-width:1.5}.pc-grid{stroke:var(--pc-line);stroke-dasharray:2 3}
+.pc-empty{font-size:12px;fill:var(--pc-soft)}.pc-filled{fill:#2bb3a3;stroke:#0f766e;stroke-width:1.5}.pc-hollow{fill:var(--pc-card);stroke:#0f766e;stroke-width:2}.pc-tick{stroke:#dc2626;stroke-width:3;stroke-linecap:round}
+.pc-day{font-size:9px;font-weight:800;fill:var(--pc-ink)}.pc-old{opacity:.35}.pc-star{fill:#eab308;stroke:#a16207;stroke-width:1}
+.pc-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin:6px 0 0;font-size:11px;color:var(--pc-soft)}.pc-key i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+.k-filled{background:#2bb3a3}.k-hollow{border:2px solid #0f766e;box-sizing:border-box}.pc-key .k-tick{width:10px;height:3px;border-radius:2px;background:#dc2626;vertical-align:2px}
+.pc-gate{margin:0;color:var(--pc-soft);font-size:14px;line-height:1.45}
+.pc-reasons{display:flex;flex-direction:column;gap:7px}.pc-reasons button{text-align:left;line-height:1.35;padding:10px 12px}
+.pc-checkrow{display:flex;gap:8px;margin-top:12px;align-items:stretch}.pc-checkrow #check{flex:1;min-height:46px;border-radius:12px;font-weight:800;background:var(--pc-ink);border-color:var(--pc-ink);color:var(--pc-bg)}
+.pc .pc-quiet{background:none}
+.pc-hint{margin:10px 0 0;font-size:14px;line-height:1.45;background:var(--pc-chip);padding:10px 12px;border-radius:10px}
+.pc .feedback{min-height:0;padding-top:10px;font-size:14px;line-height:1.5;color:var(--pc-ink)}.pc .feedback[data-correct=true]{color:var(--pc-good)}.pc .feedback[data-correct=false]{color:var(--pc-bad)}
+.pc .pc-next{width:100%;margin-top:10px;background:var(--pc-accent);border-color:var(--pc-accent);color:#062a26;font-weight:800}
+.pc-finish{background:var(--pc-card);border:1px solid var(--pc-line);border-radius:18px;padding:18px}
+.pc-finish-list{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}.pc-finish-list li{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px;background:var(--pc-chip);border-radius:12px;padding:10px 12px;font-size:14px}
+.pc-finish-list em{font-style:normal;color:var(--pc-soft)}.pc-ideas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.pc-ideas p{margin:0;font-size:14px;line-height:1.45}
+.pc-foot{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}.pc-foot details{flex:1;min-width:240px;font-size:13px;line-height:1.5;color:var(--pc-soft)}.pc-foot summary{cursor:pointer;font-weight:700;color:var(--pc-ink);min-height:44px;display:flex;align-items:center}
+.pc-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:900px){.pc-main{display:flex;flex-direction:column}.pc-stage,.pc-side{display:contents}.pc-world{order:1;aspect-ratio:4/3;max-height:330px;width:100%}.pc-setup{order:2}.pc-result{order:3}.pc-legend{order:4;margin:0}.pc-ledger{order:5}.pc-think{order:6}}
+@media (max-width:640px){.press-club{padding:14px 12px}.press-club .lede{display:none}.press-club .pill{display:none}.pc-week{padding:12px}.pc-client{font-size:14px}.pc-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.pc-finish-list li{grid-template-columns:1fr}.pc-ideas{grid-template-columns:1fr}.pc-days li{width:26px;height:26px}.pc-legend{font-size:11px;gap:4px 10px}}
+@media (max-width:360px){.pc-stepper-name small{font-size:11px}.pc-tiles strong{font-size:17px}.pc-preview{font-size:12px;margin-bottom:8px}.pc-preview span{padding:4px 7px}.pc-fixed-note{display:none}.pc-week h2{font-size:21px}.pc-client{font-size:13px;line-height:1.4}.pc-goal{font-size:13px;padding:6px 12px}.pc-goal-row{margin-top:8px;gap:8px}.pc-world{max-height:205px}.pc{gap:10px}}
+@media (prefers-reduced-motion:reduce){.pc *{transition:none!important}}
 `;

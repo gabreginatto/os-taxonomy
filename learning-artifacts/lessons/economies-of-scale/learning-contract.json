@@ -1,61 +1,54 @@
 {
   "model_id": "scale",
+  "activity": "Press Club",
   "taxonomy_foundation": "mt_9gpUHWVKMR",
   "requested_age": 15,
-  "objective": "Compare prospective daily plans using unit cost, capacity, demand and coordination; transfer the reasoning to a different business.",
-  "experiments": [
-    "Shared fixed cost at 10 versus 20 units",
-    "Assembly versus packing bottleneck",
-    "Choose lowest-cost plan that fulfills 80 orders",
-    "Reconsider plan when demand drops to 20",
-    "Profit comparison for a food festival"
+  "objective": "Choose a profitable size for one business by running days and reading their costs; explain fixed-cost spreading, bottlenecks, coordination overhead and idle capacity from the learner's own runs; transfer the method to a different business.",
+  "weeks": [
+    {"id": "rent", "idea": "Fixed cost spread over more units", "target": "profit", "evidence_gate": "two different volumes run", "unique_win": "30 hoodies"},
+    {"id": "jam", "idea": "Bottleneck", "target": "profit", "evidence_gate": "a day with stuck shirts", "unique_win": "2 presses, 2 tunnels"},
+    {"id": "size", "idea": "Economies, then diseconomies, of scale", "target": "most profitable configuration", "evidence_gate": "three press counts run", "unique_win": "4 presses, 3 tunnels"},
+    {"id": "fall", "idea": "Idle capacity; optimal size follows demand", "target": "profit", "evidence_gate": "a day with idle capacity", "unique_win": "2 presses, 2 tunnels"},
+    {"id": "noodles", "idea": "Transfer to a new business", "target": "profit", "evidence_gate": "two setups run", "unique_win": "3 woks, 2 prep benches"}
   ],
   "taxonomy_coverage": [
-    {
-      "index": 0,
-      "mode": "partial",
-      "claim": "Interpret supplied cost/revenue/profit components; not an open explanation of all definitions."
-    },
-    {
-      "index": 1,
-      "mode": "partial",
-      "claim": "Recognize a correct profit comparison from disclosed arithmetic."
-    }
+    {"index": 1, "mode": "partial", "claim": "Use displayed revenue, total cost and profit for runs the learner chose to select a profitable configuration; profit is computed by the game, not unaided."},
+    {"index": 2, "mode": "partial", "claim": "Recognise loss-making days (costs above revenue) and respond by changing the configuration; no free-text explanation is graded."}
   ],
   "authored_extensions": [
     "Fixed versus variable costs",
     "Average versus total cost",
     "Capacity and bottlenecks",
-    "Economies/diseconomies across prospective configurations",
-    "Coordination-cost curve",
-    "Demand and idle capacity"
+    "Coordination cost growing with pairs of teams",
+    "Long-run cost curve built from the learner's own runs",
+    "Idle capacity and demand-dependent optimal size"
   ],
   "assumed_prerequisites": [
     "Whole-number money arithmetic",
     "Division and averages",
-    "Read a simple bar chart",
-    "Distinguish one day from one item"
+    "Reading a simple scatter chart",
+    "Distinguishing a day's total from a per-unit amount"
   ],
-  "prerequisite_mastery": "Unknown; inspect the saved generated plan. Source topic age 7\u20139 is a foundation, not the requested audience level.",
+  "prerequisite_mastery": "Unknown; inspect the saved generated plan. The source topic's age 7–9 band is a foundation, not the requested audience level.",
   "assessment_scope": "this_response_only",
   "not_assessed": [
     "Broad mental-model mastery",
-    "Marketing and social-proof effects",
-    "Supplier bargaining and distribution economics",
-    "Uncertain demand and inventory",
-    "Sunk capital recovery",
-    "Physical production processes"
+    "Marginal cost, short- versus long-run cost curves by name",
+    "Demand curves and pricing",
+    "Bulk purchasing discounts and supplier bargaining",
+    "Learning curves and network effects",
+    "Inventory, uncertainty and sunk capital"
   ],
   "tool_decisions": {
-    "threejs": "Colorful toy workshop with direct scene picking, depth, throughput stations and replicated team pods. Procedural geometry needs no external assets.",
-    "gsap": "On-demand scene emphasis only; no domain mutation in animation callbacks.",
-    "html_css": "Keyboard equivalents, exact quantities, cost curve, bounded questions and focus management.",
-    "anatomy": "Not used; the user rejected forcing an explanatory machine metaphor as the general design direction.",
-    "drei": "Not needed for these procedural assets; no additional framework/dependency added.",
-    "blender": "Not needed",
-    "hyperframes": "No video requested"
+    "threejs": "Print-studio floor with pallets flowing through presses and curing tunnels, a stuck pile at the bottleneck, sync cables between every pair of teams, a segmented cost bar with a revenue flag, and direct scene picking to add, remove and run.",
+    "gsap": "Deterministic replay of an already-computed day and a win pulse; cancelled on seek and skipped under reduced motion.",
+    "html_svg": "Steppers, order buttons and Run as keyboard/touch twins; result tiles; an SVG ledger plotting the learner's own runs; one reasoning question per week.",
+    "anatomy": "Not used.",
+    "blender": "Not needed; procedural geometry only.",
+    "hyperframes": "No video requested."
   },
-  "source_review": "Local exact taxonomy evidence, Munger course mapping and independent arithmetic. OpenStax external page was blocked; not claimed as retrieved.",
+  "design_review": "Design brief by Fable (advisor); see design-brief.md. Every tabulated outcome was re-derived independently and is asserted in unit tests.",
+  "source_review": "Local exact taxonomy evidence, local Munger scale research and the disclosed fictional equations. No external economics source retrieved.",
   "expert_review": "not_performed",
   "learner_review": "not_performed",
   "physical_device_review": "not_performed",

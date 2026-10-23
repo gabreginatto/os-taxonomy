@@ -28,16 +28,16 @@
     },
     {
       "slug": "economies-of-scale",
-      "title": "Little Works",
-      "description": "Grow wisely. Compare costs, fix a bottleneck, and discover when a bigger business becomes more expensive.",
+      "title": "Press Club",
+      "description": "Run a merch print studio for five weeks. Lease presses, find the jam, and discover when getting bigger stops making shirts cheaper.",
       "audience": "Age 15 \u00b7 Costs, capacity & growth",
       "tags": [
         "Economies of scale",
         "3D",
-        "5 experiments"
+        "5 weeks"
       ],
-      "artifact": "../output/economies-of-scale-v4",
-      "thumbnail": "checks/growth-world-1200.png"
+      "artifact": "../output/press-club-v2",
+      "thumbnail": "checks/scale-world-1200.png"
     }
   ]
 }

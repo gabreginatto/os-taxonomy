@@ -12,6 +12,6 @@
   "economies-of-scale": {
     "plugin": "lessons/economies-of-scale/economies-of-scale.plugin.mjs",
     "age": 15,
-    "thumbnail": "lessons/economies-of-scale/screenshots/growth-world-1200.png"
+    "thumbnail": "lessons/economies-of-scale/screenshots/scale-world-1200.png"
   }
 }

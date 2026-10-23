@@ -2,7 +2,7 @@
 
 One **separate Firebase project** for all educational activities, with a home page and one stable route per lesson. The commercial repository was inspected read-only; no commercial sites, gateways, databases, passwords or assets are reused.
 
-Current state: **published and publicly verified** in the separate `gabreginatto-learning-lab` project. Open the [activity catalog](https://gabreginatto-learning-lab.web.app/), [Choice Islands](https://gabreginatto-learning-lab.web.app/opportunity-cost/), [Save the Moon Garden](https://gabreginatto-learning-lab.web.app/inversion/), or [Little Works](https://gabreginatto-learning-lab.web.app/economies-of-scale/). All 39 public files matched the build; desktop and mobile browser checks passed for all three activities. Physical phone/tablet review remains separate from browser checks.
+Current state: **published and publicly verified** in the separate `gabreginatto-learning-lab` project. Open the [activity catalog](https://gabreginatto-learning-lab.web.app/), [Choice Islands](https://gabreginatto-learning-lab.web.app/opportunity-cost/), [Save the Moon Garden](https://gabreginatto-learning-lab.web.app/inversion/), or the economies-of-scale route (https://gabreginatto-learning-lab.web.app/economies-of-scale/). That deployment matched all 39 public files and passed desktop and mobile browser checks for all three activities. The economies-of-scale activity has since been rebuilt as **Press Club**; the catalog now points at the verified local artifact `output/press-club-v2`, which builds and passes the local catalog check but is **not yet deployed** — the live route still serves the earlier Little Works. Physical phone/tablet review remains separate from browser checks.
 
 In a fresh checkout, install the learning-artifacts dependencies and run `npm --prefix learning-artifacts run restore:published` from the repository root before building this catalog. Generated lesson directories are intentionally ignored. See [AI_HANDOFF.md](../../AI_HANDOFF.md) for the complete setup and source index. Restoring locally does not deploy.
 
@@ -14,7 +14,7 @@ In a fresh checkout, install the learning-artifacts dependencies and run `npm --
 https://gabreginatto-learning-lab.web.app/                   activity catalog
 https://gabreginatto-learning-lab.web.app/opportunity-cost/  Choice Islands
 https://gabreginatto-learning-lab.web.app/inversion/         Save the Moon Garden
-https://gabreginatto-learning-lab.web.app/economies-of-scale/ Little Works
+https://gabreginatto-learning-lab.web.app/economies-of-scale/ Press Club
 https://gabreginatto-learning-lab.web.app/<future-topic>/    future activities
 ```
 

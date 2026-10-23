@@ -54,23 +54,25 @@ try:
                     page.locator('#inv-conclusion-limits').click();page.locator('#check').click()
                     require(page.locator('#feedback').get_attribute('data-correct')=='true' and page.evaluate('window.lessonAPI.snapshot().state.phase')=='complete','Hosted inversion mission did not complete')
                 elif snapshot['plugin_id']=='economies-of-scale':
-                    def scale_answer(answer,expected=True):
-                        page.locator('#sc-answer-'+answer).click();page.locator('#check').click()
-                        require(page.locator('#feedback').get_attribute('data-correct')==str(expected).lower(),'Hosted scale feedback failed: '+answer)
-                    def scale_next(phase):
-                        page.locator('#sc-next').click()
-                        require(page.evaluate('window.lessonAPI.snapshot().state.phase')==phase,'Hosted scale progression failed')
-                    page.locator('#sc-batch-20').click();scale_answer('total',False);scale_answer('spread');scale_next('bottleneck')
-                    page.locator('#sc-upgrade-assembly').click();scale_answer('packing',False)
-                    require(page.evaluate('window.lessonAPI.snapshot().observed.produced')==40,'Hosted bottleneck output incorrect')
-                    page.locator('#sc-upgrade-packing').click();scale_answer('packing');scale_next('grow')
-                    page.locator('#sc-teams-2').click();scale_answer('coordination',False)
-                    page.locator('#sc-curve-4').click();scale_answer('coordination');scale_next('quiet')
-                    require(page.evaluate('window.lessonAPI.snapshot().observed.average')==1950,'Hosted idle-capacity comparison incorrect')
-                    page.locator('#sc-teams-1').click();scale_answer('demand');scale_next('transfer')
-                    page.locator('#sc-plan-big').click();scale_answer('profit',False)
-                    page.locator('#sc-plan-small').click();scale_answer('profit');page.locator('#sc-next').click()
-                    require(page.evaluate('window.lessonAPI.snapshot().state.complete') and page.locator('#sc-complete').is_visible(),'Hosted scale experiments did not complete')
+                    observed=lambda field:page.evaluate('window.lessonAPI.snapshot().observed')[field]
+                    def week_check(expected=True):
+                        page.locator('#check').click()
+                        require(page.locator('#feedback').get_attribute('data-correct')==str(expected).lower(),'Hosted Press Club feedback failed in week '+str(observed('week')))
+                    def week_next(week):
+                        page.locator('#pc-next').click();require(observed('week')==week,'Hosted Press Club progression failed')
+                    def setup(s1,s2):
+                        for key,value in (('s1',s1),('s2',s2)):
+                            while observed('dials')[key]<value:page.locator('#pc-'+key+'-plus').click()
+                            while observed('dials')[key]>value:page.locator('#pc-'+key+'-minus').click()
+                    run=lambda:page.locator('#pc-run').click()
+                    page.locator('#pc-orders-20').click();run();page.locator('#pc-orders-30').click();run()
+                    page.locator('#pc-reason-total').click();week_check(False);page.locator('#pc-reason-shared').click();week_check();week_next(2)
+                    run();require(observed('stuck')==20,'Hosted bottleneck did not jam');setup(2,2);run();page.locator('#pc-reason-slowest').click();week_check();week_next(3)
+                    run();setup(2,2);run();setup(5,4);run();page.locator('#pc-reason-sync').click();week_check(False)
+                    setup(4,3);run();require(observed('average')==1400,'Hosted best studio size incorrect');week_check();week_next(4)
+                    run();setup(2,2);run();page.locator('#pc-reason-idle').click();week_check();week_next(5)
+                    run();setup(2,3);run();page.locator('#pc-reason-carried').click();week_check();page.locator('#pc-next').click()
+                    require(observed('complete') and page.locator('#pc-finish').is_visible(),'Hosted Press Club did not complete')
                 page.screenshot(path=str(out/(activity['slug']+'-'+str(width)+'.png')),full_page=True)
                 page.goto(args.root,wait_until='networkidle')
             page.get_by_role('link',name='Sources & credits').click();require(page.get_by_role('heading',name='Sources & credits').count()==1,'Credits link failed')

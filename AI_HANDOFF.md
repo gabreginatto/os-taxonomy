@@ -12,7 +12,7 @@ This fork contains the complete source of the learning system built in the Codex
 | [Munger_Models/README.md](Munger_Models/README.md) | 23 model groups, exact taxonomy mappings, research sources, age pathways and course guidelines |
 | [learning-artifacts/lessons/opportunity-cost/](learning-artifacts/lessons/opportunity-cost/) | Choice Islands: current Three.js game, pure model, Astra redesign brief, learning contract, tests and screenshots |
 | [learning-artifacts/lessons/inversion/](learning-artifacts/lessons/inversion/) | Save the Moon Garden: Astra design direction/review, causal game model and validation |
-| [learning-artifacts/lessons/economies-of-scale/](learning-artifacts/lessons/economies-of-scale/) | Little Works: age-15 cost, capacity, coordination, demand and transfer experiments |
+| [learning-artifacts/lessons/economies-of-scale/](learning-artifacts/lessons/economies-of-scale/) | Press Club: age-15 print-studio game (rebuilt from scratch with Fable as design advisor) — fixed-cost spreading, bottlenecks, coordination overhead, idle capacity and a noodle-stall transfer; see its design brief |
 | [learning-artifacts/lessons/opportunity-cost-anatomy/](learning-artifacts/lessons/opportunity-cost-anatomy/) | Preserved Anatomy evaluation prototype. The user rejected this as the general visual direction; it was not published |
 | [learning-artifacts/hosting/](learning-artifacts/hosting/) | Dedicated Firebase project configuration, catalog, guarded deployment scripts, checks and publication receipts |
 
@@ -23,7 +23,7 @@ The design direction is colorful, tactile 3D scenes with meaningful direct inter
 - Catalog: https://gabreginatto-learning-lab.web.app/
 - Opportunity cost, ages 10 and 15: https://gabreginatto-learning-lab.web.app/opportunity-cost/
 - Inversion, ages 10 and 15: https://gabreginatto-learning-lab.web.app/inversion/
-- Economies of scale, age 15: https://gabreginatto-learning-lab.web.app/economies-of-scale/
+- Economies of scale, age 15: https://gabreginatto-learning-lab.web.app/economies-of-scale/ (still serves the earlier Little Works until Press Club is deployed; Press Club is built and verified locally at `output/press-club-v2`)
 
 The Anatomy prototype did not replace Choice Islands. Publishing a new activity must preserve the other routes.
 

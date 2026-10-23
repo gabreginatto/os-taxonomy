@@ -1,57 +1,96 @@
 #!/usr/bin/env python3
-"""Exercise all five experiments through real buttons and 3D pointer events."""
+"""Play all five Press Club weeks through real buttons, keyboard input and 3D pointer picks."""
 import argparse,json
 from pathlib import Path
 from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright
-p=argparse.ArgumentParser();p.add_argument('--url',required=True);p.add_argument('--out',required=True);args=p.parse_args();out=Path(args.out);out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--url',required=True);p.add_argument('--out',required=True);p.add_argument('--chromium',default='/usr/bin/chromium');args=p.parse_args()
+out=Path(args.out);out.mkdir(parents=True,exist_ok=True)
 checks=[];errors=[];external=[]
 def require(value,message):
  if not value:raise AssertionError(message)
 try:
  with sync_playwright() as pw:
-  browser=pw.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-dev-shm-usage'])
+  browser=pw.chromium.launch(executable_path=args.chromium,headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-dev-shm-usage'])
   page=browser.new_page(viewport={'width':1200,'height':950},reduced_motion='reduce');page.set_default_timeout(15000)
-  page.on('pageerror',lambda e:errors.append(str(e)));page.on('console',lambda m:errors.append(m.text) if m.type=='error' else None)
+  page.on('pageerror',lambda e:errors.append(str(e)));page.on('console',lambda m:errors.append(m.text) if m.type=='error' and 'favicon' not in m.text and '404' not in m.text else None)
   def route(r):
-   if urlparse(r.request.url).scheme in ['http','https'] and urlparse(r.request.url).netloc!=urlparse(args.url).netloc:external.append(r.request.url);r.abort()
+   u=urlparse(r.request.url)
+   if u.scheme in ['http','https'] and u.netloc!=urlparse(args.url).netloc:external.append(r.request.url);r.abort()
    else:r.continue_()
   page.route('**/*',route)
-  def snap():return page.evaluate('window.lessonAPI.snapshot()')
+  snap=lambda:page.evaluate('window.lessonAPI.snapshot()')
+  obs=lambda:snap()['observed']
+  canvas=lambda:page.locator('.pc-world canvas').evaluate('(c)=>c.toDataURL()')
   def click(selector):page.locator(selector).click()
-  def picked(name):
-   page.locator('#sc-world').scroll_into_view_if_needed();target=next(t for t in snap()['presentation']['pick_targets'] if t['name']==name);box=page.locator('#sc-world canvas').bounding_box();page.mouse.click(box['x']+target['x']*box['width'],box['y']+target['y']*box['height'])
-  def answer(value,expected):
-   click('#sc-answer-'+value);click('#check');require(snap()['assessment']['correct']==expected,'Incorrect feedback for '+value);require(snap()['assessment']['scope']=='this_response_only','Assessment exceeded one response')
-  def advance(phase):
-   click('#sc-next');require(snap()['state']['phase']==phase,'Wrong next experiment');require(page.locator('#sc-question').evaluate('(e)=>e===document.activeElement'),'New task did not receive focus')
+  def pick(name):
+   page.locator('.pc-world').scroll_into_view_if_needed()
+   target=next((t for t in snap()['presentation']['pick_targets'] if t['name']==name),None);require(target,'No 3D pick target '+name)
+   box=page.locator('.pc-world canvas').bounding_box();page.mouse.click(box['x']+target['x']*box['width'],box['y']+target['y']*box['height'])
+  def check(expected,contains=None):
+   click('#check');a=snap()['assessment'];require(a['correct']==expected,'Unexpected assessment: '+a['message']);require(a['scope']=='this_response_only' and a['mastery_claim'] is False,'Assessment exceeded one response')
+   if contains:require(contains in page.locator('#feedback').inner_text(),'Feedback missing "'+contains+'": '+a['message'])
+  def next_week(week):
+   require(page.locator('#pc-next').is_visible(),'Next week button hidden after a correct check');click('#pc-next')
+   require(obs()['week']==week,'Did not advance to week '+str(week));require(page.locator('#pc-title').evaluate('(e)=>e===document.activeElement'),'New week heading did not receive focus')
+  def dials(s1,s2):
+   for key,value in (('s1',s1),('s2',s2)):
+    while obs()['dials'][key]<value:click('#pc-'+key+'-plus')
+    while obs()['dials'][key]>value:click('#pc-'+key+'-minus')
   for width,height in [(1200,950),(390,844),(320,740)]:
    page.set_viewport_size({'width':width,'height':height});page.goto(args.url,wait_until='networkidle');page.wait_for_function('window.__lessonReady===true')
-   require(snap()['presentation']['renderer']=='threejs','3D silently fell back');require(not snap()['runtime_fallback'],'Unexpected fallback');require(not page.locator('#sc-challenge').is_visible(),'Reasoning question revealed before trying the larger batch')
-   first=page.locator('#sc-world canvas').evaluate('(c)=>c.toDataURL()');picked('20 orders');require(snap()['observed']['total']==18000 and snap()['observed']['average']==900,'3D crate did not select the larger batch');require(first!=page.locator('#sc-world canvas').evaluate('(c)=>c.toDataURL()'),'Crate choice did not change the scene')
-   page.locator('#sc-batch-10').focus();page.keyboard.press('Enter');require(snap()['observed']['produced']==10,'Keyboard batch selection failed');require(page.locator('#sc-batch-10').evaluate('(e)=>e===document.activeElement'),'Selection lost keyboard focus')
-   click('#sc-batch-20');answer('total',False);click('#sc-help');answer('spread',True);require(snap()['assessment']['assistance']=='help_requested','Help use was lost');advance('bottleneck')
-   require(snap()['state']['history'][0]['help'] and not snap()['state']['help'],'History or new-scene help scope wrong')
-   picked('assembly');require(snap()['observed']['assembly']==160 and snap()['observed']['produced']==40,'Nonlimiting assembly upgrade changed finished output');answer('packing',False)
-   picked('packing');require(snap()['observed']['produced']==80 and snap()['observed']['average']==650,'Packing bottleneck repair failed');answer('packing',True)
-   page.locator('#stage').screenshot(path=str(out/f'bottleneck-{width}.png'));advance('grow')
-   click('#sc-teams-2');answer('coordination',False);require('unfilled' in page.locator('#feedback').inner_text(),'Cheap-but-infeasible plan not explained')
-   picked('team-6');require(snap()['observed']['total']==92000,'3D team picking failed');answer('coordination',False)
-   click('#sc-curve-4');require(snap()['observed']['total']==63000 and snap()['observed']['average']==787.5,'Four-team model wrong');answer('cheapest',False);answer('coordination',True)
-   require(page.locator('#sc-bars button').count()==6,'Curve is incomplete');page.locator('#stage').screenshot(path=str(out/f'growth-{width}.png'));page.locator('#sc-world').screenshot(path=str(out/f'growth-world-{width}.png'));advance('quiet')
-   require(snap()['observed']['requested']==20 and snap()['observed']['teams']==4 and snap()['observed']['average']==1950,'Demand shock did not preserve the four-team comparison');picked('team-1');answer('demand',True);advance('transfer')
-   picked('big');require(snap()['observed']['profit']==4000,'Large stall plan profit wrong');answer('profit',False);picked('small');answer('rent',False);answer('profit',True);require(snap()['observed']['profit']==36000,'Transfer profit wrong');click('#sc-next')
-   require(snap()['state']['complete'] and len(snap()['state']['history'])==5,'Five experiments did not complete');require(page.locator('#sc-complete').is_visible(),'Completion explanation missing');page.screenshot(path=str(out/f'complete-{width}.png'),full_page=True)
-   click('#reset');require(snap()['state']['phase']=='share' and not snap()['state']['history'] and snap()['assessment'] is None,'Reset left history or assessment')
+   require(snap()['presentation']['renderer']=='threejs' and not snap()['runtime_fallback'],'3D silently fell back')
+   require(page.locator('#pc-run').is_visible() and page.locator('#pc-run').bounding_box()['y']+page.locator('#pc-run').bounding_box()['height']<=height,'First action is below the fold')
+   require(page.locator('#pc-reasons button').count()==0,'Reasoning options shown before any evidence')
+   # Week 1: 3D order pad and Run button, then keyboard.
+   before=canvas();pick('orders-20');require(obs()['dials']['orders']==20,'3D order pad failed');require(before!=canvas(),'Order pick did not change the scene')
+   pick('run');require(obs()['day']==1 and obs()['cured']==20 and obs()['average']==3100,'3D Run did not run the day')
+   check(False,'lost £140')
+   page.locator('#pc-orders-30').focus();page.keyboard.press('Enter');require(obs()['dials']['orders']==30,'Keyboard order selection failed');require(page.locator('#pc-orders-30').evaluate('(e)=>e===document.activeElement'),'Order button lost focus')
+   check(False,'changed the setup')
+   page.locator('#pc-run').focus();page.keyboard.press('Enter');require(obs()['profit']==6000 and '£22.00' in page.locator('#pc-tile-avg').inner_text(),'Keyboard run failed')
+   click('#pc-reason-total');check(False,'total went up');click('#pc-reason-shared');check(True,'Fixed-cost spreading')
+   page.locator('#stage').screenshot(path=str(out/f'week1-{width}.png'));next_week(2)
+   # Week 2: the trap jams; add a tunnel by picking its ghost slot in 3D.
+   pick('run');require(obs()['stuck']==20 and obs()['unfilled']==20,'Bottleneck trap did not jam')
+   require(page.locator('.pc-badge-stuck').is_visible(),'Stuck pile badge missing');check(False,'never cured')
+   page.locator('#stage').screenshot(path=str(out/f'bottleneck-{width}.png'));page.locator('.pc-world').screenshot(path=str(out/f'bottleneck-world-{width}.png'))
+   pick('add-s2');require(obs()['dials']['s2']==2,'3D ghost tunnel did not add a tunnel');click('#pc-run');require(obs()['profit']==24000,'Second tunnel did not fix the bottleneck')
+   click('#pc-reason-late');check(False,'slowest step');click('#pc-reason-slowest');check(True,'bottleneck');next_week(3)
+   # Week 3: map sizes, find the best, see the star.
+   click('#pc-run');dials(2,2);click('#pc-run');dials(5,4);click('#pc-run')
+   check(False,'most profitable size')
+   require(page.locator('#pc-chart circle').count()==3,'Ledger did not plot three runs')
+   dials(4,3);click('#pc-run');require(obs()['average']==1400,'Four presses and three tunnels wrong');click('#pc-reason-sync');check(True,'sweet spot')
+   require(page.locator('#pc-chart .pc-star').count()==1,'Winning star missing');page.locator('#stage').screenshot(path=str(out/f'scale-{width}.png'));page.locator('.pc-world').screenshot(path=str(out/f'scale-world-{width}.png'));next_week(4)
+   # Week 4: idle leases; shrink with the 3D minus tokens.
+   click('#pc-run');require(obs()['profit']==-42000 and 'idle' in page.locator('#pc-outcome').inner_text(),'Idle capacity not shown')
+   pick('remove-s1');pick('remove-s1');pick('remove-s2');require(obs()['dials']=={'s1':2,'s2':2},'3D remove tokens failed: '+json.dumps(obs()['dials']))
+   click('#pc-run');click('#pc-reason-slow');check(False,'dimmed');click('#pc-reason-idle');check(True,'Idle capacity');next_week(5)
+   # Week 5: noodle transfer.
+   click('#pc-run');dials(2,3);click('#pc-run');require(obs()['profit']==4000,'Noodle stall best setup wrong')
+   page.locator('.pc-world').screenshot(path=str(out/f'noodles-world-{width}.png'))
+   click('#pc-reason-bigger');check(False);click('#pc-reason-carried');check(True,'new place')
+   click('#pc-next');require(obs()['complete'] and page.locator('#pc-finish').is_visible() and page.locator('#pc-finish-list li').count()==5,'Finish screen missing')
+   page.screenshot(path=str(out/f'complete-{width}.png'),full_page=True)
+   # Six-day week and restart.
+   click('#pc-again');require(obs()['week']==1 and obs()['day']==0,'Play again did not restart')
+   for _ in range(6):click('#pc-run')
+   require(page.locator('#pc-run').is_disabled() and page.locator('#pc-retry').is_visible(),'Week-over state missing')
+   click('#pc-retry');require(obs()['attempt']==1 and obs()['day']==0 and len(obs()['ledger'])==6,'Restarting the week lost earlier days')
+   click('#reset');require(snap()['state']==page.evaluate('window.lessonAPI.snapshot().state') and obs()['day']==0 and obs()['ledger']==[] and snap()['assessment'] is None,'Reset left progress')
    require(page.evaluate('document.documentElement.scrollWidth<=innerWidth'),'Horizontal overflow')
    for button in page.get_by_role('button').all():
     if button.is_visible():require(button.bounding_box()['height']>=43,'Touch target below 44px')
-   require(page.locator('canvas').count()==1,'A stale renderer leaked after reset')
-   page.locator('#stage').screenshot(path=str(out/f'world-{width}.png'));checks.append({'viewport':width,'five_experiments':'passed','scene_picking':'passed','wrong_answers':'passed','keyboard_focus':'passed','reset':'passed'})
-  # Cancel live motion on arbitrary seek, then check deterministic non-monotonic replay.
-  page.emulate_media(reduced_motion='no-preference');click('#sc-batch-20');page.evaluate('window.lessonAPI.renderAt(1)');page.evaluate('window.lessonAPI.renderAt(4)');before=page.locator('#sc-world canvas').evaluate('(c)=>c.toDataURL()');state=snap()['state'];page.wait_for_timeout(700);require(before==page.locator('#sc-world canvas').evaluate('(c)=>c.toDataURL()'),'A stale tween changed the sought scene')
-  page.evaluate('window.lessonAPI.renderAt(1)');page.evaluate('window.lessonAPI.renderAt(4)');require(state==snap()['state'] and before==page.locator('#sc-world canvas').evaluate('(c)=>c.toDataURL()'),'Repeated-time scene or state differs')
+   require(page.locator('canvas').count()==1,'A stale renderer leaked')
+   page.locator('#stage').screenshot(path=str(out/f'start-{width}.png'));checks.append({'viewport':width,'five_weeks':'passed','scene_picking':'passed','wrong_answers':'passed','keyboard':'passed','week_budget':'passed','reset':'passed'})
+  # Live playback must be cancelled by a seek, and repeated seeks must render the same still frame.
+  page.set_viewport_size({'width':1200,'height':950});page.emulate_media(reduced_motion='no-preference');page.goto(args.url,wait_until='networkidle');page.wait_for_function('window.__lessonReady===true')
+  click('#pc-orders-30');click('#pc-run');page.wait_for_timeout(250);mid=page.locator('#pc-tile-profit').inner_text()
+  require('…' in mid,'Run did not play back live')
+  page.evaluate('window.lessonAPI.renderAt(4)');first=canvas();page.wait_for_timeout(1200);require(first==canvas(),'A stale tween changed the sought scene')
+  page.evaluate('window.lessonAPI.renderAt(1)');page.evaluate('window.lessonAPI.renderAt(4)');require(first==canvas(),'Repeated-time scene differs')
   require(not errors,'Browser errors: '+str(errors));require(not external,'External runtime requests: '+str(external));browser.close()
  report={'status':'passed','checks':checks,'motion_seek':'passed','external_requests':0,'browser_errors':0,'learner_review':'not_performed','physical_device_review':'not_performed'}
 except Exception as e:report={'status':'failed','checks':checks,'error':str(e),'browser_errors':errors,'external_requests':external}
-(out/'scale-interactions.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report));raise SystemExit(0 if report['status']=='passed' else 1)
+(out/'press-club-interactions.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report));raise SystemExit(0 if report['status']=='passed' else 1)

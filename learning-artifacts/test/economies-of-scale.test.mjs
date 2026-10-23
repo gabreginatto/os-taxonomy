@@ -3,67 +3,123 @@ import assert from 'node:assert/strict';
 import {plugin} from '../lessons/economies-of-scale/economies-of-scale.plugin.mjs';
 import {applyChecked} from '../src/models.mjs';
 import {checkExtensionModel} from '../src/extensions.mjs';
-const act=(s,type,value)=>applyChecked(plugin,s,{type,value});
-const ready=s=>{assert.equal(plugin.assess(s).correct,true);return act(s,'next');};
-const share=()=>act(act(plugin.initialState(),'batch',20),'answer','spread');
-const bottleneck=()=>act(act(ready(share()),'upgrade','packing'),'answer','packing');
-const grow=()=>act(act(ready(bottleneck()),'teams',4),'answer','coordination');
-const quiet=()=>act(act(ready(grow()),'teams',1),'answer','demand');
-const transfer=()=>act(ready(quiet()),'answer','profit');
 
-test('scale metadata fixtures and initial serialization are valid',()=>{
- for(const c of checkExtensionModel(plugin))assert.equal(c.status,'passed',JSON.stringify(c));
+const act=(s,action)=>applyChecked(plugin,s,action);
+const play=(actions,s=plugin.initialState())=>actions.reduce(act,s);
+const set=(key,value)=>({type:'set',key,value}),run={type:'run'},reason=value=>({type:'reason',value}),next={type:'next'};
+const w1=[set('orders',20),run,set('orders',30),run,reason('shared'),next];
+const w2=[...w1,run,set('s2',2),run,reason('slowest'),next];
+const w3=[...w2,run,set('s1',2),set('s2',2),run,set('s1',4),set('s2',3),run,reason('sync'),next];
+const w4=[...w3,run,set('s1',2),set('s2',2),run,reason('idle'),next];
+const w5=[...w4,run,set('s1',2),set('s2',3),run,reason('carried'),next];
+// Run one setup at the start of a week and read back the day (independent of the presentation).
+const day=(prefix,dials)=>{let s=play(prefix);for(const [k,v] of Object.entries(dials))s=act(s,set(k,v));return plugin.observe(act(s,run));};
+const pounds=o=>[o.cured,o.stuck,o.committed/100,o.total/100,Math.round(o.average)/100,o.profit/100];
+
+test('metadata fixtures and initial serialization are valid',()=>{
+  for(const c of checkExtensionModel(plugin))assert.equal(c.status,'passed',JSON.stringify(c));
+  const s=plugin.initialState();assert.deepEqual(JSON.parse(JSON.stringify(s)),s);
 });
-test('using the existing workshop more fully lowers average cost while total cost rises',()=>{
- const a=plugin.observe(plugin.initialState()),b=plugin.observe(share());
- assert.deepEqual([a.produced,a.total,a.average],[10,14000,1400]);
- assert.deepEqual([b.produced,b.total,b.average],[20,18000,900]);
- assert.equal(a.fixed,b.fixed);assert.equal(a.variableRate,b.variableRate);assert.ok(b.total>a.total);assert.ok(b.average<a.average);
- assert.equal(plugin.assess(act(share(),'answer','materials')).correct,false);
- assert.equal(plugin.assess(act(share(),'answer','total')).correct,false);
+
+test('week 1: total cost rises while cost per hoodie falls; only 30 hoodies is profitable',()=>{
+  assert.deepEqual(pounds(day([],{orders:10})),[10,0,540,580,58,-340]);
+  assert.deepEqual(pounds(day([],{orders:20})),[20,0,540,620,31,-140]);
+  assert.deepEqual(pounds(day([],{orders:30})),[30,0,540,660,22,60]);
 });
-test('upgrading the nonlimiting stage adds cost without more finished output',()=>{
- const s=ready(share()),baseline=plugin.observe(s),assembly=plugin.observe(act(s,'upgrade','assembly')),packing=plugin.observe(act(s,'upgrade','packing'));
- assert.deepEqual([baseline.assembly,baseline.packing,baseline.produced,baseline.total],[80,40,40,36000]);
- assert.deepEqual([assembly.assembly,assembly.packing,assembly.produced,assembly.total,assembly.average],[160,40,40,46000,1150]);
- assert.deepEqual([packing.assembly,packing.packing,packing.produced,packing.total,packing.average],[80,80,80,52000,650]);
- assert.equal(plugin.assess(act(act(s,'upgrade','assembly'),'answer','packing')).correct,false);
+
+test('week 2: the second press without a second tunnel jams; 2 presses + 2 tunnels is the only profit',()=>{
+  const prefix=w1;
+  assert.deepEqual(pounds(day(prefix,{})),[40,20,660,900,22.5,-100]);
+  assert.equal(day(prefix,{}).unfilled,20);
+  assert.deepEqual(pounds(day(prefix,{s2:2})),[60,0,720,960,16,240]);
+  assert.deepEqual(pounds(day(prefix,{s1:1,s2:1})),[30,0,540,660,22,-60]);
+  assert.deepEqual(pounds(day(prefix,{s1:1,s2:2})),[30,0,600,720,24,-120]);
 });
-test('all six expansion plans preserve demand, money and capacity; cheapest sufficient is four',()=>{
- const s=ready(bottleneck()),expectedTotals=[18000,30000,45000,63000,76000,92000],expectedOutput=[20,40,60,80,80,80];
- for(let n=1;n<=6;n++){
-  const o=plugin.observe(act(s,'teams',n));assert.equal(o.total,expectedTotals[n-1]);assert.equal(o.produced,expectedOutput[n-1]);
-  assert.equal(o.produced+o.unfilled,80);assert.equal(o.capacity,o.produced+o.idle);assert.equal(o.total,o.fixed+o.coordination+o.variable);
-  assert.equal(plugin.assess(act(act(s,'teams',n),'answer','coordination')).correct,n===4);
- }
- const curve=plugin.observe(s).curve;
- assert.deepEqual(curve.map(p=>p.fullAverage),[900,750,750,787.5,840,900]);
- assert.equal(plugin.observe(grow()).average,787.5);assert.equal(plugin.observe(act(s,'teams',2)).average,750);assert.equal(plugin.observe(act(s,'teams',2)).unfilled,40);
+
+test('week 3: long-run cost per shirt is U-shaped and four presses + three tunnels is the unique best day',()=>{
+  const prefix=w2,lrac=[[1,1],[2,2],[3,3],[4,3],[5,4],[6,5]].map(([s1,s2])=>Math.round(day(prefix,{s1,s2}).average)/100);
+  assert.deepEqual(lrac,[22,16,14.67,14,14.4,15]);
+  assert.deepEqual(pounds(day(prefix,{s1:4,s2:2})),[80,40,1140,1620,20.25,-420]);
+  assert.deepEqual(pounds(day(prefix,{s1:5,s2:3})),[120,30,1500,2100,17.5,-300]);
+  const profits=[];
+  for(let s1=1;s1<=6;s1++)for(let s2=1;s2<=5;s2++)profits.push({s1,s2,profit:day(prefix,{s1,s2}).profit});
+  const best=Math.max(...profits.map(p=>p.profit));
+  assert.equal(best,12000);assert.deepEqual(profits.filter(p=>p.profit===best).map(p=>[p.s1,p.s2]),[[4,3]]);
 });
-test('a demand fall changes the cheapest sufficient plan without refunding past costs',()=>{
- const s=ready(grow()),before=plugin.observe(s),after=plugin.observe(act(s,'teams',1));
- assert.deepEqual([before.requested,before.teams,before.produced,before.idle,before.total,before.average],[20,4,20,60,39000,1950]);
- assert.deepEqual([after.produced,after.total,after.average],[20,18000,900]);assert.equal(after.variableRate,before.variableRate);
- for(let n=2;n<=6;n++)assert.ok(plugin.observe(act(s,'teams',n)).total>18000);
+
+test('week 4: the same leases sit idle at lower demand; only 2 presses + 2 tunnels makes a profit',()=>{
+  const prefix=w3,trap=day(prefix,{});
+  assert.deepEqual(pounds(trap),[60,0,1200,1440,24,-420]);assert.deepEqual([trap.result.idle1,trap.result.idle2],[2,1]);
+  const winners=[];
+  for(let s1=1;s1<=6;s1++)for(let s2=1;s2<=5;s2++)if(day(prefix,{s1,s2}).profit>0)winners.push([s1,s2]);
+  assert.deepEqual(winners,[[2,2]]);
+  assert.equal(day(prefix,{s1:2,s2:3}).profit,0);
 });
-test('food-stall transfer compares full cost and profit rather than cheap ingredients alone',()=>{
- const s=ready(quiet()),small=plugin.observe(s),big=plugin.observe(act(s,'plan','big'));
- assert.deepEqual([small.revenue,small.total,small.profit,small.average],[60000,24000,36000,600]);
- assert.deepEqual([big.revenue,big.total,big.profit,big.average],[60000,56000,4000,1400]);
- assert.ok(big.variableRate<small.variableRate);assert.equal(plugin.assess(act(s,'answer','profit')).correct,true);
- for(const a of ['bigger','rent'])assert.equal(plugin.assess(act(s,'answer',a)).correct,false);
+
+test('week 5 transfer: benches can starve woks, woks can waste prepped bowls, and 3 woks + 2 benches is the only profit',()=>{
+  const prefix=w4;
+  const starve=day(prefix,{s2:3});assert.deepEqual([starve.cured,starve.stuck,starve.total,starve.profit],[80,0,63200,-15200]);assert.ok(starve.result.idle2>0);
+  const waste=day(prefix,{s1:2,s2:2});assert.deepEqual([waste.cured,waste.stuck,waste.total,waste.profit],[100,50,74500,-14500]);
+  assert.deepEqual([day(prefix,{s1:2,s2:4}).total,day(prefix,{s1:3,s2:3}).total],[101000,92000]);
+  const winners=[];
+  for(let s1=1;s1<=3;s1++)for(let s2=1;s2<=4;s2++){const o=day(prefix,{s1,s2});if(o.profit>0)winners.push([s1,s2,o.total,o.profit]);}
+  assert.deepEqual(winners,[[2,3,86000,4000]]);
 });
-test('progression requires the current configuration and reasoning; changes clear stale answers',()=>{
- assert.throws(()=>act(plugin.initialState(),'next'));assert.equal(act(share(),'batch',10).answer,null);
- assert.equal(plugin.assess(act(share(),'batch',10)).correct,false);assert.throws(()=>act(plugin.initialState(),'batch',0));
- const s=ready(bottleneck());for(const n of [0,7,1.5,NaN])assert.throws(()=>act(s,'teams',n));
- assert.throws(()=>act(s,'upgrade','packing'));assert.throws(()=>act(s,'answer','spread'));
- const complete=ready(transfer());assert.equal(complete.complete,true);assert.equal(complete.history.length,5);assert.equal(plugin.assess(complete).scope,'this_response_only');assert.equal(plugin.assess(complete).mastery_claim,false);
- assert.throws(()=>act(complete,'plan','big'));assert.deepEqual(act(complete,'restart'),plugin.initialState());
+
+test('assessment judges the run setup, the target, the seen-it condition and one reason — in that order',()=>{
+  const msg=s=>plugin.assess(s).message;
+  assert.match(msg(plugin.initialState()),/Nothing has run yet/);
+  assert.match(msg(play([set('orders',30),run,set('orders',20)])),/changed the setup/);
+  assert.match(msg(play([run])),/lost £340/);
+  assert.match(msg(play([set('orders',30),run])),/run a different number/);
+  assert.match(msg(play([run,set('orders',30),run])),/answer the question/);
+  const wrong=plugin.assess(play([run,set('orders',30),run,reason('total')]));assert.equal(wrong.correct,false);assert.match(wrong.message,/total went up/);
+  const right=plugin.assess(play(w1.slice(0,-1)));assert.equal(right.correct,true);assert.equal(right.scope,'this_response_only');assert.equal(right.mastery_claim,false);
+  const profitableNotBest=plugin.assess(play([...w2,run,set('s1',2),set('s2',2),run,set('s1',5),set('s2',4),run,reason('sync')]));
+  assert.equal(profitableNotBest.correct,false);assert.match(profitableNotBest.message,/most profitable size/);
+  assert.doesNotMatch(profitableNotBest.message,/4 presses|four presses/);
 });
-test('recorded help is bounded to the current experiment and state is immutable/serializable',()=>{
- const s=share(),copy=structuredClone(s),help=act(s,'help');assert.deepEqual(s,copy);assert.equal(plugin.assess(help).assistance,'help_requested');
- const next=ready(help);assert.equal(next.history[0].help,true);assert.equal(next.help,false);
- for(const state of [s,bottleneck(),grow(),quiet(),transfer(),ready(transfer())])assert.deepEqual(JSON.parse(JSON.stringify(plugin.observe(state))),plugin.observe(state));
- assert.equal(plugin.validateInvariants({...s,history:[{phase:'transfer'}]}),false);assert.equal(plugin.validateInvariants({...s,teams:9}),false);
+
+test('reasons stay locked until the week’s evidence has been seen',()=>{
+  assert.throws(()=>play([reason('shared')]));
+  assert.throws(()=>play([set('orders',30),run,reason('shared')]));
+  assert.throws(()=>play([...w1,set('s2',2),run,reason('slowest')]),'week 2 requires a day with stuck tees');
+  assert.throws(()=>play([...w3,set('s1',2),set('s2',2),run,reason('idle')]),'week 4 requires a day with idle capacity');
+  assert.doesNotThrow(()=>play([...w1,run,reason('slowest')]));
+});
+
+test('six days per week; restarting keeps earlier days on the ledger, faded',()=>{
+  let s=play([run,run,run,run,run,run]);
+  assert.equal(plugin.observe(s).weekOver,true);assert.throws(()=>act(s,run));
+  s=act(s,{type:'retry'});const o=plugin.observe(s);
+  assert.deepEqual([o.attempt,o.day,o.weekOver,o.ledger.length,o.ledger.filter(p=>p.current).length],[1,0,false,6,0]);
+  assert.equal(o.cash,0);
+  s=play([set('orders',30),run],s);assert.equal(plugin.observe(s).gateOpen,true,'earlier attempts count as evidence');
+});
+
+test('setups are limited to what each week offers and progression requires a correct check',()=>{
+  assert.throws(()=>play([set('orders',25)]));assert.throws(()=>play([set('s1',2)]));assert.throws(()=>play([next]));
+  const week2=play(w1);
+  assert.throws(()=>act(week2,set('s1',3)));assert.throws(()=>act(week2,set('orders',30)));assert.throws(()=>act(week2,set('s2',0)));
+  for(const v of [1.5,NaN,'2'])assert.throws(()=>act(play(w2),set('s1',v)));
+  assert.throws(()=>act(week2,{type:'mystery'}));
+});
+
+test('five weeks complete the game; restart returns to the start',()=>{
+  const done=play(w5),o=plugin.observe(done);
+  assert.equal(done.complete,true);assert.equal(o.history.length,5);
+  assert.deepEqual(o.history.map(h=>[h.average,h.profit]),[[2200,6000],[1600,24000],[1400,12000],[1600,6000],[86000/150,4000]]);
+  assert.equal(plugin.assess(done).correct,true);assert.throws(()=>act(done,run));
+  assert.deepEqual(act(done,{type:'restart'}),plugin.initialState());
+});
+
+test('state is immutable, serializable and checked by invariants',()=>{
+  const s=play([run,set('orders',30)]),copy=structuredClone(s);act(s,run);assert.deepEqual(s,copy);
+  for(const prefix of [[],w1,w2,w3,w4,w5])assert.deepEqual(JSON.parse(JSON.stringify(plugin.observe(play(prefix)))),plugin.observe(play(prefix)));
+  const base=play([run]);
+  assert.equal(plugin.validateInvariants({...base,dials:{orders:10,s1:2,s2:1}}),false);
+  assert.equal(plugin.validateInvariants({...base,runs:[{...base.runs[0],day:3}]}),false);
+  assert.equal(plugin.validateInvariants({...base,reason:'shared'}),false,'reason cannot precede its evidence');
+  assert.equal(plugin.validateInvariants({...base,history:[{level:'rent',dials:{orders:10,s1:1,s2:1},reason:'shared'}],level:1}),false,'history must hold a winning setup');
+  assert.equal(plugin.assess(act(play(w1.slice(0,-1)),{type:'help'})).assistance,'help_requested');
 });
