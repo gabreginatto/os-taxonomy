@@ -1,6 +1,7 @@
 # Taxonomy-to-Lesson: proposed cloud architecture
 
 Status: design for implementation, not an installed skill or a tested integration.
+Current implementation is documented in [IMPLEMENTATION.md](IMPLEMENTATION.md). For original model production, follow [MODEL-CRAFT.md](MODEL-CRAFT.md) alongside [the learning-design rules](../AGENTS.md).
 Consultation: GPT-6 Astra, high reasoning, requested by the user.
 Scope: accept one taxonomy topic or a sequence, generate a playable educational artifact, and report what was verified. Video and presentation outputs are explicit optional branches.
 

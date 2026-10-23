@@ -6,4 +6,6 @@ Keep the original taxonomy data, schemas, checksums, and validator unchanged unl
 
 For any new or revised educational game, apply the learning-design review in [learning-artifacts/AGENTS.md](learning-artifacts/AGENTS.md). These rules capture the Little Works → Press Club review: observable consequences, coherent models, evidence-based assessment, honest experiment budgets, and readable mobile interactions. They apply to future lessons, not only economies of scale.
 
+For original educational models, also apply [the model craft guide](learning-artifacts/docs/MODEL-CRAFT.md). Visual Learning is a production-quality reference for our own models, not a library of finished lessons to reuse. Preserve the established game direction; Anatomy is an optional tool for suitable mechanisms.
+
 Generated builds and installed dependencies are intentionally ignored. Restore the three published games from committed sources with `npm --prefix learning-artifacts run restore:published` after installation. This builds and verifies locally; it does not deploy. Firebase credentials belong in private environment settings, never Git. The dedicated education project is separate from commercial projects.

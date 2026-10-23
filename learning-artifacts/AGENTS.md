@@ -6,6 +6,8 @@ Install from this directory with bash scripts/install.sh; run npm test. Exercise
 
 Domain state and assessment are pure and serializable; renderers and GSAP presentation do not determine truth. Record exact evidence coverage and partial claims. Unsupported topics are plans awaiting a model, not completed visualizations. A response is not learner mastery.
 
+For new or revised explanatory models, read [docs/MODEL-CRAFT.md](docs/MODEL-CRAFT.md). It records the Visual Learning/Anatomy production methods for original work: purposeful construction, shared model/readout state, clear steps, close-up review, and applicable geometry/motion checks. Apply it alongside the learning-design rules below. Keep colorful, tactile 3D as the established game direction; do not force unrelated concepts into an Anatomy machine metaphor.
+
 Use headless Blender for asset fabrication; do not make its unconfigured MCP bridge mandatory. HyperFrames outputs must pass actual render/decoded-frame checks. Do not replace missing outputs with different deliverable types.
 
 Keep output/, .cache/, .venv/, node_modules/, and generated logs out of Git. New topic plugins need independent model fixtures and actual UI acceptance steps. Source, expert, human and device review are separate from automated validation.
