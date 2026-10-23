@@ -9,6 +9,7 @@ This fork contains the complete source of the learning system built in the Codex
 | [.agents/skills/taxonomy-to-lesson/SKILL.md](.agents/skills/taxonomy-to-lesson/SKILL.md) | The coordinating skill: taxonomy → learning contract → tools → model → artifact → verification → hosting |
 | [learning-artifacts/README.md](learning-artifacts/README.md) | Compiler, installation, supported outputs and commands |
 | [learning-artifacts/docs/ARCHITECTURE.md](learning-artifacts/docs/ARCHITECTURE.md) | Astra's architecture and tool-selection guidance; distinguish implemented features from proposals |
+| [learning-artifacts/docs/MODEL-CRAFT.md](learning-artifacts/docs/MODEL-CRAFT.md) | Original model production standards learned from Visual Learning and Anatomy, with child-led experiments and visual/model verification; supplements the established 3D game direction |
 | [Munger_Models/README.md](Munger_Models/README.md) | 23 model groups, exact taxonomy mappings, research sources, age pathways and course guidelines |
 | [learning-artifacts/lessons/opportunity-cost/](learning-artifacts/lessons/opportunity-cost/) | Choice Islands: current Three.js game, pure model, Astra redesign brief, learning contract, tests and screenshots |
 | [learning-artifacts/lessons/inversion/](learning-artifacts/lessons/inversion/) | Save the Moon Garden: Astra design direction/review, causal game model and validation |
